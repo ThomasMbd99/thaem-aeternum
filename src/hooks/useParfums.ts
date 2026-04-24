@@ -13,6 +13,7 @@ const familleToCollection: Record<string, Collection> = {
 export interface ParfumFull {
   id: string;
   nom: string;
+  name: string;
   collection: Collection;
   tagline: string;
   inspiration: string | null;
@@ -36,17 +37,19 @@ function parseNotes(str: string | null): string[] {
 }
 
 function mapParfum(p: ParfumDB): ParfumFull {
+  const id = p.nom.toLowerCase()
+    .replace(/æ/g, 'ae')
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '');
   return {
-    id: p.nom.toLowerCase()
-      .replace(/æ/g, 'ae')
-      .replace(/\s+/g, '-')
-      .replace(/[^a-z0-9-]/g, ''),
+    id,
     nom: p.nom,
+    name: p.nom,
     collection: familleToCollection[p.famille] ?? 'sacrae',
     tagline: p.texte_court ?? '',
     inspiration: p.inspiration,
     marque: p.marque,
-    type: p.type,
+    type: p.type ?? 'inspiration',
     notes: {
       top: parseNotes(p.notes_tete),
       heart: parseNotes(p.notes_coeur),
@@ -73,12 +76,8 @@ export function useParfums() {
         .select('*')
         .order('famille')
         .order('nom');
-
-      if (error) {
-        setError(error.message);
-      } else {
-        setParfums((data as ParfumDB[]).map(mapParfum));
-      }
+      if (error) setError(error.message);
+      else setParfums((data as ParfumDB[]).map(mapParfum));
       setLoading(false);
     }
     fetch();
