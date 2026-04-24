@@ -1,7 +1,8 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { products, collections, getCollection, type Collection } from '@/data/products';
+import { collections, getCollection, type Collection } from '@/data/products';
+import { useParfums } from '@/hooks/useParfums';
 import { useCart } from '@/context/CartContext';
 
 interface QuizOption {
@@ -69,6 +70,7 @@ const questions: { question: string; hint: string; options: QuizOption[] }[] = [
 ];
 
 const Quiz = () => {
+  const { parfums } = useParfums();
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
   const [showResult, setShowResult] = useState(false);
@@ -96,7 +98,7 @@ const Quiz = () => {
 
     const ranked = (Object.entries(scores) as [Collection, number][]).sort((a, b) => b[1] - a[1]);
     const topFamily = ranked[0][0];
-    const familyProducts = products.filter(p => p.collection === topFamily);
+    const familyProducts = parfums.filter(p => p.collection === topFamily);
     const recommended = familyProducts[Math.floor(Math.random() * familyProducts.length)];
     const collection = getCollection(topFamily);
 

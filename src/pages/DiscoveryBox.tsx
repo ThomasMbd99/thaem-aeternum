@@ -276,7 +276,7 @@ const DiscoveryBox = () => {
 
   return (
     <PageTransition>
-      <div className="min-h-screen pt-24 lg:pt-28 pb-28 relative">
+      <div className="min-h-screen pt-24 lg:pt-28 pb-28 relative bg-background" style={{ backgroundColor: "hsl(var(--background))" }}>
         <div
           className="fixed inset-0 pointer-events-none z-0"
           style={{
