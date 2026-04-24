@@ -67,6 +67,16 @@ const collectionThemes: Record<CollectionId, CollectionTheme> = {
     hoverText: '#5B4351',
     hoverSubText: 'rgba(91,67,81,0.72)',
   },
+  aera: {
+    fallbackBg:
+      'linear-gradient(135deg, #F5FAFF 0%, #D6EEFF 40%, #C0E4FF 70%, #F0F8FF 100%)',
+    hoverBg:
+      'linear-gradient(135deg, #F8FCFF 0%, #DEEEFF 45%, #C8EAFF 100%)',
+    baseText: '#1A2A3A',
+    baseSubText: 'rgba(26,42,58,0.72)',
+    hoverText: '#1A2A3A',
+    hoverSubText: 'rgba(26,42,58,0.72)',
+  },
 };
 
 const perfumeThemes: Record<string, PerfumeTheme> = {

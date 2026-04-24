@@ -109,9 +109,9 @@ const Collections = () => {
                           dangerouslySetInnerHTML={{ __html: col.displayName }}
                           style={{ color: textColor }}
                         />
-                        <p className="font-body text-[10px] tracking-[0.25em] uppercase" style={{ color: col.colors.accent }}>
-                          {col.mood}
-                        </p>
+                        <div className="font-body text-[10px] tracking-[0.25em] uppercase" style={{ color: col.colors.accent }}>
+                          {col.mood.split(', ').map((m, i) => <p key={i}>{m}</p>)}
+                        </div>
                         <div className="h-px w-10 my-1" style={{ backgroundColor: col.colors.accent, opacity: 0.3 }} />
                         <p className="font-body text-xs leading-relaxed opacity-50 group-hover:opacity-80 transition-opacity duration-500" style={{ color: textColor }}>
                           {col.description}

@@ -351,7 +351,7 @@ const Index = () => {
                                   style={{ color: textColor }}
                                 />
                                 <p className="font-body text-[10px] tracking-[0.2em] uppercase mb-4 transition-colors duration-500" style={{ color: col.colors.accent }}>
-                                  {col.mood}
+                                  {col.mood.split(', ').map((m: string, i: number) => <p key={i}>{m}</p>)}
                                 </p>
                                 <p className="font-body text-xs leading-relaxed opacity-50 group-hover:opacity-90 transition-opacity duration-500" style={{ color: textColor }}>
                                   {col.description}
