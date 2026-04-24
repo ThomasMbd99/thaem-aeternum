@@ -1,0 +1,237 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Montserrat:wght@200;300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+
+  :root {
+    --background: 0 0% 4%;
+    --foreground: 43 45% 85%;
+    --card: 0 0% 7%;
+    --card-foreground: 43 45% 85%;
+    --popover: 0 0% 7%;
+    --popover-foreground: 43 45% 85%;
+    --primary: 43 50% 54%;
+    --primary-foreground: 0 0% 4%;
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 43 45% 85%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 55%;
+    --accent: 43 50% 54%;
+    --accent-foreground: 0 0% 4%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 16%;
+    --input: 0 0% 16%;
+    --ring: 43 50% 54%;
+    --radius: 0.25rem;
+    --gold: 43 50% 54%;
+    --gold-glow: 43 60% 65%;
+    --navbar-bg: 0 0% 4%;
+    --navbar-border: 0 0% 16%;
+    --theme-bg: #0a0a0a;
+    --sidebar-background: 0 0% 5%;
+    --sidebar-foreground: 43 45% 85%;
+    --sidebar-primary: 43 50% 54%;
+    --sidebar-primary-foreground: 0 0% 4%;
+    --sidebar-accent: 0 0% 10%;
+    --sidebar-accent-foreground: 43 45% 85%;
+    --sidebar-border: 0 0% 16%;
+    --sidebar-ring: 43 50% 54%;
+  }
+
+  [data-theme="sacrae"] {
+    --background: 38 55% 91%;
+    --foreground: 25 40% 18%;
+    --card: 38 48% 86%;
+    --card-foreground: 25 40% 18%;
+    --popover: 38 48% 86%;
+    --popover-foreground: 25 40% 18%;
+    --primary: 28 48% 52%;
+    --primary-foreground: 38 55% 96%;
+    --secondary: 36 38% 82%;
+    --secondary-foreground: 25 40% 18%;
+    --muted: 36 30% 80%;
+    --muted-foreground: 25 22% 40%;
+    --accent: 28 48% 52%;
+    --accent-foreground: 38 55% 96%;
+    --border: 33 28% 74%;
+    --input: 33 28% 74%;
+    --ring: 28 48% 52%;
+    --gold: 28 48% 52%;
+    --gold-glow: 28 58% 62%;
+    --navbar-bg: 38 55% 91%;
+    --navbar-border: 33 28% 74%;
+    --theme-bg: #F5EFE0;
+  }
+
+  [data-theme="vitae"] {
+    --background: 20 100% 20%;
+    --foreground: 45 100% 92%;
+    --card: 20 90% 16%;
+    --card-foreground: 45 100% 92%;
+    --primary: 45 100% 60%;
+    --primary-foreground: 20 100% 12%;
+    --secondary: 15 80% 25%;
+    --secondary-foreground: 45 100% 92%;
+    --muted: 15 70% 22%;
+    --muted-foreground: 40 60% 68%;
+    --accent: 45 100% 60%;
+    --accent-foreground: 20 100% 12%;
+    --border: 20 60% 30%;
+    --input: 20 60% 30%;
+    --ring: 45 100% 60%;
+    --gold: 45 100% 60%;
+    --gold-glow: 45 100% 70%;
+    --navbar-bg: 20 100% 15%;
+    --navbar-border: 20 60% 28%;
+    --theme-bg: #7a1500;
+  }
+
+  [data-theme="umbrae"] {
+    --background: 22 80% 6%;
+    --foreground: 35 45% 72%;
+    --card: 22 70% 10%;
+    --card-foreground: 35 45% 72%;
+    --primary: 35 65% 42%;
+    --primary-foreground: 22 80% 6%;
+    --secondary: 22 55% 14%;
+    --secondary-foreground: 35 45% 72%;
+    --muted: 22 45% 16%;
+    --muted-foreground: 35 28% 48%;
+    --accent: 35 65% 42%;
+    --accent-foreground: 22 80% 6%;
+    --border: 22 45% 20%;
+    --input: 22 45% 20%;
+    --ring: 35 65% 42%;
+    --gold: 35 65% 42%;
+    --gold-glow: 35 72% 52%;
+    --navbar-bg: 22 80% 5%;
+    --navbar-border: 22 45% 18%;
+    --theme-bg: #1A0A00;
+  }
+
+  [data-theme="nerolae"] {
+    --background: 340 60% 94%;
+    --foreground: 330 30% 22%;
+    --card: 338 50% 89%;
+    --card-foreground: 330 30% 22%;
+    --primary: 340 50% 62%;
+    --primary-foreground: 340 60% 97%;
+    --secondary: 335 30% 85%;
+    --secondary-foreground: 330 30% 22%;
+    --muted: 335 24% 83%;
+    --muted-foreground: 330 18% 46%;
+    --accent: 340 50% 62%;
+    --accent-foreground: 340 60% 97%;
+    --border: 335 22% 79%;
+    --input: 335 22% 79%;
+    --ring: 340 50% 62%;
+    --gold: 340 50% 62%;
+    --gold-glow: 340 58% 72%;
+    --navbar-bg: 340 60% 94%;
+    --navbar-border: 335 22% 79%;
+    --theme-bg: #FFF0F5;
+  }
+
+  [data-theme="aera"] {
+    --background: 210 80% 97%;
+    --foreground: 210 40% 18%;
+    --card: 210 70% 93%;
+    --card-foreground: 210 40% 18%;
+    --primary: 205 65% 62%;
+    --primary-foreground: 210 80% 98%;
+    --secondary: 210 45% 88%;
+    --secondary-foreground: 210 40% 18%;
+    --muted: 210 38% 86%;
+    --muted-foreground: 210 22% 42%;
+    --accent: 205 65% 62%;
+    --accent-foreground: 210 80% 98%;
+    --border: 210 30% 82%;
+    --input: 210 30% 82%;
+    --ring: 205 65% 62%;
+    --gold: 205 65% 62%;
+    --gold-glow: 205 72% 72%;
+    --navbar-bg: 210 80% 97%;
+    --navbar-border: 210 30% 82%;
+    --theme-bg: #F5FAFF;
+  }
+}
+
+@layer base {
+  * { @apply border-border; }
+  html { transition: background-color 0.8s ease, color 0.6s ease; }
+  body { @apply bg-background text-foreground font-body antialiased; transition: background-color 0.8s ease, color 0.6s ease; }
+  h1, h2, h3, h4, h5, h6 { @apply font-display; transition: color 0.6s ease; }
+  nav, button, a { transition: background-color 0.6s ease, border-color 0.6s ease, color 0.4s ease; }
+}
+
+[data-theme="vitae"] body {
+  background: linear-gradient(160deg, #7a1500 0%, #c03000 25%, #e05500 55%, #cc7700 80%, #FF6B2B 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="umbrae"] body {
+  background: radial-gradient(ellipse at 30% 60%, #3D1A00 0%, #1A0A00 45%, #0D0500 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="nerolae"] body {
+  background: linear-gradient(135deg, #FFF0F5 0%, #FFD6E7 40%, #FFCCE0 70%, #FFF0F5 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="sacrae"] body {
+  background: linear-gradient(150deg, #F5EFE0 0%, #EFE5CC 40%, #E8D8B8 70%, #F0E8D5 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="aera"] body {
+  background: linear-gradient(135deg, #F5FAFF 0%, #D6EEFF 40%, #C0E4FF 70%, #F0F8FF 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="umbrae"] body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 50%, rgba(100,50,0,0.15) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 80% 30%, rgba(80,30,0,0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 30% at 50% 80%, rgba(60,20,0,0.10) 0%, transparent 70%);
+  animation: smoke 8s ease-in-out infinite alternate;
+}
+
+@keyframes smoke {
+  0%   { opacity: 0.6; transform: scale(1) translateY(0); }
+  50%  { opacity: 1; transform: scale(1.05) translateY(-10px); }
+  100% { opacity: 0.7; transform: scale(0.98) translateY(5px); }
+}
+
+@layer utilities {
+  .text-gold { color: hsl(var(--gold)); transition: color 0.5s ease; }
+  .bg-gold { background-color: hsl(var(--gold)); transition: background-color 0.5s ease; }
+  .glow-gold { text-shadow: 0 0 20px hsl(var(--gold-glow) / 0.5), 0 0 40px hsl(var(--gold-glow) / 0.2); transition: text-shadow 0.5s ease; }
+  .glow-gold-box { box-shadow: 0 0 20px hsl(var(--gold-glow) / 0.15), 0 0 40px hsl(var(--gold-glow) / 0.05); transition: box-shadow 0.5s ease; }
+  .ae-highlight { @apply text-gold glow-gold; font-size: 1.15em; }
+  .theme-badge { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.2rem 0.65rem; border-radius: 999px; border: 1px solid hsl(var(--primary) / 0.4); background: hsl(var(--primary) / 0.08); color: hsl(var(--primary)); font-family: 'Montserrat', sans-serif; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; transition: all 0.5s ease; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: hsl(var(--background)); }
+  ::-webkit-scrollbar-thumb { background: hsl(var(--gold) / 0.3); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: hsl(var(--gold) / 0.5); }
+}
+
+.btn-ripple { position: relative; overflow: hidden; }
+.btn-ripple::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), hsl(var(--gold) / 0.3) 0%, transparent 60%); opacity: 0; transition: opacity 0.3s; }
+.btn-ripple:hover::after { opacity: 1; }
+
+@keyframes sb {
+  0% { top: -100%; }
+  50% { top: 100%; }
+  51% { top: -100%; }
+  100% { top: -100%; }
+}
