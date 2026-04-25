@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
 
 const CookieBanner = () => {
   const [visible, setVisible] = useState(false);
@@ -38,9 +37,9 @@ const CookieBanner = () => {
           <p className="font-display italic text-base text-foreground mb-2">Cookies</p>
           <p className="font-body text-xs text-foreground/60 leading-relaxed mb-4">
             Ce site utilise des cookies techniques essentiels à son fonctionnement. Aucun cookie publicitaire.{' '}
-            <Link to="/confidentialite" className="underline hover:text-foreground transition-colors">
+            <a href="/confidentialite" className="underline hover:text-foreground transition-colors">
               En savoir plus
-            </Link>
+            </a>
           </p>
           <div className="flex gap-3">
             <button
