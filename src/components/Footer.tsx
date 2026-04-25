@@ -34,7 +34,15 @@ const Footer = () => (
         <p className="font-body text-xs text-muted-foreground">© 2026 THÆM ÆTERNUM. Tous droits réservés.</p>
       </div>
     </div>
-  </footer>
+    <div className="border-t border-white/5 mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <p className="font-body text-xs text-foreground/30">© 2025 THÆM ÆTERNUM. Tous droits réservés.</p>
+        <div className="flex gap-6">
+          <a href="/mentions-legales" className="font-body text-xs text-foreground/30 hover:text-foreground/60 transition-colors">Mentions légales</a>
+          <a href="/cgv" className="font-body text-xs text-foreground/30 hover:text-foreground/60 transition-colors">CGV</a>
+          <a href="/confidentialite" className="font-body text-xs text-foreground/30 hover:text-foreground/60 transition-colors">Confidentialité</a>
+        </div>
+      </div>
+</footer>
 );
 
 export default Footer;

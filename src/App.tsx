@@ -1,6 +1,9 @@
 import { AuthProvider } from '@/context/AuthContext';
 import LoginPage from './pages/LoginPage';
 import AccountPage from './pages/AccountPage';
+import MentionsLegales from './pages/MentionsLegales';
+import CGV from './pages/CGV';
+import Confidentialite from './pages/Confidentialite';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -16,6 +19,7 @@ import CartDrawer from "@/components/CartDrawer";
 import AnimatedBackground from "@/components/AnimatedBackground";
 import SplashScreen from "@/components/SplashScreen";
 import ThemeTransition from "@/components/ThemeTransition";
+import CookieBanner from "@/components/CookieBanner";
 import { useTheme } from "@/context/ThemeContext";
 import Index from "./pages/Index";
 import Collections from "./pages/Collections";
@@ -69,6 +73,9 @@ const AnimatedRoutes = () => {
           <Route path="/quiz" element={<Quiz />} />
           <Route path="/login" element={<LoginPage />} />
             <Route path="/account" element={<AccountPage />} />
+            <Route path="/mentions-legales" element={<MentionsLegales />} />
+            <Route path="/cgv" element={<CGV />} />
+            <Route path="/confidentialite" element={<Confidentialite />} />
             <Route path="*" element={<NotFound />} />
         </Routes>
       </motion.div>
@@ -97,6 +104,7 @@ const App = () => (
           </BrowserRouter>
         </CartProvider>
       </ThemeProvider>
+        <CookieBanner />
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>

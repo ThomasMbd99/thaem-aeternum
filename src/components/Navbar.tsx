@@ -50,6 +50,7 @@ const Navbar = () => {
             )}
           </AnimatePresence>
 
+          {/* Icône compte */}
           <Link
             to={user ? '/account' : '/login'}
             className="p-2 rounded-full hover:bg-white/5 transition-colors"
@@ -58,6 +59,7 @@ const Navbar = () => {
             <User className="w-5 h-5 text-muted-foreground hover:text-primary transition-colors" />
           </Link>
 
+          {/* Panier */}
           <button onClick={() => setIsOpen(true)} className="relative p-2 transition-colors hover:text-primary">
             <ShoppingBag className="w-5 h-5" />
             {totalItems > 0 && (
