@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingBag, Menu, X } from 'lucide-react';
+import { ShoppingBag, Menu, X, User } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
@@ -22,6 +22,7 @@ const themeLabels: Record<string, string> = {
 const Navbar = () => {
   const { totalItems, setIsOpen } = useCart();
   const { activeTheme } = useTheme();
+  const { user } = useAuth();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -39,7 +40,7 @@ const Navbar = () => {
             </Link>
           ))}
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <AnimatePresence>
             {activeTheme && (
               <motion.span key={activeTheme} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} className="hidden lg:inline-flex theme-badge">
@@ -48,6 +49,15 @@ const Navbar = () => {
               </motion.span>
             )}
           </AnimatePresence>
+
+          <Link
+            to={user ? '/account' : '/login'}
+            className="p-2 rounded-full hover:bg-white/5 transition-colors"
+            aria-label="Mon compte"
+          >
+            <User className="w-5 h-5 text-muted-foreground hover:text-primary transition-colors" />
+          </Link>
+
           <button onClick={() => setIsOpen(true)} className="relative p-2 transition-colors hover:text-primary">
             <ShoppingBag className="w-5 h-5" />
             {totalItems > 0 && (
@@ -56,6 +66,7 @@ const Navbar = () => {
               </motion.span>
             )}
           </button>
+
           <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden p-2">
             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -71,6 +82,13 @@ const Navbar = () => {
                   {link.label}
                 </Link>
               ))}
+              <Link
+                to={user ? '/account' : '/login'}
+                onClick={() => setMobileOpen(false)}
+                className="font-body text-sm tracking-widest uppercase py-2 transition-colors text-muted-foreground hover:text-primary"
+              >
+                {user ? 'Mon compte' : 'Connexion'}
+              </Link>
             </div>
           </motion.div>
         )}
