@@ -64,7 +64,9 @@ const AnimatedRoutes = () => {
           <Route path="/histoire" element={<OurStory />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/quiz" element={<Quiz />} />
-          <Route path="*" element={<NotFound />} />
+          <Route path="/login" element={<LoginPage />} />
+            <Route path="/account" element={<AccountPage />} />
+            <Route path="*" element={<NotFound />} />
         </Routes>
       </motion.div>
     </AnimatePresence>
@@ -74,6 +76,7 @@ const AnimatedRoutes = () => {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
+      <AuthProvider>
       <ThemeProvider>
         <CartProvider>
           <Toaster />
@@ -91,6 +94,7 @@ const App = () => (
           </BrowserRouter>
         </CartProvider>
       </ThemeProvider>
+      </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
