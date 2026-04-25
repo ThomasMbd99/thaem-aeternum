@@ -93,11 +93,11 @@ const questions: Question[] = [
 const gammeTexts: Record<Collection, { titre: string; texte: string }> = {
   sacrae: {
     titre: "THÆM a choisi SACRÆ pour vous.",
-    texte: "Vous portez la chaleur comme une évidence. Ce n'est pas une tendance — c'est une nature. SACRÆ existe pour ceux qui n'ont pas peur de la douceur quand elle est profonde. Vanille, tonka, caramel brûlant. Une gamme qui reste. Longtemps après que vous soyez parti.",
+    texte: "Vous portez la chaleur comme une évidence. Ce n'est pas une tendance c'est une nature. SACRÆ existe pour ceux qui n'ont pas peur de la douceur quand elle est profonde. Vanille, tonka, caramel brûlant. Une gamme qui reste. Longtemps après que vous soyez parti.",
   },
   vitae: {
     titre: "THÆM a choisi VITÆ pour vous.",
-    texte: "Vous êtes mouvement avant d'être silence. Votre parfum doit suivre ce rythme — vif, lumineux, immédiat. VITÆ a été pensée pour les peaux qui captent la lumière. Des fruits qui éclatent, une énergie qui ne demande pas la permission.",
+    texte: "Vous êtes mouvement avant d'être silence. Votre parfum doit suivre ce rythme vif, lumineux, immédiat. VITÆ a été pensée pour les peaux qui captent la lumière. Des fruits qui éclatent, une énergie qui ne demande pas la permission.",
   },
   umbrae: {
     titre: "THÆM a choisi UMBRÆ pour vous.",
@@ -105,11 +105,11 @@ const gammeTexts: Record<Collection, { titre: string; texte: string }> = {
   },
   nerolae: {
     titre: "THÆM a choisi NEROLÆ pour vous.",
-    texte: "Vous portez l'élégance sans effort — c'est la forme la plus rare de la beauté. NEROLÆ a été pensée pour les peaux qui transforment la fleur en quelque chose d'inattendu. Rose, jasmin, néroli. Une gamme qui murmure mais ne s'efface pas.",
+    texte: "Vous portez l'élégance sans effort c'est la forme la plus rare de la beauté. NEROLÆ a été pensée pour les peaux qui transforment la fleur en quelque chose d'inattendu. Rose, jasmin, néroli. Une gamme qui murmure mais ne s'efface pas.",
   },
   aera: {
     titre: "THÆM a choisi ÆRA pour vous.",
-    texte: "Vous avez compris que la pureté est un luxe. Pas le vide — la précision. ÆRA existe pour ceux qui n'ont besoin de rien de plus que ce qui est essentiel. Musc blanc, air, légèreté absolue. Une gamme qui dit tout sans bruit.",
+    texte: "Vous avez compris que la pureté est un luxe. Pas le vide la précision. ÆRA existe pour ceux qui n'ont besoin de rien de plus que ce qui est essentiel. Musc blanc, air, légèreté absolue. Une gamme qui dit tout sans bruit.",
   },
 };
 
@@ -146,7 +146,7 @@ const Quiz = () => {
     .sort((a, b) => b[1] - a[1]);
   const top3 = sorted.slice(0, 3).map(([col]) => col);
 
-  // Pour chaque gamme du top 3 — trouver le meilleur parfum
+  // Pour chaque gamme du top 3 trouver le meilleur parfum
   const getTopParfum = (col: Collection) => {
     const list = parfums.filter(p => p.collection === col);
     return list[0] ?? null;
