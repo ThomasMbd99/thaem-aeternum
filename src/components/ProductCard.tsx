@@ -162,13 +162,27 @@ const ProductCard = ({ product, index = 0 }: Props) => {
             className="relative z-10 h-[70%] w-auto object-contain drop-shadow-lg transition-transform duration-700 group-hover:-translate-y-3 group-hover:scale-105"
           />
 
-          {/* Badge */}
+          {/* Badge collection */}
           <div
             className="absolute bottom-3 left-3 px-2 py-1 rounded text-[10px] font-body uppercase tracking-wider z-10"
             style={{ backgroundColor: collection?.colors.accent + '22', color: collection?.colors.accent }}
           >
             {collection?.name}
           </div>
+
+          {/* Badge Création / Inspiration */}
+          {(product as any).type && (
+            <div
+              className="absolute top-3 right-3 px-2.5 py-1 rounded font-body text-[9px] uppercase tracking-widest z-10"
+              style={
+                (product as any).type === 'creation'
+                  ? { backgroundColor: collection?.colors.accent + '25', color: collection?.colors.accent, border: `1px solid ${collection?.colors.accent}50` }
+                  : { backgroundColor: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.4)', border: '1px solid rgba(255,255,255,0.1)' }
+              }
+            >
+              {(product as any).type === 'creation' ? 'Création' : 'Inspiration'}
+            </div>
+          )}
 
           {/* ── PARTICLES ── */}
           <AnimatePresence>
