@@ -29,6 +29,8 @@ import DiscoveryBox from "./pages/DiscoveryBox";
 import OurStory from "./pages/OurStory";
 import Contact from "./pages/Contact";
 import Quiz from "./pages/Quiz";
+import CheckoutPage from "./pages/CheckoutPage";
+import CheckoutSuccess from "./pages/CheckoutSuccess";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -71,6 +73,8 @@ const AnimatedRoutes = () => {
           <Route path="/histoire" element={<OurStory />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/quiz" element={<Quiz />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/checkout/success" element={<CheckoutSuccess />} />
           <Route path="/login" element={<LoginPage />} />
             <Route path="/account" element={<AccountPage />} />
             <Route path="/mentions-legales" element={<MentionsLegales />} />
