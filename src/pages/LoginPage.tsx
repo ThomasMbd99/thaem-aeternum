@@ -6,7 +6,7 @@ import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<'login' | 'register'>('login');
+  const [mode, setMode] = useState<'login' | 'register' | 'forgot'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [prenom, setPrenom] = useState('');
@@ -20,6 +20,16 @@ const LoginPage = () => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+
+    if (mode === 'forgot') {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/account`,
+      });
+      if (error) setError(error.message);
+      else setSuccess('Email envoyé ! Vérifiez votre boîte mail pour réinitialiser votre mot de passe.');
+      setLoading(false);
+      return;
+    }
 
     if (mode === 'login') {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -77,21 +87,31 @@ const LoginPage = () => {
         </Link>
 
         {/* Toggle */}
-        <div className="flex mb-8 border border-white/10 rounded p-1">
-          {(['login', 'register'] as const).map(m => (
-            <button
-              key={m}
-              onClick={() => { setMode(m); setError(null); setSuccess(null); }}
-              className="flex-1 py-2 font-body text-xs uppercase tracking-widest transition-all duration-300 rounded"
-              style={{
-                background: mode === m ? 'rgba(196,149,106,0.15)' : 'transparent',
-                color: mode === m ? '#C4956A' : 'rgba(255,255,255,0.4)',
-              }}
-            >
-              {m === 'login' ? 'Connexion' : 'Créer un compte'}
-            </button>
-          ))}
-        </div>
+        {mode !== 'forgot' && (
+          <div className="flex mb-8 border border-white/10 rounded p-1">
+            {(['login', 'register'] as const).map(m => (
+              <button
+                key={m}
+                onClick={() => { setMode(m); setError(null); setSuccess(null); }}
+                className="flex-1 py-2 font-body text-xs uppercase tracking-widest transition-all duration-300 rounded"
+                style={{
+                  background: mode === m ? 'rgba(196,149,106,0.15)' : 'transparent',
+                  color: mode === m ? '#C4956A' : 'rgba(255,255,255,0.4)',
+                }}
+              >
+                {m === 'login' ? 'Connexion' : 'Créer un compte'}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Titre mode forgot */}
+        {mode === 'forgot' && (
+          <div className="mb-8 text-center">
+            <p className="font-display italic text-foreground/70 text-lg mb-1">Mot de passe oublié</p>
+            <p className="font-body text-xs text-foreground/35">Entrez votre email pour recevoir un lien de réinitialisation.</p>
+          </div>
+        )}
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -139,24 +159,26 @@ const LoginPage = () => {
             />
           </div>
 
-          <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/30" />
-            <input
-              type={showPassword ? 'text' : 'password'}
-              placeholder="Mot de passe"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              required
-              className="w-full pl-9 pr-10 py-3 bg-white/5 border border-white/10 rounded font-body text-sm text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-white/25 transition-colors"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/30 hover:text-foreground/60 transition-colors"
-            >
-              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            </button>
-          </div>
+          {mode !== 'forgot' && (
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/30" />
+              <input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Mot de passe"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                required
+                className="w-full pl-9 pr-10 py-3 bg-white/5 border border-white/10 rounded font-body text-sm text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-white/25 transition-colors"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/30 hover:text-foreground/60 transition-colors"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+          )}
 
           {error && (
             <motion.p
@@ -188,8 +210,28 @@ const LoginPage = () => {
               color: '#C4956A',
             }}
           >
-            {loading ? 'Chargement...' : mode === 'login' ? 'Se connecter' : 'Créer mon compte'}
+            {loading ? 'Chargement...' : mode === 'login' ? 'Se connecter' : mode === 'register' ? 'Créer mon compte' : 'Envoyer le lien'}
           </button>
+
+          {mode === 'login' && (
+            <button
+              type="button"
+              onClick={() => { setMode('forgot'); setError(null); setSuccess(null); }}
+              className="w-full text-center font-body text-xs text-foreground/30 hover:text-foreground/60 transition-colors pt-1"
+            >
+              Mot de passe oublié ?
+            </button>
+          )}
+
+          {mode === 'forgot' && (
+            <button
+              type="button"
+              onClick={() => { setMode('login'); setError(null); setSuccess(null); }}
+              className="w-full text-center font-body text-xs text-foreground/30 hover:text-foreground/60 transition-colors pt-1"
+            >
+              ← Retour à la connexion
+            </button>
+          )}
         </form>
 
         {/* Séparateur */}

@@ -1,8 +1,11 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Product, getCollection } from '@/data/products';
 import { getBottleImage } from '@/data/bottleImages';
 import { useState, useCallback, useRef } from 'react';
+import { Heart } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/context/AuthContext';
 
 interface Props {
   product: Product;
@@ -115,6 +118,21 @@ const ProductCard = ({ product, index = 0 }: Props) => {
   const fired = useRef(false);
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  const [liked, setLiked] = useState(false);
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleFavorite = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!user) { navigate('/login'); return; }
+    const next = !liked;
+    setLiked(next);
+    if (next) {
+      await supabase.from('favoris').insert({ user_id: user.id, parfum_id: product.id });
+    } else {
+      await supabase.from('favoris').delete().eq('user_id', user.id).eq('parfum_id', product.id);
+    }
+  };
 
   const handleMouseEnter = useCallback(() => {
     if (fired.current) return;
@@ -161,6 +179,18 @@ const ProductCard = ({ product, index = 0 }: Props) => {
             alt={product.name}
             className="relative z-10 h-[70%] w-auto object-contain drop-shadow-lg transition-transform duration-700 group-hover:-translate-y-3 group-hover:scale-105"
           />
+
+          {/* Bouton favori */}
+          <button
+            onClick={handleFavorite}
+            className="absolute top-3 left-3 z-20 p-1.5 rounded-full transition-all duration-300"
+            style={{ background: 'rgba(0,0,0,0.35)', backdropFilter: 'blur(4px)' }}
+          >
+            <Heart
+              className="w-3.5 h-3.5 transition-all duration-300"
+              style={{ color: liked ? '#ef4444' : 'rgba(255,255,255,0.4)', fill: liked ? '#ef4444' : 'none' }}
+            />
+          </button>
 
           {/* Badge collection */}
           <div

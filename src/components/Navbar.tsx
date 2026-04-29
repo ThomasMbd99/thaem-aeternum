@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const navLinks = [
   { to: '/', label: 'Accueil' },
   { to: '/collections', label: 'Nos Gammes' },
+  { to: '/parfums', label: 'Tous les Parfums' },
   { to: '/coffret', label: 'Coffret Découverte' },
   { to: '/quiz', label: 'Quiz Olfactif' },
   { to: '/histoire', label: 'Notre Histoire' },

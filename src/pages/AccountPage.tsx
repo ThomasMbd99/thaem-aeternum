@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
-import { User, Package, Heart, LogOut, Save, ChevronRight } from 'lucide-react';
+import { User, Package, Heart, LogOut, Save, ChevronRight, Trash2 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
 
@@ -13,6 +13,8 @@ const AccountPage = () => {
   const [tab, setTab] = useState<Tab>('profil');
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [commandes, setCommandes] = useState<any[]>([]);
   const [favoris, setFavoris] = useState<any[]>([]);
 
@@ -76,6 +78,14 @@ const AccountPage = () => {
   };
 
   const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
+  };
+
+  const handleDeleteAccount = async () => {
+    setDeleting(true);
+    await supabase.from('favoris').delete().eq('user_id', user!.id);
+    await supabase.from('profiles').delete().eq('id', user!.id);
     await signOut();
     navigate('/');
   };
@@ -220,6 +230,42 @@ const AccountPage = () => {
                     <Save className="w-4 h-4" />
                     {saving ? 'Sauvegarde...' : saved ? 'Sauvegardé' : 'Sauvegarder'}
                   </button>
+
+                  {/* Zone danger */}
+                  <div className="mt-8 pt-8 border-t border-white/5">
+                    <p className="font-body text-[10px] uppercase tracking-widest text-red-400/50 mb-4">Zone de danger</p>
+                    {!confirmDelete ? (
+                      <button
+                        onClick={() => setConfirmDelete(true)}
+                        className="flex items-center gap-2 px-5 py-2.5 font-body text-xs uppercase tracking-widest rounded transition-all duration-300"
+                        style={{ border: '1px solid rgba(239,68,68,0.2)', color: 'rgba(239,68,68,0.5)' }}
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        Supprimer mon compte
+                      </button>
+                    ) : (
+                      <div className="border border-red-500/20 rounded p-4 space-y-3">
+                        <p className="font-body text-xs text-red-400/80">Cette action est irréversible. Toutes vos données seront supprimées.</p>
+                        <div className="flex gap-3">
+                          <button
+                            onClick={handleDeleteAccount}
+                            disabled={deleting}
+                            className="px-5 py-2 font-body text-xs uppercase tracking-widest rounded transition-all duration-300"
+                            style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)', color: '#ef4444' }}
+                          >
+                            {deleting ? 'Suppression...' : 'Confirmer'}
+                          </button>
+                          <button
+                            onClick={() => setConfirmDelete(false)}
+                            className="px-5 py-2 font-body text-xs uppercase tracking-widest rounded text-foreground/40 hover:text-foreground transition-colors"
+                            style={{ border: '1px solid rgba(255,255,255,0.08)' }}
+                          >
+                            Annuler
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
 
