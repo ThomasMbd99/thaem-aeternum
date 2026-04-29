@@ -1,259 +1,20 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { collections, products } from '@/data/products';
 import ProductCard from '@/components/ProductCard';
-import { Recycle, Gift, Sparkles } from 'lucide-react';
+import { Recycle, Gift } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
-import almaePromo from '@/assets/bottles/almae-promo.png';
-import { useRef, useEffect, useCallback } from 'react';
+import ScrollVideoHero from '@/components/ScrollVideoHero';
 
 const bestSellers = [products[0], products[3], products[6], products[9], products[12]];
 
-// ── CANVAS : vague dorée lente + particules flottantes
-const GoldWaveCanvas = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animRef = useRef<number>(0);
-
-  const draw = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let W = canvas.width = window.innerWidth;
-    let H = canvas.height = window.innerHeight;
-    let t = 0;
-
-    // Particles
-    const particles = Array.from({ length: 55 }, () => ({
-      x: Math.random() * W,
-      y: Math.random() * H,
-      r: 0.8 + Math.random() * 2,
-      vx: (Math.random() - 0.5) * 0.25,
-      vy: -(0.1 + Math.random() * 0.3),
-      opacity: 0.2 + Math.random() * 0.5,
-      phase: Math.random() * Math.PI * 2,
-    }));
-
-    const resize = () => {
-      W = canvas.width = window.innerWidth;
-      H = canvas.height = window.innerHeight;
-    };
-    window.addEventListener('resize', resize);
-
-    const animate = () => {
-      ctx.clearRect(0, 0, W, H);
-      t += 0.008;
-
-      // ── Vagues dorées lentes
-      for (let w = 0; w < 3; w++) {
-        ctx.beginPath();
-        const amp = 55 + w * 20;
-        const freq = 0.0018 + w * 0.0006;
-        const speed = t * (0.4 + w * 0.15);
-        const yBase = H * (0.35 + w * 0.12);
-        const alpha = 0.035 - w * 0.008;
-
-        ctx.moveTo(0, yBase);
-        for (let x = 0; x <= W; x += 4) {
-          const y = yBase
-            + Math.sin(x * freq + speed) * amp
-            + Math.sin(x * freq * 1.7 + speed * 0.8) * (amp * 0.4);
-          ctx.lineTo(x, y);
-        }
-        ctx.lineTo(W, H);
-        ctx.lineTo(0, H);
-        ctx.closePath();
-
-        const grad = ctx.createLinearGradient(0, yBase - amp, 0, yBase + amp);
-        grad.addColorStop(0, `rgba(196,149,106,0)`);
-        grad.addColorStop(0.5, `rgba(196,149,106,${alpha})`);
-        grad.addColorStop(1, `rgba(196,149,106,0)`);
-        ctx.fillStyle = grad;
-        ctx.fill();
-      }
-
-      // ── Lueur centrale pulsante
-      const pulse = 0.06 + Math.sin(t * 1.2) * 0.025;
-      const radial = ctx.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, W * 0.55);
-      radial.addColorStop(0, `rgba(196,149,106,${pulse})`);
-      radial.addColorStop(0.5, `rgba(196,149,106,0.015)`);
-      radial.addColorStop(1, 'rgba(196,149,106,0)');
-      ctx.fillStyle = radial;
-      ctx.fillRect(0, 0, W, H);
-
-      // ── Particules dorées flottantes
-      for (const p of particles) {
-        p.x += p.vx + Math.sin(t + p.phase) * 0.15;
-        p.y += p.vy;
-        if (p.y < -10) { p.y = H + 10; p.x = Math.random() * W; }
-        if (p.x < -10) p.x = W + 10;
-        if (p.x > W + 10) p.x = -10;
-
-        const flicker = p.opacity * (0.7 + Math.sin(t * 2 + p.phase) * 0.3);
-
-        // Glow autour de la particule
-        const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 5);
-        glow.addColorStop(0, `rgba(220,180,120,${flicker * 0.4})`);
-        glow.addColorStop(1, 'rgba(220,180,120,0)');
-        ctx.fillStyle = glow;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r * 5, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Point central
-        ctx.fillStyle = `rgba(245,230,190,${flicker})`;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      animRef.current = requestAnimationFrame(animate);
-    };
-
-    animRef.current = requestAnimationFrame(animate);
-    return () => {
-      cancelAnimationFrame(animRef.current);
-      window.removeEventListener('resize', resize);
-    };
-  }, []);
-
-  useEffect(() => {
-    const cleanup = draw();
-    return cleanup;
-  }, [draw]);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-none"
-      style={{ opacity: 1 }}
-    />
-  );
-};
-
 const Index = () => {
-  const heroRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
-  const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
-
   return (
     <PageTransition>
       <div className="min-h-screen">
 
-        {/* ── HERO ── */}
-        <section ref={heroRef} className="relative h-screen flex items-center justify-center overflow-hidden">
-
-          {/* Canvas animation */}
-          <GoldWaveCanvas />
-
-          {/* Overlay sombre en haut et bas */}
-          <div className="absolute inset-0 pointer-events-none"
-            style={{ background: 'linear-gradient(to bottom, rgba(10,10,10,0.5) 0%, transparent 30%, transparent 70%, rgba(10,10,10,0.7) 100%)' }}
-          />
-
-          {/* Contenu hero */}
-          <motion.div
-            style={{ opacity: heroOpacity, y: heroY }}
-            className="relative z-10 text-center px-4"
-          >
-
-
-            {/* Nom sur une ligne */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className="flex items-baseline justify-center gap-2 lg:gap-3 flex-wrap"
-            >
-              {['T','H','Æ','M','SPACE','Æ','T','E','R','N','U','M'].map((l, i) => (
-                <motion.span
-                  key={i}
-                  initial={{ opacity: 0, y: 60, filter: 'blur(10px)' }}
-                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                  transition={{ delay: 0.2 + i * 0.07, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                  className="font-display leading-none"
-                  style={{
-                    fontSize: l === 'SPACE' ? 'clamp(1rem, 3vw, 3rem)' : 'clamp(2.8rem, 7vw, 8rem)',
-                    letterSpacing: '0.05em',
-                    color: 'hsl(43, 50%, 62%)',
-                    textShadow: (i === 2 || i === 5)
-                      ? '0 0 30px hsl(43 60% 65% / 0.7), 0 0 60px hsl(43 60% 65% / 0.3)'
-                      : 'none',
-                    fontWeight: (i === 2 || i === 5) ? '500' : '300',
-                    display: 'inline-block',
-                    width: l === 'SPACE' ? '2rem' : 'auto',
-                    visibility: l === 'SPACE' ? 'hidden' : 'visible',
-                  }}
-                >
-                  {l === 'SPACE' ? '\u00A0' : l}
-                </motion.span>
-              ))}
-            </motion.div>
-
-            {/* Tagline */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.4, duration: 1 }}
-              className="font-display italic text-base lg:text-xl mt-10"
-              style={{ color: 'rgba(196,149,106,0.35)' }}
-            >
-              Le souffle de l’âme.
-            </motion.p>
-
-            {/* Ligne dorée */}
-            <motion.div
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ delay: 1.8, duration: 1.2, ease: 'easeOut' }}
-              className="h-px max-w-[100px] mx-auto mt-8 origin-center"
-              style={{ background: 'linear-gradient(to right, transparent, hsl(43,50%,54%), transparent)' }}
-            />
-
-            {/* CTAs */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 2, duration: 0.8 }}
-              className="flex gap-4 justify-center flex-wrap mt-10"
-            >
-              <Link
-                to="/collections"
-                className="px-8 py-3 font-body text-xs uppercase tracking-[0.3em] transition-all duration-300"
-                style={{ border: '1px solid hsl(43,50%,54%)', color: 'hsl(43,50%,54%)' }}
-              >
-                Découvrir les gammes
-              </Link>
-              <Link
-                to="/histoire"
-                className="px-8 py-3 font-body text-xs uppercase tracking-[0.3em] transition-all duration-300 text-foreground/50 hover:text-foreground"
-                style={{ border: '1px solid rgba(255,255,255,0.1)' }}
-              >
-                Notre histoire
-              </Link>
-            </motion.div>
-          </motion.div>
-
-          {/* Scroll indicator */}
-          <motion.div
-            className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 2.5 }}
-          >
-            <span className="font-body text-[9px] tracking-[0.3em] uppercase" style={{ color: 'rgba(196,149,106,0.4)' }}>
-              Défiler
-            </span>
-            <motion.div
-              animate={{ y: [0, 8, 0] }}
-              transition={{ repeat: Infinity, duration: 1.8, ease: 'easeInOut' }}
-              className="w-px h-10"
-              style={{ background: 'linear-gradient(to bottom, hsl(43,50%,54%), transparent)' }}
-            />
-          </motion.div>
-        </section>
+        {/* ── SCROLL VIDEO HERO ── */}
+        <ScrollVideoHero />
 
         {/* ── MANIFESTE ── */}
         <section className="relative py-28 lg:py-40 overflow-hidden">
@@ -333,7 +94,6 @@ const Index = () => {
                           className="relative p-8 min-h-[320px] flex flex-col items-center justify-center text-center overflow-hidden rounded transition-all duration-700"
                           style={{ background: 'hsl(0 0% 7%)', border: '1px solid rgba(255,255,255,0.06)' }}
                         >
-                          {/* Fond thème complet au hover */}
                           <div
                             className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none rounded"
                             style={{ background: themeBgs[col.id] }}
@@ -342,7 +102,6 @@ const Index = () => {
                             const lightThemes = ['sacrae', 'nerolae', 'aera'];
                             const isLight = lightThemes.includes(col.id);
                             const textColor = isLight ? col.colors.text : 'hsl(var(--foreground))';
-                            const subColor = isLight ? col.colors.text + '99' : 'rgba(255,255,255,0.5)';
                             return (
                               <div className="relative z-10 flex flex-col items-center">
                                 <h3
