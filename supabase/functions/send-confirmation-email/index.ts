@@ -127,7 +127,7 @@ Deno.serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Thæm Æternum <commandes@thaem-aeternum.com>',
+        from: 'Thæm Æternum <onboarding@resend.dev>',
         to: userEmail,
         subject: 'Votre commande Thæm Æternum est confirmée',
         html,
