@@ -1,13 +1,7 @@
-import { Link, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 const NotFound = () => {
-  const location = useLocation();
-
-  useEffect(() => {
-    console.error('404:', location.pathname);
-  }, [location.pathname]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-background px-4 relative overflow-hidden">

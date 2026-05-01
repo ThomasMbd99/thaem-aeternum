@@ -13,32 +13,64 @@ interface CartItem {
   name: string;
 }
 
+interface Address {
+  prenom: string;
+  nom: string;
+  telephone: string;
+  adresse: string;
+  ville: string;
+  code_postal: string;
+  pays: string;
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }
 
   try {
-    const { items, successUrl, cancelUrl } = await req.json() as {
+    const stripeKey = Deno.env.get('STRIPE_SECRET_KEY');
+    if (!stripeKey) {
+      return new Response(JSON.stringify({ error: 'Configuration Stripe manquante.' }), {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const { items, shippingCost, address, successUrl, cancelUrl } = await req.json() as {
       items: CartItem[];
+      shippingCost: number;
+      address: Address;
       successUrl: string;
       cancelUrl: string;
     };
 
-    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') ?? '', {
-      apiVersion: '2023-10-16',
-    });
+    const stripe = new Stripe(stripeKey, { apiVersion: '2023-10-16' });
 
     const lineItems = items.map((item) => ({
       price_data: {
         currency: 'eur',
-        product_data: {
-          name: `${item.name} — ${item.format}`,
-        },
+        product_data: { name: `${item.name} — ${item.format}` },
         unit_amount: Math.round(item.price * 100),
       },
       quantity: item.quantity,
     }));
+
+    if (shippingCost > 0) {
+      lineItems.push({
+        price_data: {
+          currency: 'eur',
+          product_data: { name: 'Livraison standard' },
+          unit_amount: Math.round(shippingCost * 100),
+        },
+        quantity: 1,
+      });
+    }
+
+    const deliveryName = address ? `${address.prenom} ${address.nom}`.trim() : undefined;
+    const deliveryLine = address
+      ? `${address.adresse}, ${address.code_postal} ${address.ville}, ${address.pays}`
+      : undefined;
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -46,6 +78,14 @@ Deno.serve(async (req) => {
       mode: 'payment',
       success_url: successUrl,
       cancel_url: cancelUrl,
+      ...(deliveryName && {
+        customer_email: undefined,
+        metadata: {
+          delivery_name: deliveryName,
+          delivery_address: deliveryLine ?? '',
+          delivery_phone: address?.telephone ?? '',
+        },
+      }),
     });
 
     return new Response(JSON.stringify({ url: session.url }), {
