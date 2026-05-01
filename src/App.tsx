@@ -64,6 +64,14 @@ const ThemeGuard = () => {
   return null;
 };
 
+const ScrollToTop = () => {
+  const location = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+  return null;
+};
+
 const AnimatedRoutes = () => {
   const location = useLocation();
   return (
@@ -109,6 +117,7 @@ const App = () => (
             <SplashScreen>
               <ThemeTransition />
               <ThemeGuard />
+              <ScrollToTop />
               <AnimatedBackground />
               <Navbar />
               <CartDrawer />
