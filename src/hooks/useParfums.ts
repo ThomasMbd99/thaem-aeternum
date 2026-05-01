@@ -29,6 +29,7 @@ export interface ParfumFull {
   phrase_signature: string | null;
   note: number | null;
   statut: string;
+  stock: number;
 }
 
 function parseNotes(str: string | null): string[] {
@@ -60,6 +61,7 @@ function mapParfum(p: ParfumDB): ParfumFull {
     phrase_signature: p.phrase_signature,
     note: p.note,
     statut: p.statut,
+    stock: p.stock ?? 0,
   };
 }
 

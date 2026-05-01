@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ShoppingBag, ArrowLeft, Loader2, MapPin, Truck, Tag, X } from 'lucide-react';
+import { ShoppingBag, ArrowLeft, Loader2, MapPin, Truck, Tag, X, Home } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
+import RelayPointPicker, { type RelayPoint } from '@/components/RelayPointPicker';
 
 const SHIPPING_THRESHOLD = 80;
 const SHIPPING_COST = 5.9;
@@ -55,16 +56,15 @@ const CheckoutPage = () => {
 
   const [promoCode, setPromoCode] = useState('');
   const [promoError, setPromoError] = useState<string | null>(null);
+  const [deliveryMode, setDeliveryMode] = useState<'home' | 'relay'>('home');
+  const [selectedRelay, setSelectedRelay] = useState<RelayPoint | null>(null);
 
   const shippingCost = totalPrice >= SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
   const finalTotal = totalPrice + shippingCost;
 
-  const isAddressComplete =
-    address.prenom.trim() &&
-    address.nom.trim() &&
-    address.adresse.trim() &&
-    address.ville.trim() &&
-    address.code_postal.trim();
+  const isAddressComplete = deliveryMode === 'relay'
+    ? selectedRelay !== null
+    : (address.prenom.trim() && address.nom.trim() && address.adresse.trim() && address.ville.trim() && address.code_postal.trim());
 
   const set = (key: keyof DeliveryAddress) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setAddress(a => ({ ...a, [key]: e.target.value }));
@@ -153,48 +153,83 @@ const CheckoutPage = () => {
             transition={{ delay: 0.05 }}
             className="lg:col-span-3 space-y-5"
           >
+            {/* Mode de livraison */}
+            <div className="mb-2">
+              <p className="font-body text-xs uppercase tracking-widest text-foreground/40 mb-3">Mode de livraison</p>
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { mode: 'home' as const, icon: Home, label: 'À domicile', sub: 'Livraison chez vous' },
+                  { mode: 'relay' as const, icon: MapPin, label: 'Point relais', sub: 'Mondial Relay' },
+                ].map(({ mode, icon: Icon, label, sub }) => (
+                  <button
+                    key={mode}
+                    onClick={() => setDeliveryMode(mode)}
+                    className="flex items-center gap-3 p-4 rounded border transition-all duration-300 text-left"
+                    style={{
+                      background: deliveryMode === mode ? 'rgba(196,149,106,0.08)' : 'rgba(255,255,255,0.02)',
+                      borderColor: deliveryMode === mode ? 'rgba(196,149,106,0.4)' : 'rgba(255,255,255,0.08)',
+                    }}
+                  >
+                    <Icon className="w-4 h-4 shrink-0" style={{ color: deliveryMode === mode ? '#C4956A' : 'rgba(255,255,255,0.3)' }} />
+                    <div>
+                      <p className="font-body text-xs uppercase tracking-widest" style={{ color: deliveryMode === mode ? '#C4956A' : 'rgba(255,255,255,0.5)' }}>{label}</p>
+                      <p className="font-body text-[10px] text-foreground/30 mt-0.5">{sub}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div className="flex items-center gap-2 mb-2">
               <MapPin className="w-4 h-4 text-primary" />
-              <h2 className="font-display italic text-lg">Adresse de livraison</h2>
+              <h2 className="font-display italic text-lg">{deliveryMode === 'relay' ? 'Choisir un point relais' : 'Adresse de livraison'}</h2>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className={labelClass}>Prénom *</label>
-                <input className={inputClass} value={address.prenom} onChange={set('prenom')} />
-              </div>
-              <div>
-                <label className={labelClass}>Nom *</label>
-                <input className={inputClass} value={address.nom} onChange={set('nom')} />
-              </div>
-            </div>
+            {deliveryMode === 'relay' && (
+              <RelayPointPicker selected={selectedRelay} onSelect={setSelectedRelay} />
+            )}
 
-            <div>
-              <label className={labelClass}>Adresse *</label>
-              <input className={inputClass} value={address.adresse} onChange={set('adresse')} placeholder="Numéro et nom de rue" />
-            </div>
+            {deliveryMode === 'home' && (
+              <>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className={labelClass}>Prénom *</label>
+                    <input className={inputClass} value={address.prenom} onChange={set('prenom')} />
+                  </div>
+                  <div>
+                    <label className={labelClass}>Nom *</label>
+                    <input className={inputClass} value={address.nom} onChange={set('nom')} />
+                  </div>
+                </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className={labelClass}>Code postal *</label>
-                <input className={inputClass} value={address.code_postal} onChange={set('code_postal')} />
-              </div>
-              <div>
-                <label className={labelClass}>Ville *</label>
-                <input className={inputClass} value={address.ville} onChange={set('ville')} />
-              </div>
-            </div>
+                <div>
+                  <label className={labelClass}>Adresse *</label>
+                  <input className={inputClass} value={address.adresse} onChange={set('adresse')} placeholder="Numéro et nom de rue" />
+                </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className={labelClass}>Pays</label>
-                <input className={inputClass} value={address.pays} onChange={set('pays')} />
-              </div>
-              <div>
-                <label className={labelClass}>Téléphone</label>
-                <input className={inputClass} value={address.telephone} onChange={set('telephone')} type="tel" />
-              </div>
-            </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className={labelClass}>Code postal *</label>
+                    <input className={inputClass} value={address.code_postal} onChange={set('code_postal')} />
+                  </div>
+                  <div>
+                    <label className={labelClass}>Ville *</label>
+                    <input className={inputClass} value={address.ville} onChange={set('ville')} />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className={labelClass}>Pays</label>
+                    <input className={inputClass} value={address.pays} onChange={set('pays')} />
+                  </div>
+                  <div>
+                    <label className={labelClass}>Téléphone</label>
+                    <input className={inputClass} value={address.telephone} onChange={set('telephone')} type="tel" />
+                  </div>
+                </div>
+              </>
+            )}
 
             {/* Livraison info */}
             <div

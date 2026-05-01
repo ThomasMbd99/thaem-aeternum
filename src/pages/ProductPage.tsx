@@ -167,7 +167,10 @@ const ProductPage = () => {
   };
   const rgb = hexToRgb(acc);
 
+  const outOfStock = product.stock === 0;
+
   const handleAdd = () => {
+    if (outOfStock) return;
     for (let i = 0; i < quantity; i++) {
       addItem({ productId: product.id, format: selectedFormat, price: currentFormat.price, name: product.name });
     }
@@ -414,15 +417,15 @@ const ProductPage = () => {
                 </span>
                 <button
                   onClick={handleAdd}
-                  disabled={added}
-                  className="flex-1 py-4 font-body text-xs uppercase tracking-[0.3em] rounded transition-all duration-400"
+                  disabled={added || outOfStock}
+                  className="flex-1 py-4 font-body text-xs uppercase tracking-[0.3em] rounded transition-all duration-400 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{
-                    background: added ? 'rgba(74,163,84,0.2)' : `rgba(${rgb}, 0.15)`,
-                    border: `1px solid ${added ? 'rgba(74,163,84,0.5)' : acc}`,
-                    color: added ? 'rgb(134,213,144)' : acc,
+                    background: outOfStock ? 'rgba(255,255,255,0.03)' : added ? 'rgba(74,163,84,0.2)' : `rgba(${rgb}, 0.15)`,
+                    border: `1px solid ${outOfStock ? 'rgba(255,255,255,0.1)' : added ? 'rgba(74,163,84,0.5)' : acc}`,
+                    color: outOfStock ? 'rgba(255,255,255,0.3)' : added ? 'rgb(134,213,144)' : acc,
                   }}
                 >
-                  {added ? (
+                  {outOfStock ? 'Rupture de stock' : added ? (
                     <span className="inline-flex items-center justify-center gap-2">
                       <Check className="w-4 h-4" /> Ajouté
                     </span>
@@ -430,6 +433,11 @@ const ProductPage = () => {
                     'Ajouter au panier'
                   )}
                 </button>
+                {product.stock !== undefined && product.stock > 0 && product.stock <= 10 && (
+                  <p className="w-full text-center font-body text-xs mt-2" style={{ color: 'rgba(239,68,68,0.7)' }}>
+                    Plus que {product.stock} en stock
+                  </p>
+                )}
               </div>
 
               {/* Pyramide olfactive */}

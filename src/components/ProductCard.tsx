@@ -200,6 +200,18 @@ const ProductCard = ({ product, index = 0 }: Props) => {
             {collection?.name}
           </div>
 
+          {/* Badge stock */}
+          {product.stock !== undefined && product.stock === 0 && (
+            <div className="absolute inset-0 flex items-center justify-center z-30 rounded" style={{ background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(2px)' }}>
+              <span className="font-body text-xs uppercase tracking-widest text-white/70">Rupture de stock</span>
+            </div>
+          )}
+          {product.stock !== undefined && product.stock > 0 && product.stock <= 5 && (
+            <div className="absolute bottom-3 right-3 px-2 py-1 rounded z-10 font-body text-[9px] uppercase tracking-widest" style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)', color: '#ef4444' }}>
+              Plus que {product.stock}
+            </div>
+          )}
+
           {/* Badge Création / Inspiration */}
           {(product as any).type && (
             <div

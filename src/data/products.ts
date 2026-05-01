@@ -13,6 +13,7 @@ export interface Product {
   tagline: string;
   inspiration?: string;
   notes: Note;
+  stock?: number;
 }
 
 export interface CollectionInfo {

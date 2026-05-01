@@ -21,4 +21,5 @@ export interface ParfumDB {
   texte_court: string | null;
   phrase_signature: string | null;
   flagship: boolean;
+  stock: number;
 }
