@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { products, getCollection } from '@/data/products';
 import { useCart } from '@/context/CartContext';
+import { useParfums } from '@/hooks/useParfums';
 import { Check, Gift } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
 
@@ -260,6 +261,13 @@ const DiscoveryBox = () => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const { addItem } = useCart();
   const [added, setAdded] = useState(false);
+  const { parfums: parfumsDB } = useParfums();
+
+  const stockMap = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const p of parfumsDB) map.set(p.id, p.stock);
+    return map;
+  }, [parfumsDB]);
 
   const togglePerfume = (id: string) => {
     setSelected(prev =>
@@ -480,7 +488,8 @@ const DiscoveryBox = () => {
                   {colProducts.map((p, i) => {
                     const isSelected = selected.includes(p.id);
                     const isHovered = hoveredId === p.id;
-                    const canSelect = selected.length < 5 || isSelected;
+                    const outOfStock = stockMap.size > 0 && (stockMap.get(p.id) ?? 100) === 0;
+                    const canSelect = !outOfStock && (selected.length < 5 || isSelected);
                     const perfumeTheme = perfumeThemes[p.id];
 
                     const bg = isSelected
@@ -540,6 +549,17 @@ const DiscoveryBox = () => {
                                 color: colId === 'umbrae' ? '#140A08' : '#000',
                               }}
                             />
+                          </div>
+                        )}
+
+                        {outOfStock && (
+                          <div
+                            className="absolute inset-x-0 bottom-0 py-1 text-center"
+                            style={{ background: 'rgba(0,0,0,0.55)' }}
+                          >
+                            <span className="font-body text-[9px] uppercase tracking-widest text-white/60">
+                              Rupture
+                            </span>
                           </div>
                         )}
 

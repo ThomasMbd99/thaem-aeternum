@@ -143,10 +143,6 @@ const CheckoutPage = () => {
   const saveOrderToSupabase = async (stripeSessionId?: string) => {
     if (!user) return;
     try {
-      const deliveryAddress = deliveryMode === 'relay' && selectedRelay
-        ? { ...selectedRelay, prenom: address.prenom || '', nom: address.nom || '' }
-        : address;
-
       const { data: commande, error: cmdError } = await supabase
         .from('commandes')
         .insert({ user_id: user.id, statut: 'pending', total: finalTotal })
@@ -163,6 +159,40 @@ const CheckoutPage = () => {
           quantite: item.quantity,
           prix_unitaire: item.price,
         }))
+      );
+
+      // Décrémentation du stock
+      const { data: parfumsData } = await supabase.from('parfums').select('nom, stock');
+      if (!parfumsData) return;
+
+      const slugToNom = new Map<string, string>();
+      const nomToStock = new Map<string, number>();
+      for (const p of parfumsData) {
+        const slug = (p.nom as string).toLowerCase()
+          .replace(/æ/g, 'ae')
+          .replace(/\s+/g, '-')
+          .replace(/[^a-z0-9-]/g, '');
+        slugToNom.set(slug, p.nom as string);
+        nomToStock.set(p.nom as string, p.stock as number);
+      }
+
+      const decrements = new Map<string, number>();
+      for (const item of items) {
+        if (item.isDiscoveryBox && item.selectedPerfumes) {
+          for (const slug of item.selectedPerfumes) {
+            const nom = slugToNom.get(slug);
+            if (nom) decrements.set(nom, (decrements.get(nom) ?? 0) + item.quantity);
+          }
+        } else {
+          decrements.set(item.name, (decrements.get(item.name) ?? 0) + item.quantity);
+        }
+      }
+
+      await Promise.all(
+        Array.from(decrements.entries()).map(([nom, qty]) => {
+          const newStock = Math.max(0, (nomToStock.get(nom) ?? 0) - qty);
+          return supabase.from('parfums').update({ stock: newStock }).eq('nom', nom);
+        })
       );
     } catch {}
   };
