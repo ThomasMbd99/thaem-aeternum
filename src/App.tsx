@@ -33,6 +33,7 @@ import CheckoutPage from "./pages/CheckoutPage";
 import CheckoutSuccess from "./pages/CheckoutSuccess";
 import NotFound from "./pages/NotFound";
 import AllParfums from "./pages/AllParfums";
+import InvoicePage from "./pages/InvoicePage";
 
 const queryClient = new QueryClient();
 
@@ -82,6 +83,7 @@ const AnimatedRoutes = () => {
             <Route path="/mentions-legales" element={<MentionsLegales />} />
             <Route path="/cgv" element={<CGV />} />
             <Route path="/confidentialite" element={<Confidentialite />} />
+            <Route path="/invoice/:id" element={<InvoicePage />} />
             <Route path="*" element={<NotFound />} />
         </Routes>
       </motion.div>

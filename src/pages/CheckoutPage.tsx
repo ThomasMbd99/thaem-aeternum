@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ShoppingBag, ArrowLeft, Loader2, MapPin, Truck } from 'lucide-react';
+import { ShoppingBag, ArrowLeft, Loader2, MapPin, Truck, Tag, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
@@ -53,6 +53,9 @@ const CheckoutPage = () => {
     }
   }, [profile]);
 
+  const [promoCode, setPromoCode] = useState('');
+  const [promoError, setPromoError] = useState<string | null>(null);
+
   const shippingCost = totalPrice >= SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
   const finalTotal = totalPrice + shippingCost;
 
@@ -73,22 +76,41 @@ const CheckoutPage = () => {
     }
     setLoading(true);
     setError(null);
+    setPromoError(null);
     try {
+      sessionStorage.setItem('pendingOrder', JSON.stringify({
+        items,
+        address,
+        shippingCost,
+        finalTotal,
+        userEmail: user?.email ?? '',
+      }));
+
       const { data, error: fnError } = await supabase.functions.invoke('create-checkout-session', {
         body: {
           items,
           shippingCost,
           address,
+          promoCode: promoCode.trim() || undefined,
           successUrl: `${window.location.origin}/checkout/success`,
           cancelUrl: `${window.location.origin}/checkout`,
         },
       });
 
       if (fnError) throw new Error(fnError.message);
+      if (data?.error?.includes('coupon')) {
+        setPromoError('Code promo invalide ou expiré.');
+        setLoading(false);
+        return;
+      }
       if (data?.url) window.location.href = data.url;
       else throw new Error('URL de paiement non reçue.');
-    } catch {
-      setError('Une erreur est survenue. Veuillez réessayer.');
+    } catch (e: any) {
+      if (e?.message?.toLowerCase().includes('coupon') || e?.message?.toLowerCase().includes('promo')) {
+        setPromoError('Code promo invalide ou expiré.');
+      } else {
+        setError('Une erreur est survenue. Veuillez réessayer.');
+      }
     } finally {
       setLoading(false);
     }
@@ -214,6 +236,26 @@ const CheckoutPage = () => {
               ))}
             </div>
 
+            {/* Code promo */}
+            <div>
+              <label className={labelClass}><Tag className="w-3 h-3 inline mr-1" />Code promo</label>
+              <div className="flex gap-2">
+                <input
+                  className={inputClass}
+                  value={promoCode}
+                  onChange={e => { setPromoCode(e.target.value.toUpperCase()); setPromoError(null); }}
+                  placeholder="WELCOME10"
+                />
+                {promoCode && (
+                  <button onClick={() => { setPromoCode(''); setPromoError(null); }} className="px-3 text-foreground/30 hover:text-foreground transition-colors">
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+              {promoError && <p className="font-body text-xs text-red-400 mt-1">{promoError}</p>}
+              {promoCode && !promoError && <p className="font-body text-xs mt-1" style={{ color: '#C4956A' }}>Le code sera appliqué lors du paiement.</p>}
+            </div>
+
             <div className="border-t border-border pt-4 space-y-2">
               <div className="flex justify-between font-body text-sm text-foreground/60">
                 <span>Sous-total</span>
@@ -223,6 +265,12 @@ const CheckoutPage = () => {
                 <span>Livraison</span>
                 <span>{shippingCost === 0 ? 'Offerte' : `${SHIPPING_COST.toFixed(2).replace('.', ',')}€`}</span>
               </div>
+              {promoCode && (
+                <div className="flex justify-between font-body text-sm" style={{ color: '#C4956A' }}>
+                  <span>Code promo ({promoCode})</span>
+                  <span>Appliqué sur Stripe</span>
+                </div>
+              )}
               <div className="flex justify-between font-display text-xl pt-2 border-t border-border">
                 <span>Total</span>
                 <span className="text-primary">{finalTotal.toFixed(2).replace('.', ',')}€</span>

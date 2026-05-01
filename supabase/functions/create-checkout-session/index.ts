@@ -37,10 +37,11 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { items, shippingCost, address, successUrl, cancelUrl } = await req.json() as {
+    const { items, shippingCost, address, promoCode, successUrl, cancelUrl } = await req.json() as {
       items: CartItem[];
       shippingCost: number;
       address: Address;
+      promoCode?: string;
       successUrl: string;
       cancelUrl: string;
     };
@@ -72,21 +73,23 @@ Deno.serve(async (req) => {
       ? `${address.adresse}, ${address.code_postal} ${address.ville}, ${address.pays}`
       : undefined;
 
-    const session = await stripe.checkout.sessions.create({
+    const sessionParams: any = {
       payment_method_types: ['card'],
       line_items: lineItems,
       mode: 'payment',
       success_url: successUrl,
       cancel_url: cancelUrl,
+      ...(promoCode ? { discounts: [{ coupon: promoCode }] } : {}),
       ...(deliveryName && {
-        customer_email: undefined,
         metadata: {
           delivery_name: deliveryName,
           delivery_address: deliveryLine ?? '',
           delivery_phone: address?.telephone ?? '',
         },
       }),
-    });
+    };
+
+    const session = await stripe.checkout.sessions.create(sessionParams);
 
     return new Response(JSON.stringify({ url: session.url }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

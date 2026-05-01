@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
-import { User, Package, Heart, LogOut, Save, ChevronRight, Trash2, ChevronDown, KeyRound } from 'lucide-react';
+import { User, Package, Heart, LogOut, Save, ChevronRight, Trash2, ChevronDown, KeyRound, FileText } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
 
@@ -408,6 +408,14 @@ const AccountPage = () => {
                                 {cmd.statut ?? 'En cours'}
                               </span>
                               <span className="font-display italic text-foreground/60 text-sm">{cmd.total}€</span>
+                              <Link
+                                to={`/invoice/${cmd.id}`}
+                                onClick={e => e.stopPropagation()}
+                                className="p-1.5 rounded hover:bg-white/5 transition-colors"
+                                title="Télécharger la facture"
+                              >
+                                <FileText className="w-3.5 h-3.5 text-foreground/30 hover:text-foreground/60" />
+                              </Link>
                               <ChevronDown
                                 className="w-4 h-4 text-foreground/30 transition-transform duration-200"
                                 style={{ transform: expandedOrder === cmd.id ? 'rotate(180deg)' : 'rotate(0deg)' }}

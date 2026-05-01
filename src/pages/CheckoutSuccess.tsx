@@ -3,12 +3,24 @@ import { motion } from 'framer-motion';
 import { CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '@/context/CartContext';
+import { supabase } from '@/lib/supabase';
 
 const CheckoutSuccess = () => {
   const { clearCart } = useCart();
 
   useEffect(() => {
     clearCart();
+
+    const raw = sessionStorage.getItem('pendingOrder');
+    if (raw) {
+      try {
+        const orderData = JSON.parse(raw);
+        if (orderData.userEmail) {
+          supabase.functions.invoke('send-confirmation-email', { body: orderData });
+        }
+      } catch {}
+      sessionStorage.removeItem('pendingOrder');
+    }
   }, [clearCart]);
 
   return (
@@ -33,15 +45,24 @@ const CheckoutSuccess = () => {
           Merci pour votre confiance. Votre commande a été reçue.
         </p>
         <p className="font-body text-sm text-muted-foreground mb-10">
-          Un email de confirmation vous sera envoyé sous peu.
+          Un email de confirmation vous a été envoyé.
         </p>
 
-        <Link
-          to="/collections"
-          className="inline-block px-8 py-3 bg-primary text-primary-foreground font-body text-xs uppercase tracking-[0.3em] rounded hover:bg-primary/90 transition-all duration-300 btn-ripple"
-        >
-          Continuer à explorer
-        </Link>
+        <div className="flex gap-4 justify-center flex-wrap">
+          <Link
+            to="/account"
+            className="inline-block px-8 py-3 font-body text-xs uppercase tracking-[0.3em] rounded transition-all duration-300"
+            style={{ border: '1px solid rgba(196,149,106,0.4)', color: '#C4956A' }}
+          >
+            Voir mes commandes
+          </Link>
+          <Link
+            to="/collections"
+            className="inline-block px-8 py-3 bg-primary text-primary-foreground font-body text-xs uppercase tracking-[0.3em] rounded hover:bg-primary/90 transition-all duration-300 btn-ripple"
+          >
+            Continuer à explorer
+          </Link>
+        </div>
       </motion.div>
     </div>
   );
