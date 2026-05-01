@@ -1,10 +1,24 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Plus, Minus, ShoppingBag } from 'lucide-react';
+import { X, Plus, Minus, ShoppingBag, Gift } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
-import { Link } from 'react-router-dom';
+import { useAuth } from '@/context/AuthContext';
+import { Link, useNavigate } from 'react-router-dom';
 
 const CartDrawer = () => {
   const { items, isOpen, setIsOpen, removeItem, updateQuantity, totalPrice, totalItems } = useCart();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleCommander = () => {
+    setIsOpen(false);
+    navigate('/checkout');
+  };
+
+  const formatLabel = (item: typeof items[0]) => {
+    if (item.isDiscoveryBox) return `Coffret 5 × 10ml`;
+    if (item.format === 'recharge') return 'Recharge 50ml ♻️';
+    return item.format;
+  };
 
   return (
     <AnimatePresence>
@@ -41,14 +55,22 @@ const CartDrawer = () => {
                 <div className="flex-1 overflow-y-auto p-6 space-y-4">
                   {items.map(item => (
                     <div key={`${item.productId}-${item.format}`} className="flex gap-4 p-4 bg-secondary/50 rounded">
-                      <div className="w-16 h-16 bg-muted rounded flex items-center justify-center">
-                        <span className="font-display text-xs text-primary">{item.name.slice(0, 3)}</span>
+                      <div className="w-16 h-16 bg-muted rounded flex items-center justify-center shrink-0">
+                        {item.isDiscoveryBox
+                          ? <Gift className="w-6 h-6 text-primary" />
+                          : <span className="font-display text-xs text-primary">{item.name.slice(0, 3)}</span>
+                        }
                       </div>
-                      <div className="flex-1">
+                      <div className="flex-1 min-w-0">
                         <h4 className="font-display text-sm">{item.name}</h4>
                         <p className="font-body text-xs text-muted-foreground mt-0.5">
-                          {item.format === 'recharge' ? 'Recharge 50ml ♻️' : item.format}
+                          {formatLabel(item)}
                         </p>
+                        {item.isDiscoveryBox && item.selectedPerfumes && item.selectedPerfumes.length > 0 && (
+                          <p className="font-body text-[10px] text-foreground/40 mt-1 leading-relaxed">
+                            {item.selectedPerfumes.join(', ')}
+                          </p>
+                        )}
                         <div className="flex items-center justify-between mt-2">
                           <div className="flex items-center gap-2">
                             <button
@@ -77,18 +99,27 @@ const CartDrawer = () => {
                     </div>
                   ))}
                 </div>
+
                 <div className="p-6 border-t border-border space-y-4">
                   <div className="flex justify-between font-display text-lg">
                     <span>Total</span>
                     <span className="text-primary">{totalPrice}€</span>
                   </div>
-                  <Link
-                    to="/checkout"
-                    onClick={() => setIsOpen(false)}
+
+                  <button
+                    onClick={handleCommander}
                     className="block w-full text-center py-3 bg-primary text-primary-foreground font-body text-sm uppercase tracking-widest hover:bg-primary/90 transition-colors rounded btn-ripple"
                   >
                     Commander
-                  </Link>
+                  </button>
+
+                  {!user && (
+                    <p className="font-body text-xs text-center text-foreground/40">
+                      Vous pouvez vous{' '}
+                      <Link to="/login" onClick={() => setIsOpen(false)} className="text-primary hover:underline">connecter</Link>
+                      {' '}pour sauvegarder vos commandes
+                    </p>
+                  )}
                 </div>
               </>
             )}
