@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import { useCallback } from 'react';
 import { motion } from 'framer-motion';
@@ -33,6 +34,12 @@ const Collections = () => {
 
   return (
     <PageTransition>
+      <Helmet>
+        <title>Nos Gammes — THÆM ÆTERNUM</title>
+        <meta name="description" content="Explorez les 5 univers olfactifs de THÆM ÆTERNUM : SACRÆ, VITÆA, UMBRÆ, NEROLÆ et ÆRA. 15 créations parfumées artisanales." />
+        <meta property="og:title" content="Nos Gammes — THÆM ÆTERNUM" />
+        <meta property="og:description" content="5 univers olfactifs, 15 créations artisanales." />
+      </Helmet>
       <div className="min-h-screen pt-24 lg:pt-28 pb-28">
 
         {/* ── HEADER ── */}

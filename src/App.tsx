@@ -1,9 +1,11 @@
+import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from '@/context/AuthContext';
 import LoginPage from './pages/LoginPage';
 import AccountPage from './pages/AccountPage';
 import MentionsLegales from './pages/MentionsLegales';
 import CGV from './pages/CGV';
 import Confidentialite from './pages/Confidentialite';
+import PolitiqueRetour from './pages/PolitiqueRetour';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -86,6 +88,7 @@ const AnimatedRoutes = () => {
             <Route path="/confidentialite" element={<Confidentialite />} />
             <Route path="/invoice/:id" element={<InvoicePage />} />
             <Route path="/admin" element={<AdminPage />} />
+            <Route path="/politique-retour" element={<PolitiqueRetour />} />
             <Route path="*" element={<NotFound />} />
         </Routes>
       </motion.div>
@@ -94,6 +97,7 @@ const AnimatedRoutes = () => {
 };
 
 const App = () => (
+  <HelmetProvider>
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AuthProvider>
@@ -118,6 +122,7 @@ const App = () => (
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
+  </HelmetProvider>
 );
 
 export default App;

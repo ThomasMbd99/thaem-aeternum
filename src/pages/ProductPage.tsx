@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { useParams, Link } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useState, useRef } from 'react';
@@ -180,6 +181,12 @@ const ProductPage = () => {
 
   return (
     <div className="min-h-screen bg-background relative">
+      <Helmet>
+        <title>{product ? `${product.nom} — THÆM ÆTERNUM` : 'Parfum — THÆM ÆTERNUM'}</title>
+        <meta name="description" content={product ? `${product.tagline} — Extrait de parfum artisanal THÆM ÆTERNUM.` : 'Extrait de parfum artisanal THÆM ÆTERNUM.'} />
+        <meta property="og:title" content={product ? `${product.nom} — THÆM ÆTERNUM` : 'Parfum — THÆM ÆTERNUM'} />
+        <meta property="og:description" content={product?.tagline ?? ''} />
+      </Helmet>
 
       {/* Dégradé global page */}
       <div

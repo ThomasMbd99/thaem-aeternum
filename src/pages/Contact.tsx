@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Send } from 'lucide-react';
@@ -13,6 +14,10 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen pt-24 lg:pt-28 pb-20">
+      <Helmet>
+        <title>Contact — THÆM ÆTERNUM</title>
+        <meta name="description" content="Contactez THÆM ÆTERNUM pour toute question sur nos parfums artisanaux, commandes ou collaborations." />
+      </Helmet>
       <div className="container mx-auto px-4 lg:px-8 max-w-xl">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
           <h1 className="font-display text-4xl lg:text-5xl">Contact</h1>

@@ -39,6 +39,7 @@ const Footer = () => (
         <div className="flex gap-6">
           <a href="/mentions-legales" className="font-body text-xs text-foreground/30 hover:text-foreground/60 transition-colors">Mentions légales</a>
           <a href="/cgv" className="font-body text-xs text-foreground/30 hover:text-foreground/60 transition-colors">CGV</a>
+          <a href="/politique-retour" className="font-body text-xs text-foreground/30 hover:text-foreground/60 transition-colors">Politique de retour</a>
           <a href="/confidentialite" className="font-body text-xs text-foreground/30 hover:text-foreground/60 transition-colors">Confidentialité</a>
         </div>
       </div>

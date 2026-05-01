@@ -37,13 +37,14 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { items, shippingCost, address, promoCode, successUrl, cancelUrl } = await req.json() as {
+    const { items, shippingCost, address, promoCode, successUrl, cancelUrl, commandeId } = await req.json() as {
       items: CartItem[];
       shippingCost: number;
       address: Address;
       promoCode?: string;
       successUrl: string;
       cancelUrl: string;
+      commandeId?: string;
     };
 
     const stripe = new Stripe(stripeKey, { apiVersion: '2023-10-16' });
@@ -79,6 +80,7 @@ Deno.serve(async (req) => {
       mode: 'payment',
       success_url: successUrl,
       cancel_url: cancelUrl,
+      ...(commandeId ? { client_reference_id: commandeId } : {}),
       ...(promoCode ? { discounts: [{ coupon: promoCode }] } : {}),
       ...(deliveryName && {
         metadata: {

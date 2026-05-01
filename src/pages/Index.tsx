@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { collections, products } from '@/data/products';
@@ -140,6 +141,13 @@ const Index = () => {
 
   return (
     <PageTransition>
+      <Helmet>
+        <title>THÆM ÆTERNUM — Parfumerie d'Exception</title>
+        <meta name="description" content="L'essence de l'éternel. Découvrez 15 créations parfumées artisanales à travers 5 univers olfactifs uniques. Extraits de parfum 100% français." />
+        <meta property="og:title" content="THÆM ÆTERNUM — Parfumerie d'Exception" />
+        <meta property="og:description" content="L'essence de l'éternel. 15 créations parfumées artisanales." />
+        <meta property="og:type" content="website" />
+      </Helmet>
       <div className="min-h-screen">
 
         {/* ── HERO ── */}

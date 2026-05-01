@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { products, getCollection } from '@/data/products';
@@ -294,6 +295,12 @@ const DiscoveryBox = () => {
 
   return (
     <PageTransition>
+      <Helmet>
+        <title>Coffret ÆTERNUM — 5 × 10ml | THÆM ÆTERNUM</title>
+        <meta name="description" content="Composez votre coffret découverte : choisissez 5 parfums parmi nos 15 créations artisanales. 5 × 10ml pour 50€." />
+        <meta property="og:title" content="Coffret ÆTERNUM — Coffret Découverte | THÆM ÆTERNUM" />
+        <meta property="og:description" content="Choisissez 5 parfums parmi nos 15 créations artisanales. 5 × 10ml pour 50€." />
+      </Helmet>
       <div className="min-h-screen pt-24 lg:pt-28 pb-28 relative bg-background" style={{ backgroundColor: "hsl(var(--background))" }}>
         <div
           className="fixed inset-0 pointer-events-none z-0"

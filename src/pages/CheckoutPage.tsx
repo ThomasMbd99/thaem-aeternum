@@ -140,8 +140,8 @@ const CheckoutPage = () => {
   const set = (key: keyof DeliveryAddress) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setAddress(a => ({ ...a, [key]: e.target.value }));
 
-  const saveOrderToSupabase = async (stripeSessionId?: string) => {
-    if (!user) return;
+  const saveOrderToSupabase = async (): Promise<string | null> => {
+    if (!user) return null;
     try {
       const { data: commande, error: cmdError } = await supabase
         .from('commandes')
@@ -149,7 +149,7 @@ const CheckoutPage = () => {
         .select()
         .single();
 
-      if (cmdError || !commande) return;
+      if (cmdError || !commande) return null;
 
       await supabase.from('commande_items').insert(
         items.map(item => ({
@@ -194,7 +194,11 @@ const CheckoutPage = () => {
           return supabase.from('parfums').update({ stock: newStock }).eq('nom', nom);
         })
       );
-    } catch {}
+
+      return commande.id as string;
+    } catch {
+      return null;
+    }
   };
 
   const handleCheckout = async () => {
@@ -219,7 +223,7 @@ const CheckoutPage = () => {
         userEmail: user?.email ?? '',
       }));
 
-      await saveOrderToSupabase();
+      const commandeId = await saveOrderToSupabase();
 
       const { data, error: fnError } = await supabase.functions.invoke('create-checkout-session', {
         body: {
@@ -229,6 +233,7 @@ const CheckoutPage = () => {
           promoCode: promoCode.trim() || undefined,
           successUrl: `${window.location.origin}/checkout/success`,
           cancelUrl: `${window.location.origin}/checkout`,
+          commandeId: commandeId ?? undefined,
         },
       });
 
