@@ -6,6 +6,10 @@
 
 @layer base {
 
+  html {
+    font-size: 112.5%; /* 18px au lieu de 16px — scale toutes les tailles rem */
+  }
+
   :root {
     --background: 0 0% 4%;
     --foreground: 43 45% 85%;
@@ -223,6 +227,11 @@
   ::-webkit-scrollbar-track { background: hsl(var(--background)); }
   ::-webkit-scrollbar-thumb { background: hsl(var(--gold) / 0.3); border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: hsl(var(--gold) / 0.5); }
+
+  /* Relèvement des tailles fixes en pixels */
+  .text-\[9px\]  { font-size: 11px; }
+  .text-\[10px\] { font-size: 12px; }
+  .text-\[11px\] { font-size: 13px; }
 }
 
 .btn-ripple { position: relative; overflow: hidden; }
