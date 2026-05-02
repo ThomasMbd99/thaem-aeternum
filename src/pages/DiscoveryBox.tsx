@@ -477,18 +477,20 @@ const DiscoveryBox = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: ci * 0.1, duration: 0.7 }}
-                className="mb-16"
+                className="mb-16 rounded-xl overflow-hidden"
+                style={{ background: `linear-gradient(135deg, ${col.colors.accent}12 0%, transparent 60%)`, border: `1px solid ${col.colors.accent}20` }}
               >
-                <div className="flex items-center gap-4 mb-6">
+                <div className="flex items-center gap-4 mb-6 px-5 pt-5 pb-4"
+                  style={{ background: `linear-gradient(to right, ${col.colors.accent}18, transparent)`, borderBottom: `1px solid ${col.colors.accent}20` }}
+                >
                   <h2
                     className="font-display text-2xl lg:text-3xl italic font-light"
+                    style={{ color: col.colors.accent }}
                     dangerouslySetInnerHTML={{ __html: col.displayName }}
                   />
                   <div
                     className="h-px flex-1"
-                    style={{
-                      background: `linear-gradient(to right, ${col.colors.accent}40, transparent)`,
-                    }}
+                    style={{ background: `linear-gradient(to right, ${col.colors.accent}40, transparent)` }}
                   />
                   <span
                     className="font-body text-[10px] uppercase tracking-widest"
@@ -497,6 +499,7 @@ const DiscoveryBox = () => {
                     {col.mood}
                   </span>
                 </div>
+                <div className="px-5 pb-5">
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
                   {colProducts.map((p, i) => {
@@ -606,6 +609,7 @@ const DiscoveryBox = () => {
                       </motion.button>
                     );
                   })}
+                </div>
                 </div>
               </motion.div>
             );

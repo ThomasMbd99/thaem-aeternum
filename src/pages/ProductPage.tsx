@@ -8,6 +8,7 @@ import { getBottleImage } from '@/data/bottleImages';
 import OlfactoryPyramid from '@/components/OlfactoryPyramid';
 import ProductCard from '@/components/ProductCard';
 import { useCart } from '@/context/CartContext';
+import { useTheme } from '@/context/ThemeContext';
 import { Recycle, Check, Minus, Plus, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import NotFound from './NotFound';
 
@@ -146,14 +147,19 @@ const ProductPage = () => {
   const [added, setAdded] = useState(false);
   const { addItem } = useCart();
   const navigate = useNavigate();
+  const { setTheme } = useTheme();
 
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
   const imgY = useTransform(scrollYProgress, [0, 1], ['0%', '12%']);
 
   useEffect(() => {
-    if (!loading && product && product.statut === 'prochainement') {
-      navigate(`/collection/${product.collection}`, { replace: true });
+    if (!loading && product) {
+      if (product.statut === 'prochainement') {
+        navigate(`/collection/${product.collection}`, { replace: true });
+      } else {
+        setTheme(product.collection);
+      }
     }
   }, [loading, product]);
 
