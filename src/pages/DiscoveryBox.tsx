@@ -266,13 +266,13 @@ const DiscoveryBox = () => {
 
   const stockMap = useMemo(() => {
     const map = new Map<string, number>();
-    for (const p of parfumsDB) map.set(p.id, p.stock);
+    for (const p of parfumsDB) map.set(p.nom.toLowerCase().trim(), p.stock);
     return map;
   }, [parfumsDB]);
 
   const statusMap = useMemo(() => {
     const map = new Map<string, string>();
-    for (const p of parfumsDB) map.set(p.id, p.statut);
+    for (const p of parfumsDB) map.set(p.nom.toLowerCase().trim(), p.statut);
     return map;
   }, [parfumsDB]);
 
@@ -501,8 +501,9 @@ const DiscoveryBox = () => {
                   {colProducts.map((p, i) => {
                     const isSelected = selected.includes(p.id);
                     const isHovered = hoveredId === p.id;
-                    const outOfStock = stockMap.size > 0 && (stockMap.get(p.id) ?? 100) === 0;
-                    const isComingSoon = statusMap.size > 0 && statusMap.get(p.id) === 'prochainement';
+                    const key = p.name.toLowerCase().trim();
+                    const outOfStock = stockMap.size > 0 && (stockMap.get(key) ?? 100) === 0;
+                    const isComingSoon = statusMap.size > 0 && statusMap.get(key) === 'prochainement';
                     const canSelect = !outOfStock && !isComingSoon && (selected.length < 5 || isSelected);
                     const perfumeTheme = perfumeThemes[p.id];
 

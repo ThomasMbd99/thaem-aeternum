@@ -11,9 +11,9 @@ const AllParfums = () => {
 
   // Enrichit les données statiques avec statut/stock Supabase
   const enrichedProducts = useMemo(() => {
-    const dbMap = new Map(parfumsDB.map(p => [p.id, p]));
+    const dbMap = new Map(parfumsDB.map(p => [p.nom.toLowerCase().trim(), p]));
     return products.map(p => {
-      const db = dbMap.get(p.id);
+      const db = dbMap.get(p.name.toLowerCase().trim());
       return db ? { ...p, statut: db.statut, stock: db.stock } : p;
     });
   }, [parfumsDB]);

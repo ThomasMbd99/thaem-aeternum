@@ -141,11 +141,11 @@ const Index = () => {
   const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
   const { parfums: parfumsDB } = useParfums();
   const bestSellers = useMemo((): Product[] => {
-    const dbMap = new Map(parfumsDB.map(p => [p.id, p]));
+    const dbMap = new Map(parfumsDB.map(p => [p.nom.toLowerCase().trim(), p]));
     return BEST_SELLER_IDS.reduce<Product[]>((acc, id) => {
       const staticP = products.find(p => p.id === id);
       if (!staticP) return acc;
-      const db = dbMap.get(id);
+      const db = dbMap.get(staticP.name.toLowerCase().trim());
       acc.push(db ? { ...staticP, statut: db.statut, stock: db.stock } : staticP);
       return acc;
     }, []);

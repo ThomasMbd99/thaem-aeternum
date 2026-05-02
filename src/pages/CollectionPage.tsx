@@ -20,9 +20,9 @@ const CollectionPage = () => {
   // Données statiques enrichies avec statut/stock Supabase
   const prods = useMemo(() => {
     if (!id) return [];
-    const dbMap = new Map(parfumsDB.map(p => [p.id, p]));
+    const dbMap = new Map(parfumsDB.map(p => [p.nom.toLowerCase().trim(), p]));
     return getCollectionProducts(id as Collection).map(p => {
-      const db = dbMap.get(p.id);
+      const db = dbMap.get(p.name.toLowerCase().trim());
       return db ? { ...p, statut: db.statut, stock: db.stock } : p;
     });
   }, [id, parfumsDB]);
