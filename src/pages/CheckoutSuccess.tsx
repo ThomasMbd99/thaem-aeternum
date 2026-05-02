@@ -3,10 +3,12 @@ import { motion } from 'framer-motion';
 import { CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
 
 const CheckoutSuccess = () => {
   const { clearCart } = useCart();
+  const { user } = useAuth();
 
   useEffect(() => {
     clearCart();
@@ -15,13 +17,16 @@ const CheckoutSuccess = () => {
     if (raw) {
       try {
         const orderData = JSON.parse(raw);
-        if (orderData.userEmail) {
-          supabase.functions.invoke('send-confirmation-email', { body: orderData });
+        const userEmail = user?.email || orderData.userEmail;
+        if (userEmail) {
+          supabase.functions.invoke('send-confirmation-email', {
+            body: { ...orderData, userEmail },
+          });
         }
       } catch {}
       sessionStorage.removeItem('pendingOrder');
     }
-  }, [clearCart]);
+  }, [clearCart, user]);
 
   return (
     <div className="min-h-screen pt-24 pb-20 flex flex-col items-center justify-center">
