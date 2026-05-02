@@ -13,10 +13,7 @@ const AllParfums = () => {
   // Enrichit les données statiques avec statut/stock Supabase
   const enrichedProducts = useMemo(() => {
     const dbMap = buildDbMap(parfumsDB);
-    const result = products.map(p => enrichProduct(p, dbMap));
-    console.log('DB parfums:', parfumsDB.map(p => ({ nom: p.nom, statut: p.statut })));
-    console.log('Enriched:', result.map(p => ({ name: p.name, statut: p.statut })));
-    return result;
+    return products.map(p => enrichProduct(p, dbMap));
   }, [parfumsDB]);
 
   const filtered = filter === 'all' ? enrichedProducts : enrichedProducts.filter(p => p.collection === filter);

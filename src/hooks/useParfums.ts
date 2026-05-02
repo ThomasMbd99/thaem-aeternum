@@ -60,7 +60,7 @@ function mapParfum(p: ParfumDB): ParfumFull {
     texte_court: p.texte_court,
     phrase_signature: p.phrase_signature,
     note: p.note,
-    statut: p.statut,
+    statut: (p.statut ?? '').trim().toLowerCase(),
     stock: p.stock ?? 0,
   };
 }
