@@ -100,7 +100,7 @@ const LoginGate = ({ onContinueAsGuest }: { onContinueAsGuest: () => void }) => 
 
 // ── Page principale ───────────────────────────────
 const CheckoutPage = () => {
-  const { items, totalPrice } = useCart();
+  const { items, totalPrice, bundleDiscount, finalPrice: cartFinalPrice } = useCart();
   const { user, profile } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -130,8 +130,8 @@ const CheckoutPage = () => {
   const [deliveryMode, setDeliveryMode] = useState<'home' | 'relay' | 'click_collect'>('home');
   const [selectedRelay, setSelectedRelay] = useState<RelayPoint | null>(null);
 
-  const shippingCost = deliveryMode === 'click_collect' ? 0 : totalPrice >= SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
-  const finalTotal = totalPrice + shippingCost;
+  const shippingCost = deliveryMode === 'click_collect' ? 0 : cartFinalPrice >= SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+  const finalTotal = cartFinalPrice + shippingCost;
 
   const isAddressComplete = deliveryMode === 'click_collect'
     ? true
@@ -221,6 +221,7 @@ const CheckoutPage = () => {
         items,
         address: deliveryMode === 'relay' ? selectedRelay : deliveryMode === 'click_collect' ? null : address,
         shippingCost,
+        bundleDiscount,
         finalTotal,
         userEmail: user?.email ?? '',
         mode_livraison: deliveryMode,
@@ -297,7 +298,7 @@ const CheckoutPage = () => {
                     {[
                       { mode: 'home' as const, icon: Home, label: 'À domicile', sub: 'Livraison chez vous' },
                       { mode: 'relay' as const, icon: MapPin, label: 'Point relais', sub: 'Mondial Relay' },
-                      { mode: 'click_collect' as const, icon: Store, label: 'Click & Collect', sub: 'Retrait à Lorient — Gratuit' },
+                      { mode: 'click_collect' as const, icon: Store, label: 'Click & Collect', sub: 'Retrait à Lorient · Gratuit' },
                     ].map(({ mode, icon: Icon, label, sub }) => (
                       <button
                         key={mode}
@@ -406,6 +407,12 @@ const CheckoutPage = () => {
 
                 <div className="border-t border-border pt-4 space-y-2">
                   <div className="flex justify-between font-body text-sm text-foreground/60"><span>Sous-total</span><span>{totalPrice.toFixed(2).replace('.', ',')}€</span></div>
+                  {bundleDiscount > 0 && (
+                    <div className="flex justify-between font-body text-sm" style={{ color: '#C4956A' }}>
+                      <span>Offre duo parfums</span>
+                      <span>-{bundleDiscount.toFixed(2).replace('.', ',')}€</span>
+                    </div>
+                  )}
                   <div className="flex justify-between font-body text-sm text-foreground/60"><span>Livraison</span><span>{deliveryMode === 'click_collect' ? 'Click & Collect' : shippingCost === 0 ? 'Offerte' : `${SHIPPING_COST.toFixed(2).replace('.', ',')}€`}</span></div>
                   {promoCode && <div className="flex justify-between font-body text-sm" style={{ color: '#C4956A' }}><span>Code promo ({promoCode})</span><span>Appliqué sur Stripe</span></div>}
                   <div className="flex justify-between font-display text-xl pt-2 border-t border-border"><span>Total</span><span className="text-primary">{finalTotal.toFixed(2).replace('.', ',')}€</span></div>

@@ -5,7 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 
 const CartDrawer = () => {
-  const { items, isOpen, setIsOpen, removeItem, updateQuantity, totalPrice, totalItems } = useCart();
+  const { items, isOpen, setIsOpen, removeItem, updateQuantity, totalPrice, bundleDiscount, finalPrice, totalItems } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -101,9 +101,21 @@ const CartDrawer = () => {
                 </div>
 
                 <div className="p-6 border-t border-border space-y-4">
+                  {bundleDiscount > 0 && (
+                    <div className="flex justify-between font-body text-xs text-foreground/50">
+                      <span>Sous-total</span>
+                      <span>{totalPrice.toFixed(2).replace('.', ',')}€</span>
+                    </div>
+                  )}
+                  {bundleDiscount > 0 && (
+                    <div className="flex justify-between font-body text-xs" style={{ color: '#C4956A' }}>
+                      <span>Offre duo parfums</span>
+                      <span>-{bundleDiscount.toFixed(2).replace('.', ',')}€</span>
+                    </div>
+                  )}
                   <div className="flex justify-between font-display text-lg">
                     <span>Total</span>
-                    <span className="text-primary">{totalPrice}€</span>
+                    <span className="text-primary">{finalPrice.toFixed(2).replace('.', ',')}€</span>
                   </div>
 
                   <button

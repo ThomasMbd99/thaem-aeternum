@@ -352,9 +352,9 @@ export const products: Product[] = [
 ];
 
 export const formats = [
-  { id: '10ml', label: '10ml', price: 10, description: 'Flacon voyage' },
-  { id: '50ml', label: '50ml', price: 45, description: 'Flacon signature' },
-  { id: 'recharge', label: 'Recharge 50ml', price: 35, description: 'Rechargez votre flacon', eco: true },
+  { id: '10ml', label: '10ml', price: 9.99, description: 'Flacon voyage' },
+  { id: '50ml', label: '50ml', price: 44.99, description: 'Flacon signature' },
+  { id: 'recharge', label: 'Recharge 50ml', price: 34.99, description: 'Rechargez votre flacon', eco: true },
 ] as const;
 
 export type FormatId = typeof formats[number]['id'];

@@ -20,6 +20,8 @@ interface CartContextType {
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
+  bundleDiscount: number;
+  finalPrice: number;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
 }
@@ -70,8 +72,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
   const totalPrice = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
+  const total50ml = items.filter(i => i.format === '50ml' && !i.isDiscoveryBox).reduce((sum, i) => sum + i.quantity, 0);
+  const bundleDiscount = Math.floor(total50ml / 2) * 9.99;
+  const finalPrice = Math.max(0, totalPrice - bundleDiscount);
+
   return (
-    <CartContext.Provider value={{ items, addItem, removeItem, updateQuantity, clearCart, totalItems, totalPrice, isOpen, setIsOpen }}>
+    <CartContext.Provider value={{ items, addItem, removeItem, updateQuantity, clearCart, totalItems, totalPrice, bundleDiscount, finalPrice, isOpen, setIsOpen }}>
       {children}
     </CartContext.Provider>
   );
