@@ -34,13 +34,15 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { userEmail, items, address, shippingCost, finalTotal } = await req.json() as {
+    const { userEmail, items, address, shippingCost, finalTotal, mode_livraison } = await req.json() as {
       userEmail: string;
       items: OrderItem[];
-      address: Address;
+      address: Address | null;
       shippingCost: number;
       finalTotal: number;
+      mode_livraison?: string;
     };
+    const isClickCollect = mode_livraison === 'click_collect';
 
     if (!userEmail) {
       return new Response(JSON.stringify({ error: 'Email manquant.' }), {
@@ -58,7 +60,9 @@ Deno.serve(async (req) => {
       </tr>
     `).join('');
 
-    const deliveryAddress = address
+    const deliveryAddress = isClickCollect
+      ? null
+      : address
       ? `${address.prenom} ${address.nom}<br>${address.adresse}<br>${address.code_postal} ${address.ville}<br>${address.pays}`
       : 'Non renseignée';
 
@@ -78,9 +82,11 @@ Deno.serve(async (req) => {
 
     <!-- Message -->
     <div style="margin-bottom:32px">
-      <p style="font-family:Georgia,serif;font-style:italic;color:#e8ddd0;font-size:18px;margin:0 0 8px">Merci ${address?.prenom ?? ''},</p>
+      <p style="font-family:Georgia,serif;font-style:italic;color:#e8ddd0;font-size:18px;margin:0 0 8px">Merci${address?.prenom ? ` ${address.prenom}` : ''},</p>
       <p style="font-family:Arial,sans-serif;font-size:13px;color:#9a8878;line-height:1.7;margin:0">
-        Votre commande a bien été reçue. Nous préparons votre colis avec soin et vous informerons dès son expédition.
+        ${isClickCollect
+          ? 'Votre commande est confirmée. Contactez-nous sur Instagram <a href="https://ig.me/m/thaem_aeternum" style="color:#C4956A">@thaem_aeternum</a> pour organiser votre retrait à Lorient.'
+          : 'Votre commande a bien été reçue. Nous préparons votre colis avec soin et vous informerons dès son expédition.'}
       </p>
     </div>
 
@@ -102,10 +108,18 @@ Deno.serve(async (req) => {
       </table>
     </div>
 
-    <!-- Adresse -->
+    <!-- Adresse / Retrait -->
     <div style="background:#141209;border:1px solid #2a2218;border-radius:8px;padding:24px;margin-bottom:32px">
+      ${isClickCollect ? `
+      <p style="font-family:Arial,sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:0.3em;color:#9a8878;margin:0 0 12px">Click &amp; Collect — Lorient</p>
+      <p style="font-family:Arial,sans-serif;font-size:13px;color:#e8ddd0;line-height:1.8;margin:0 0 12px">Contactez-nous sur Instagram pour convenir d'un créneau de retrait :</p>
+      <a href="https://ig.me/m/thaem_aeternum" style="display:inline-block;padding:10px 24px;background:rgba(196,149,106,0.15);border:1px solid rgba(196,149,106,0.4);border-radius:6px;font-family:Arial,sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:0.2em;color:#C4956A;text-decoration:none">
+        @thaem_aeternum sur Instagram →
+      </a>
+      ` : `
       <p style="font-family:Arial,sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:0.3em;color:#9a8878;margin:0 0 12px">Adresse de livraison</p>
       <p style="font-family:Arial,sans-serif;font-size:13px;color:#e8ddd0;line-height:1.8;margin:0">${deliveryAddress}</p>
+      `}
     </div>
 
     <!-- Footer -->
@@ -136,6 +150,7 @@ Deno.serve(async (req) => {
 
     if (!res.ok) {
       const err = await res.text();
+      console.error('❌ Resend error:', err);
       throw new Error(err);
     }
 

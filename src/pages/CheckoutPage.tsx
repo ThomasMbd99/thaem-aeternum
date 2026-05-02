@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ShoppingBag, ArrowLeft, Loader2, MapPin, Truck, Tag, X, Home, LogIn, UserPlus } from 'lucide-react';
+import { ShoppingBag, ArrowLeft, Loader2, MapPin, Truck, Tag, X, Home, LogIn, UserPlus, Store } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
@@ -127,15 +127,17 @@ const CheckoutPage = () => {
 
   const [promoCode, setPromoCode] = useState('');
   const [promoError, setPromoError] = useState<string | null>(null);
-  const [deliveryMode, setDeliveryMode] = useState<'home' | 'relay'>('home');
+  const [deliveryMode, setDeliveryMode] = useState<'home' | 'relay' | 'click_collect'>('home');
   const [selectedRelay, setSelectedRelay] = useState<RelayPoint | null>(null);
 
-  const shippingCost = totalPrice >= SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+  const shippingCost = deliveryMode === 'click_collect' ? 0 : totalPrice >= SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
   const finalTotal = totalPrice + shippingCost;
 
-  const isAddressComplete = deliveryMode === 'relay'
+  const isAddressComplete = deliveryMode === 'click_collect'
+    ? true
+    : deliveryMode === 'relay'
     ? selectedRelay !== null
-    : (address.prenom.trim() && address.nom.trim() && address.adresse.trim() && address.ville.trim() && address.code_postal.trim());
+    : !!(address.prenom.trim() && address.nom.trim() && address.adresse.trim() && address.ville.trim() && address.code_postal.trim());
 
   const set = (key: keyof DeliveryAddress) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setAddress(a => ({ ...a, [key]: e.target.value }));
@@ -145,7 +147,7 @@ const CheckoutPage = () => {
     try {
       const { data: commande, error: cmdError } = await supabase
         .from('commandes')
-        .insert({ user_id: user.id, email: user.email, statut: 'pending', total: finalTotal })
+        .insert({ user_id: user.id, email: user.email, statut: 'pending', total: finalTotal, mode_livraison: deliveryMode })
         .select()
         .single();
 
@@ -217,10 +219,11 @@ const CheckoutPage = () => {
     try {
       sessionStorage.setItem('pendingOrder', JSON.stringify({
         items,
-        address: deliveryMode === 'relay' ? selectedRelay : address,
+        address: deliveryMode === 'relay' ? selectedRelay : deliveryMode === 'click_collect' ? null : address,
         shippingCost,
         finalTotal,
         userEmail: user?.email ?? '',
+        mode_livraison: deliveryMode,
       }));
 
       const commandeId = await saveOrderToSupabase();
@@ -229,11 +232,12 @@ const CheckoutPage = () => {
         body: {
           items,
           shippingCost,
-          address: deliveryMode === 'relay' ? selectedRelay : address,
+          address: deliveryMode === 'relay' ? selectedRelay : deliveryMode === 'click_collect' ? null : address,
           promoCode: promoCode.trim() || undefined,
           successUrl: `${window.location.origin}/checkout/success`,
           cancelUrl: `${window.location.origin}/checkout`,
           commandeId: commandeId ?? undefined,
+          mode_livraison: deliveryMode,
         },
       });
 
@@ -289,10 +293,11 @@ const CheckoutPage = () => {
                 {/* Mode de livraison */}
                 <div>
                   <p className={labelClass}>Mode de livraison</p>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     {[
                       { mode: 'home' as const, icon: Home, label: 'À domicile', sub: 'Livraison chez vous' },
                       { mode: 'relay' as const, icon: MapPin, label: 'Point relais', sub: 'Mondial Relay' },
+                      { mode: 'click_collect' as const, icon: Store, label: 'Click & Collect', sub: 'Retrait à Lorient — Gratuit' },
                     ].map(({ mode, icon: Icon, label, sub }) => (
                       <button
                         key={mode}
@@ -318,6 +323,19 @@ const CheckoutPage = () => {
                   <h2 className="font-display italic text-lg">{deliveryMode === 'relay' ? 'Choisir un point relais' : 'Adresse de livraison'}</h2>
                 </div>
 
+                {deliveryMode === 'click_collect' && (
+                  <div className="flex items-start gap-3 p-5 rounded border" style={{ background: 'rgba(196,149,106,0.05)', borderColor: 'rgba(196,149,106,0.2)' }}>
+                    <Store className="w-4 h-4 shrink-0 mt-0.5" style={{ color: '#C4956A' }} />
+                    <div>
+                      <p className="font-body text-xs uppercase tracking-widest mb-2" style={{ color: '#C4956A' }}>Retrait à Lorient</p>
+                      <p className="font-body text-xs text-foreground/60 leading-relaxed">
+                        Après validation de votre paiement, contactez-nous sur Instagram pour organiser votre retrait.
+                        Nous vous répondrons pour convenir d'un créneau.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
                 {deliveryMode === 'relay' && (
                   <RelayPointPicker selected={selectedRelay} onSelect={setSelectedRelay} />
                 )}
@@ -341,15 +359,17 @@ const CheckoutPage = () => {
                 )}
 
                 {/* Livraison info */}
-                <div className="flex items-center gap-3 p-4 rounded border" style={{ background: 'rgba(196,149,106,0.05)', borderColor: 'rgba(196,149,106,0.15)' }}>
-                  <Truck className="w-4 h-4 shrink-0" style={{ color: '#C4956A' }} />
-                  <div>
-                    <p className="font-body text-xs text-foreground/60">
-                      {shippingCost === 0 ? 'Livraison offerte' : `Livraison standard : ${SHIPPING_COST.toFixed(2).replace('.', ',')}€ — gratuite dès 80€`}
-                    </p>
-                    <p className="font-body text-[10px] text-foreground/30 mt-0.5">Délai estimé : 3 à 5 jours ouvrés</p>
+                {deliveryMode !== 'click_collect' && (
+                  <div className="flex items-center gap-3 p-4 rounded border" style={{ background: 'rgba(196,149,106,0.05)', borderColor: 'rgba(196,149,106,0.15)' }}>
+                    <Truck className="w-4 h-4 shrink-0" style={{ color: '#C4956A' }} />
+                    <div>
+                      <p className="font-body text-xs text-foreground/60">
+                        {shippingCost === 0 ? 'Livraison offerte' : `Livraison standard : ${SHIPPING_COST.toFixed(2).replace('.', ',')}€ — gratuite dès 80€`}
+                      </p>
+                      <p className="font-body text-[10px] text-foreground/30 mt-0.5">Délai estimé : 3 à 5 jours ouvrés</p>
+                    </div>
                   </div>
-                </div>
+                )}
               </motion.div>
 
               {/* Récapitulatif */}
@@ -386,7 +406,7 @@ const CheckoutPage = () => {
 
                 <div className="border-t border-border pt-4 space-y-2">
                   <div className="flex justify-between font-body text-sm text-foreground/60"><span>Sous-total</span><span>{totalPrice.toFixed(2).replace('.', ',')}€</span></div>
-                  <div className="flex justify-between font-body text-sm text-foreground/60"><span>Livraison</span><span>{shippingCost === 0 ? 'Offerte' : `${SHIPPING_COST.toFixed(2).replace('.', ',')}€`}</span></div>
+                  <div className="flex justify-between font-body text-sm text-foreground/60"><span>Livraison</span><span>{deliveryMode === 'click_collect' ? 'Click & Collect' : shippingCost === 0 ? 'Offerte' : `${SHIPPING_COST.toFixed(2).replace('.', ',')}€`}</span></div>
                   {promoCode && <div className="flex justify-between font-body text-sm" style={{ color: '#C4956A' }}><span>Code promo ({promoCode})</span><span>Appliqué sur Stripe</span></div>}
                   <div className="flex justify-between font-display text-xl pt-2 border-t border-border"><span>Total</span><span className="text-primary">{finalTotal.toFixed(2).replace('.', ',')}€</span></div>
                 </div>

@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, Instagram } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
@@ -9,9 +9,17 @@ import { supabase } from '@/lib/supabase';
 const CheckoutSuccess = () => {
   const { clearCart } = useCart();
   const { user } = useAuth();
+  const [isClickCollect, setIsClickCollect] = useState(false);
 
   useEffect(() => {
     clearCart();
+    const raw = sessionStorage.getItem('pendingOrder');
+    if (raw) {
+      try {
+        const data = JSON.parse(raw);
+        if (data.mode_livraison === 'click_collect') setIsClickCollect(true);
+      } catch { /* */ }
+    }
   }, [clearCart]);
 
   useEffect(() => {
@@ -50,18 +58,36 @@ const CheckoutSuccess = () => {
 
         <h1 className="font-display text-4xl lg:text-5xl mb-4">Commande confirmée</h1>
         <p className="font-body text-muted-foreground mb-2">
-          Merci pour votre confiance. Votre commande a été reçue.
+          Merci pour votre confiance. Votre commande a bien été reçue.
         </p>
         <p className="font-body text-sm text-muted-foreground mb-10">
-          Un email de confirmation vous a été envoyé.
+          {isClickCollect
+            ? 'Contactez-nous sur Instagram pour organiser votre retrait à Lorient.'
+            : 'Un email de confirmation vous a été envoyé.'}
         </p>
+
+        {isClickCollect && (
+          <motion.a
+            href="https://ig.me/m/thaem_aeternum"
+            target="_blank"
+            rel="noopener noreferrer"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="inline-flex items-center gap-3 px-8 py-4 mb-6 font-body text-xs uppercase tracking-[0.3em] rounded transition-all duration-300 w-full justify-center"
+            style={{ background: 'rgba(196,149,106,0.15)', border: '1px solid rgba(196,149,106,0.4)', color: '#C4956A' }}
+          >
+            <Instagram className="w-4 h-4" />
+            Organiser mon retrait sur Instagram
+          </motion.a>
+        )}
 
         <div className="flex gap-4 justify-center flex-wrap">
           <Link
             to="/account"
             state={{ tab: 'commandes' }}
             className="inline-block px-8 py-3 font-body text-xs uppercase tracking-[0.3em] rounded transition-all duration-300"
-            style={{ border: '1px solid rgba(196,149,106,0.4)', color: '#C4956A' }}
+            style={{ border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.4)' }}
           >
             Voir mes commandes
           </Link>
