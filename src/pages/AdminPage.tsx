@@ -28,6 +28,8 @@ const AdminPage = () => {
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
   const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
   const [rlsError, setRlsError] = useState(false);
+  const [shippingModal, setShippingModal] = useState<{ orderId: string; email: string } | null>(null);
+  const [trackingInput, setTrackingInput] = useState('');
 
   useEffect(() => {
     if (loading) return;
@@ -51,13 +53,38 @@ const AdminPage = () => {
     setFetching(false);
   };
 
-  const updateStatus = async (orderId: string, status: OrderStatus) => {
+  const updateStatus = async (orderId: string, status: OrderStatus, trackingNumber?: string) => {
     setUpdatingStatus(orderId);
-    const { error } = await supabase.from('commandes').update({ statut: status }).eq('id', orderId);
+    const updates: any = { statut: status };
+    if (trackingNumber) updates.numero_suivi = trackingNumber;
+    const { error } = await supabase.from('commandes').update(updates).eq('id', orderId);
     if (!error) {
-      setOrders(prev => prev.map(o => o.id === orderId ? { ...o, statut: status } : o));
+      setOrders(prev => prev.map(o => o.id === orderId ? { ...o, statut: status, numero_suivi: trackingNumber ?? o.numero_suivi } : o));
+      if (status === 'shipped' && trackingNumber) {
+        const order = orders.find(o => o.id === orderId);
+        if (order?.email) {
+          supabase.functions.invoke('send-shipping-email', {
+            body: { userEmail: order.email, orderId, trackingNumber, items: order.commande_items },
+          });
+        }
+      }
     }
     setUpdatingStatus(null);
+  };
+
+  const handleStatusChange = (orderId: string, email: string, newStatus: OrderStatus) => {
+    if (newStatus === 'shipped') {
+      setShippingModal({ orderId, email });
+      setTrackingInput('');
+    } else {
+      updateStatus(orderId, newStatus);
+    }
+  };
+
+  const confirmShipping = async () => {
+    if (!shippingModal) return;
+    await updateStatus(shippingModal.orderId, 'shipped', trackingInput.trim() || undefined);
+    setShippingModal(null);
   };
 
   const filtered = filter === 'all' ? orders : orders.filter(o => (o.statut ?? 'pending') === filter);
@@ -202,7 +229,7 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
                       </div>
                       <select
                         value={status}
-                        onChange={e => updateStatus(cmd.id, e.target.value as OrderStatus)}
+                        onChange={e => handleStatusChange(cmd.id, cmd.email ?? '', e.target.value as OrderStatus)}
                         disabled={updatingStatus === cmd.id}
                         className="px-3 py-1.5 font-body text-[10px] uppercase tracking-widest rounded border border-white/10 bg-white/5 text-foreground/60 focus:outline-none focus:border-white/20 cursor-pointer"
                       >
@@ -243,6 +270,13 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
                           ) : (
                             <p className="font-body text-xs text-foreground/30">Détail non disponible.</p>
                           )}
+                          {cmd.numero_suivi && (
+                            <div className="flex items-center gap-2 mt-2 pt-2 border-t border-white/5">
+                              <Truck className="w-3 h-3 shrink-0" style={{ color: '#3B82F6' }} />
+                              <p className="font-body text-xs text-foreground/50">Suivi :</p>
+                              <p className="font-mono text-xs" style={{ color: '#3B82F6' }}>{cmd.numero_suivi}</p>
+                            </div>
+                          )}
                           <div className="flex justify-end pt-2">
                             <Link
                               to={`/invoice/${cmd.id}`}
@@ -262,6 +296,67 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
         </motion.div>
 
       </div>
+
+      {/* Modale numéro de suivi */}
+      <AnimatePresence>
+        {shippingModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center px-4"
+            style={{ background: 'rgba(0,0,0,0.7)' }}
+            onClick={() => setShippingModal(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              onClick={e => e.stopPropagation()}
+              className="w-full max-w-md rounded-lg border border-white/10 p-6 space-y-5"
+              style={{ background: 'hsl(var(--background))' }}
+            >
+              <div className="flex items-center gap-3">
+                <Truck className="w-5 h-5" style={{ color: '#3B82F6' }} />
+                <h3 className="font-display italic text-xl">Marquer comme expédiée</h3>
+              </div>
+              <p className="font-body text-xs text-foreground/40">
+                Entrez le numéro de suivi — un email sera envoyé automatiquement au client.
+              </p>
+              <div>
+                <label className="block font-body text-xs uppercase tracking-widest text-foreground/40 mb-1.5">
+                  Numéro de suivi
+                </label>
+                <input
+                  autoFocus
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded font-mono text-sm text-foreground focus:outline-none focus:border-white/25 transition-colors"
+                  placeholder="ex: 6A12345678901"
+                  value={trackingInput}
+                  onChange={e => setTrackingInput(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && confirmShipping()}
+                />
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShippingModal(null)}
+                  className="flex-1 py-3 font-body text-xs uppercase tracking-widest rounded border border-white/10 text-foreground/40 hover:text-foreground transition-colors"
+                >
+                  Annuler
+                </button>
+                <button
+                  onClick={confirmShipping}
+                  disabled={updatingStatus === shippingModal.orderId}
+                  className="flex-1 py-3 font-body text-xs uppercase tracking-widest rounded transition-all duration-200 disabled:opacity-50"
+                  style={{ background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.4)', color: '#3B82F6' }}
+                >
+                  {updatingStatus === shippingModal.orderId ? 'Envoi...' : 'Confirmer l\'expédition'}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { User, Package, Heart, LogOut, Save, ChevronRight, Trash2, ChevronDown, KeyRound, FileText } from 'lucide-react';
+import { User, Package, Heart, LogOut, Save, ChevronRight, Trash2, ChevronDown, KeyRound, FileText, Truck } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
 
@@ -435,6 +435,15 @@ const AccountPage = () => {
                                 className="overflow-hidden"
                               >
                                 <div className="border-t border-white/5 px-4 pb-4 pt-3 space-y-2">
+                                  {cmd.statut === 'shipped' && cmd.numero_suivi && (
+                                    <div className="flex items-center gap-2 p-3 rounded mb-2" style={{ background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.2)' }}>
+                                      <Truck className="w-3.5 h-3.5 shrink-0" style={{ color: '#3B82F6' }} />
+                                      <div>
+                                        <p className="font-body text-[10px] uppercase tracking-widest mb-0.5" style={{ color: '#3B82F6' }}>Colis en transit</p>
+                                        <p className="font-mono text-xs text-foreground/70">N° {cmd.numero_suivi}</p>
+                                      </div>
+                                    </div>
+                                  )}
                                   {cmd.commande_items && cmd.commande_items.length > 0 ? (
                                     cmd.commande_items.map((item: any, i: number) => (
                                       <div key={item.id ?? i} className="flex justify-between items-center py-1.5">
