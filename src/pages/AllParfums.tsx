@@ -1,13 +1,21 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { products, collections } from '@/data/products';
+import { collections } from '@/data/products';
+import { useParfums } from '@/hooks/useParfums';
 import ProductCard from '@/components/ProductCard';
 import PageTransition from '@/components/PageTransition';
 
 const AllParfums = () => {
   const [filter, setFilter] = useState<string>('all');
+  const { parfums, loading } = useParfums();
 
-  const filtered = filter === 'all' ? products : products.filter(p => p.collection === filter);
+  const filtered = filter === 'all' ? parfums : parfums.filter(p => p.collection === filter);
+
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center">
+      <p className="font-display italic text-foreground/40">Chargement...</p>
+    </div>
+  );
 
   return (
     <PageTransition>
@@ -46,10 +54,10 @@ const AllParfums = () => {
                 background: filter === 'all' ? 'rgba(196,149,106,0.08)' : 'transparent',
               }}
             >
-              Tous ({products.length})
+              Tous ({parfums.length})
             </button>
             {collections.map(col => {
-              const count = products.filter(p => p.collection === col.id).length;
+              const count = parfums.filter(p => p.collection === col.id).length;
               const active = filter === col.id;
               return (
                 <button
