@@ -1,14 +1,13 @@
 import { Helmet } from 'react-helmet-async';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { collections, products } from '@/data/products';
+import { collections } from '@/data/products';
+import { useParfums } from '@/hooks/useParfums';
 import ProductCard from '@/components/ProductCard';
 import { Recycle, Gift, Sparkles } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
 import almaePromo from '@/assets/bottles/almae-promo.png';
-import { useRef, useEffect, useCallback } from 'react';
-
-const bestSellers = [products[0], products[3], products[6], products[9], products[12]];
+import { useRef, useEffect, useCallback, useMemo } from 'react';
 
 // ── CANVAS : vague dorée lente + particules flottantes
 const GoldWaveCanvas = () => {
@@ -133,11 +132,18 @@ const GoldWaveCanvas = () => {
   );
 };
 
+const BEST_SELLER_IDS = ['zaemyr', 'velae', 'koyaen', 'aeonis', 'alnae'];
+
 const Index = () => {
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
   const heroOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
   const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
+  const { parfums } = useParfums();
+  const bestSellers = useMemo(
+    () => BEST_SELLER_IDS.map(id => parfums.find(p => p.id === id)).filter(Boolean) as typeof parfums,
+    [parfums]
+  );
 
   return (
     <PageTransition>
