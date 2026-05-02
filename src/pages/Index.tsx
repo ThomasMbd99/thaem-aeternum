@@ -2,6 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { collections, products, type Product } from '@/data/products';
+import { buildDbMap, enrichProduct } from '@/lib/parfumUtils';
 import { useParfums } from '@/hooks/useParfums';
 import ProductCard from '@/components/ProductCard';
 import { Recycle, Gift, Sparkles } from 'lucide-react';
@@ -141,12 +142,11 @@ const Index = () => {
   const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
   const { parfums: parfumsDB } = useParfums();
   const bestSellers = useMemo((): Product[] => {
-    const dbMap = new Map(parfumsDB.map(p => [p.nom.toLowerCase().trim(), p]));
+    const dbMap = buildDbMap(parfumsDB);
     return BEST_SELLER_IDS.reduce<Product[]>((acc, id) => {
       const staticP = products.find(p => p.id === id);
       if (!staticP) return acc;
-      const db = dbMap.get(staticP.name.toLowerCase().trim());
-      acc.push(db ? { ...staticP, statut: db.statut, stock: db.stock } : staticP);
+      acc.push(enrichProduct(staticP, dbMap));
       return acc;
     }, []);
   }, [parfumsDB]);

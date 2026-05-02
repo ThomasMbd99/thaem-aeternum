@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { products, getCollection } from '@/data/products';
 import { useCart } from '@/context/CartContext';
 import { useParfums } from '@/hooks/useParfums';
+import { normalizeNom } from '@/lib/parfumUtils';
 import { Check, Gift } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
 
@@ -266,13 +267,13 @@ const DiscoveryBox = () => {
 
   const stockMap = useMemo(() => {
     const map = new Map<string, number>();
-    for (const p of parfumsDB) map.set(p.nom.toLowerCase().trim(), p.stock);
+    for (const p of parfumsDB) map.set(normalizeNom(p.nom), p.stock);
     return map;
   }, [parfumsDB]);
 
   const statusMap = useMemo(() => {
     const map = new Map<string, string>();
-    for (const p of parfumsDB) map.set(p.nom.toLowerCase().trim(), p.statut);
+    for (const p of parfumsDB) map.set(normalizeNom(p.nom), p.statut);
     return map;
   }, [parfumsDB]);
 
@@ -501,7 +502,7 @@ const DiscoveryBox = () => {
                   {colProducts.map((p, i) => {
                     const isSelected = selected.includes(p.id);
                     const isHovered = hoveredId === p.id;
-                    const key = p.name.toLowerCase().trim();
+                    const key = normalizeNom(p.name);
                     const outOfStock = stockMap.size > 0 && (stockMap.get(key) ?? 100) === 0;
                     const isComingSoon = statusMap.size > 0 && statusMap.get(key) === 'prochainement';
                     const canSelect = !outOfStock && !isComingSoon && (selected.length < 5 || isSelected);

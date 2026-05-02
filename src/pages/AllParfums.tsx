@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { products, collections } from '@/data/products';
 import { useParfums } from '@/hooks/useParfums';
+import { buildDbMap, enrichProduct } from '@/lib/parfumUtils';
 import ProductCard from '@/components/ProductCard';
 import PageTransition from '@/components/PageTransition';
 
@@ -11,11 +12,8 @@ const AllParfums = () => {
 
   // Enrichit les données statiques avec statut/stock Supabase
   const enrichedProducts = useMemo(() => {
-    const dbMap = new Map(parfumsDB.map(p => [p.nom.toLowerCase().trim(), p]));
-    return products.map(p => {
-      const db = dbMap.get(p.name.toLowerCase().trim());
-      return db ? { ...p, statut: db.statut, stock: db.stock } : p;
-    });
+    const dbMap = buildDbMap(parfumsDB);
+    return products.map(p => enrichProduct(p, dbMap));
   }, [parfumsDB]);
 
   const filtered = filter === 'all' ? enrichedProducts : enrichedProducts.filter(p => p.collection === filter);

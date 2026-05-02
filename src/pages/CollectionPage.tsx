@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useRef, useMemo } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { getCollection, getCollectionProducts, type Collection } from '@/data/products';
+import { buildDbMap, enrichProduct } from '@/lib/parfumUtils';
 import { useParfums } from '@/hooks/useParfums';
 import { collectionStories } from '@/data/collectionStories';
 import { useTheme } from '@/context/ThemeContext';
@@ -20,11 +21,8 @@ const CollectionPage = () => {
   // Données statiques enrichies avec statut/stock Supabase
   const prods = useMemo(() => {
     if (!id) return [];
-    const dbMap = new Map(parfumsDB.map(p => [p.nom.toLowerCase().trim(), p]));
-    return getCollectionProducts(id as Collection).map(p => {
-      const db = dbMap.get(p.name.toLowerCase().trim());
-      return db ? { ...p, statut: db.statut, stock: db.stock } : p;
-    });
+    const dbMap = buildDbMap(parfumsDB);
+    return getCollectionProducts(id as Collection).map(p => enrichProduct(p, dbMap));
   }, [id, parfumsDB]);
   const story = id ? collectionStories[id as keyof typeof collectionStories] : undefined;
 
