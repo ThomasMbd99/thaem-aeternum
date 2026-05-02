@@ -230,6 +230,7 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
                         <p className="font-body text-xs uppercase tracking-widest text-foreground/50">
                           #{String(cmd.id).slice(0, 8).toUpperCase()}
                         </p>
+                        <p className="font-body text-xs text-foreground/50 mt-0.5">{cmd.email ?? ''}</p>
                         <p className="font-body text-xs text-foreground/30 mt-0.5">
                           {new Date(cmd.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                         </p>
