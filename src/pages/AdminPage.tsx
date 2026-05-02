@@ -7,17 +7,18 @@ import { supabase } from '@/lib/supabase';
 
 const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL as string;
 
-type OrderStatus = 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled';
+type OrderStatus = 'pending' | 'paid' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled';
 
 const statusConfig: Record<OrderStatus, { label: string; color: string; bg: string; icon: any }> = {
   pending:   { label: 'En attente',  color: '#EAB308', bg: 'rgba(234,179,8,0.12)',   icon: Clock },
+  paid:      { label: 'Payée',       color: '#C4956A', bg: 'rgba(196,149,106,0.12)', icon: CheckCircle },
   confirmed: { label: 'Confirmée',   color: '#C4956A', bg: 'rgba(196,149,106,0.12)', icon: CheckCircle },
   shipped:   { label: 'Expédiée',    color: '#3B82F6', bg: 'rgba(59,130,246,0.12)',  icon: Truck },
   delivered: { label: 'Livrée',      color: '#22C55E', bg: 'rgba(34,197,94,0.12)',   icon: CheckCircle },
   cancelled: { label: 'Annulée',     color: '#EF4444', bg: 'rgba(239,68,68,0.12)',   icon: XCircle },
 };
 
-const allStatuses: OrderStatus[] = ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'];
+const allStatuses: OrderStatus[] = ['pending', 'paid', 'confirmed', 'shipped', 'delivered', 'cancelled'];
 
 const AdminPage = () => {
   const { user, loading } = useAuth();
@@ -28,6 +29,7 @@ const AdminPage = () => {
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
   const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
   const [rlsError, setRlsError] = useState(false);
+  const [updateError, setUpdateError] = useState<string | null>(null);
   const [shippingModal, setShippingModal] = useState<{ orderId: string; email: string } | null>(null);
   const [trackingInput, setTrackingInput] = useState('');
 
@@ -55,10 +57,13 @@ const AdminPage = () => {
 
   const updateStatus = async (orderId: string, status: OrderStatus, trackingNumber?: string) => {
     setUpdatingStatus(orderId);
+    setUpdateError(null);
     const updates: any = { statut: status };
     if (trackingNumber) updates.numero_suivi = trackingNumber;
     const { error } = await supabase.from('commandes').update(updates).eq('id', orderId);
-    if (!error) {
+    if (error) {
+      setUpdateError(`Erreur : ${error.message} — vérifiez la politique RLS dans Supabase.`);
+    } else {
       setOrders(prev => prev.map(o => o.id === orderId ? { ...o, statut: status, numero_suivi: trackingNumber ?? o.numero_suivi } : o));
       if (status === 'shipped' && trackingNumber) {
         const order = orders.find(o => o.id === orderId);
@@ -128,6 +133,17 @@ const AdminPage = () => {
 FOR ALL USING (auth.email() = '${user?.email}');`}
                 </pre>
               </div>
+            </div>
+          </motion.div>
+        )}
+
+        {updateError && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-6 p-4 rounded border border-red-500/20 bg-red-500/5 flex items-start gap-3">
+            <AlertTriangle className="w-4 h-4 shrink-0 text-red-400 mt-0.5" />
+            <div>
+              <p className="font-body text-sm text-red-400 mb-2">{updateError}</p>
+              <p className="font-body text-xs text-foreground/40">Exécutez ce SQL dans Supabase → SQL Editor :</p>
+              <pre className="font-mono text-xs text-foreground/60 bg-white/5 rounded p-3 mt-2 overflow-x-auto">{`CREATE POLICY "Admin update" ON commandes\nFOR UPDATE USING (auth.email() = '${user?.email}');`}</pre>
             </div>
           </motion.div>
         )}
