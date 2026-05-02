@@ -125,12 +125,14 @@ const ProductCard = ({ product, index = 0 }: Props) => {
   const handleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();
     if (!user) { navigate('/login'); return; }
+    const { data: parfumRow } = await supabase.from('parfums').select('id').eq('nom', product.name).single();
+    if (!parfumRow) return;
     const next = !liked;
     setLiked(next);
     if (next) {
-      await supabase.from('favoris').insert({ user_id: user.id, parfum_id: product.id });
+      await supabase.from('favoris').insert({ user_id: user.id, parfum_id: parfumRow.id });
     } else {
-      await supabase.from('favoris').delete().eq('user_id', user.id).eq('parfum_id', product.id);
+      await supabase.from('favoris').delete().eq('user_id', user.id).eq('parfum_id', parfumRow.id);
     }
   };
 
