@@ -167,7 +167,7 @@ const ProductPage = () => {
   if (product.statut === 'prochainement') return null;
 
   const currentFormat = formats.find(f => f.id === selectedFormat)!;
-  const relatedProducts = getByCollection(product.collection).filter(p => p.id !== product.id).slice(0, 3);
+  const relatedProducts = getByCollection(product.collection).filter(p => p.id !== product.id && p.statut !== 'prochainement').slice(0, 3);
 
   const acc = collection.colors.accent;
   const hexToRgb = (hex: string) => {

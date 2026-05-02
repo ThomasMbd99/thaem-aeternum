@@ -148,7 +148,7 @@ const Quiz = () => {
 
   // Pour chaque gamme du top 3 trouver le meilleur parfum
   const getTopParfum = (col: Collection) => {
-    const list = parfums.filter(p => p.collection === col);
+    const list = parfums.filter(p => p.collection === col && p.statut !== 'prochainement');
     return list[0] ?? null;
   };
 
