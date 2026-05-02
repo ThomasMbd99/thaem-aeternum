@@ -145,7 +145,7 @@ const CheckoutPage = () => {
     try {
       const { data: commande, error: cmdError } = await supabase
         .from('commandes')
-        .insert({ user_id: user.id, statut: 'pending', total: finalTotal })
+        .insert({ user_id: user.id, email: user.email, statut: 'pending', total: finalTotal })
         .select()
         .single();
 
