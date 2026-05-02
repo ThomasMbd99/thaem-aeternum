@@ -149,7 +149,7 @@ const CheckoutPage = () => {
         .select()
         .single();
 
-      if (cmdError || !commande) { console.error('❌ Erreur insert commande:', cmdError); return null; }
+      if (cmdError || !commande) return null;
 
       await supabase.from('commande_items').insert(
         items.map(item => ({
@@ -197,7 +197,6 @@ const CheckoutPage = () => {
 
       return commande.id as string;
     } catch (e) {
-      console.error('❌ Exception saveOrderToSupabase:', e);
       return null;
     }
   };

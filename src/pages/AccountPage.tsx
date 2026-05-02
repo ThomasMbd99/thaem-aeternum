@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { User, Package, Heart, LogOut, Save, ChevronRight, Trash2, ChevronDown, KeyRound, FileText } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
@@ -14,7 +14,8 @@ const labelClass = 'block font-body text-xs uppercase tracking-widest text-foreg
 const AccountPage = () => {
   const { user, profile, loading, signOut, refreshProfile } = useAuth();
   const navigate = useNavigate();
-  const [tab, setTab] = useState<Tab>('profil');
+  const location = useLocation();
+  const [tab, setTab] = useState<Tab>((location.state as any)?.tab ?? 'profil');
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);

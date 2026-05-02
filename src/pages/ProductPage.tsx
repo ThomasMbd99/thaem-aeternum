@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { getCollection, formats, getCollectionProducts, type FormatId } from '@/data/products';
 import { useParfums } from '@/hooks/useParfums';
 import { getBottleImage } from '@/data/bottleImages';
@@ -145,10 +145,17 @@ const ProductPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   const { addItem } = useCart();
+  const navigate = useNavigate();
 
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
   const imgY = useTransform(scrollYProgress, [0, 1], ['0%', '12%']);
+
+  useEffect(() => {
+    if (!loading && product && product.statut === 'prochainement') {
+      navigate(`/collection/${product.collection}`, { replace: true });
+    }
+  }, [loading, product]);
 
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center">
@@ -157,6 +164,7 @@ const ProductPage = () => {
   );
 
   if (!product || !collection) return <NotFound />;
+  if (product.statut === 'prochainement') return null;
 
   const currentFormat = formats.find(f => f.id === selectedFormat)!;
   const relatedProducts = getByCollection(product.collection).filter(p => p.id !== product.id).slice(0, 3);

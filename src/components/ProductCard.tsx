@@ -121,6 +121,7 @@ const ProductCard = ({ product, index = 0 }: Props) => {
   const [liked, setLiked] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const isComingSoon = product.status === 'prochainement' || (product as any).statut === 'prochainement';
 
   const handleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -162,7 +163,11 @@ const ProductCard = ({ product, index = 0 }: Props) => {
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
     >
-      <Link to={`/produit/${product.id}`} className="group block">
+      <Link
+        to={isComingSoon ? '#' : `/produit/${product.id}`}
+        onClick={isComingSoon ? (e) => e.preventDefault() : undefined}
+        className={`group block${isComingSoon ? ' cursor-default' : ''}`}
+      >
         <div
           ref={cardRef}
           className="aspect-[3/4] rounded overflow-hidden relative mb-4 flex items-center justify-center transition-all duration-500 group-hover:scale-[1.03]"
@@ -201,6 +206,15 @@ const ProductCard = ({ product, index = 0 }: Props) => {
           >
             {collection?.name}
           </div>
+
+          {/* Badge Prochainement */}
+          {isComingSoon && (
+            <div className="absolute inset-0 z-30 rounded" style={{ backdropFilter: 'blur(8px)', background: 'rgba(0,0,0,0.45)' }}>
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+                <span className="font-body text-xs uppercase tracking-[0.3em] text-white/80">Prochainement</span>
+              </div>
+            </div>
+          )}
 
           {/* Badge stock */}
           {product.stock !== undefined && product.stock === 0 && (
@@ -272,8 +286,14 @@ const ProductCard = ({ product, index = 0 }: Props) => {
         <h3 className="font-display text-lg tracking-wide group-hover:text-primary transition-colors">
           {product.name}
         </h3>
-        <p className="font-body text-xs text-muted-foreground mt-1 line-clamp-1">{product.tagline}</p>
-        <p className="font-body text-sm text-primary mt-2">À partir de 10€</p>
+        {isComingSoon ? (
+          <p className="font-body text-xs text-muted-foreground mt-1 uppercase tracking-widest">Prochainement</p>
+        ) : (
+          <>
+            <p className="font-body text-xs text-muted-foreground mt-1 line-clamp-1">{product.tagline}</p>
+            <p className="font-body text-sm text-primary mt-2">À partir de 10€</p>
+          </>
+        )}
       </Link>
     </motion.div>
   );

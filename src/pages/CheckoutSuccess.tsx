@@ -59,6 +59,7 @@ const CheckoutSuccess = () => {
         <div className="flex gap-4 justify-center flex-wrap">
           <Link
             to="/account"
+            state={{ tab: 'commandes' }}
             className="inline-block px-8 py-3 font-body text-xs uppercase tracking-[0.3em] rounded transition-all duration-300"
             style={{ border: '1px solid rgba(196,149,106,0.4)', color: '#C4956A' }}
           >
