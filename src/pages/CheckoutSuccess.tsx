@@ -12,21 +12,24 @@ const CheckoutSuccess = () => {
 
   useEffect(() => {
     clearCart();
+  }, [clearCart]);
 
+  useEffect(() => {
     const raw = sessionStorage.getItem('pendingOrder');
-    if (raw) {
-      try {
-        const orderData = JSON.parse(raw);
-        const userEmail = user?.email || orderData.userEmail;
-        if (userEmail) {
-          supabase.functions.invoke('send-confirmation-email', {
-            body: { ...orderData, userEmail },
-          });
-        }
-      } catch {}
+    if (!raw) return;
+    try {
+      const orderData = JSON.parse(raw);
+      const userEmail = user?.email || orderData.userEmail;
+      if (userEmail && orderData.items?.length > 0) {
+        supabase.functions.invoke('send-confirmation-email', {
+          body: { ...orderData, userEmail },
+        });
+        sessionStorage.removeItem('pendingOrder');
+      }
+    } catch {
       sessionStorage.removeItem('pendingOrder');
     }
-  }, [clearCart, user]);
+  }, [user]);
 
   return (
     <div className="min-h-screen pt-24 pb-20 flex flex-col items-center justify-center">
