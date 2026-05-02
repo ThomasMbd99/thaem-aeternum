@@ -270,6 +270,12 @@ const DiscoveryBox = () => {
     return map;
   }, [parfumsDB]);
 
+  const statusMap = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const p of parfumsDB) map.set(p.id, p.statut);
+    return map;
+  }, [parfumsDB]);
+
   const togglePerfume = (id: string) => {
     setSelected(prev =>
       prev.includes(id) ? prev.filter(p => p !== id) : prev.length < 5 ? [...prev, id] : prev
@@ -496,7 +502,8 @@ const DiscoveryBox = () => {
                     const isSelected = selected.includes(p.id);
                     const isHovered = hoveredId === p.id;
                     const outOfStock = stockMap.size > 0 && (stockMap.get(p.id) ?? 100) === 0;
-                    const canSelect = !outOfStock && (selected.length < 5 || isSelected);
+                    const isComingSoon = statusMap.size > 0 && statusMap.get(p.id) === 'prochainement';
+                    const canSelect = !outOfStock && !isComingSoon && (selected.length < 5 || isSelected);
                     const perfumeTheme = perfumeThemes[p.id];
 
                     const bg = isSelected
@@ -566,6 +573,17 @@ const DiscoveryBox = () => {
                           >
                             <span className="font-body text-[9px] uppercase tracking-widest text-white/60">
                               Rupture
+                            </span>
+                          </div>
+                        )}
+
+                        {isComingSoon && (
+                          <div
+                            className="absolute inset-0 flex items-center justify-center rounded"
+                            style={{ backdropFilter: 'blur(6px)', background: 'rgba(0,0,0,0.5)' }}
+                          >
+                            <span className="font-body text-[9px] uppercase tracking-widest text-white/70">
+                              Prochainement
                             </span>
                           </div>
                         )}
