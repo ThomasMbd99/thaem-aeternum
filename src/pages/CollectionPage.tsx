@@ -1,8 +1,8 @@
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { getCollection, type Collection } from '@/data/products';
+import { getCollection, getCollectionProducts, type Collection } from '@/data/products';
 import { useParfums } from '@/hooks/useParfums';
 import { collectionStories } from '@/data/collectionStories';
 import { useTheme } from '@/context/ThemeContext';
@@ -15,8 +15,17 @@ const CollectionPage = () => {
   const { id } = useParams<{ id: string }>();
   const { setTheme } = useTheme();
   const collection = id ? getCollection(id as Collection) : undefined;
-  const { getByCollection, loading } = useParfums();
-  const prods = id ? getByCollection(id as Collection) : [];
+  const { parfums: parfumsDB, loading } = useParfums();
+
+  // Données statiques enrichies avec statut/stock Supabase
+  const prods = useMemo(() => {
+    if (!id) return [];
+    const dbMap = new Map(parfumsDB.map(p => [p.id, p]));
+    return getCollectionProducts(id as Collection).map(p => {
+      const db = dbMap.get(p.id);
+      return db ? { ...p, statut: db.statut, stock: db.stock } : p;
+    });
+  }, [id, parfumsDB]);
   const story = id ? collectionStories[id as keyof typeof collectionStories] : undefined;
 
   const heroRef = useRef<HTMLDivElement>(null);

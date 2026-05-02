@@ -1,21 +1,24 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { collections } from '@/data/products';
+import { products, collections } from '@/data/products';
 import { useParfums } from '@/hooks/useParfums';
 import ProductCard from '@/components/ProductCard';
 import PageTransition from '@/components/PageTransition';
 
 const AllParfums = () => {
   const [filter, setFilter] = useState<string>('all');
-  const { parfums, loading } = useParfums();
+  const { parfums: parfumsDB } = useParfums();
 
-  const filtered = filter === 'all' ? parfums : parfums.filter(p => p.collection === filter);
+  // Enrichit les données statiques avec statut/stock Supabase
+  const enrichedProducts = useMemo(() => {
+    const dbMap = new Map(parfumsDB.map(p => [p.id, p]));
+    return products.map(p => {
+      const db = dbMap.get(p.id);
+      return db ? { ...p, statut: db.statut, stock: db.stock } : p;
+    });
+  }, [parfumsDB]);
 
-  if (loading) return (
-    <div className="min-h-screen flex items-center justify-center">
-      <p className="font-display italic text-foreground/40">Chargement...</p>
-    </div>
-  );
+  const filtered = filter === 'all' ? enrichedProducts : enrichedProducts.filter(p => p.collection === filter);
 
   return (
     <PageTransition>
@@ -54,10 +57,10 @@ const AllParfums = () => {
                 background: filter === 'all' ? 'rgba(196,149,106,0.08)' : 'transparent',
               }}
             >
-              Tous ({parfums.length})
+              Tous ({enrichedProducts.length})
             </button>
             {collections.map(col => {
-              const count = parfums.filter(p => p.collection === col.id).length;
+              const count = enrichedProducts.filter(p => p.collection === col.id).length;
               const active = filter === col.id;
               return (
                 <button
@@ -86,7 +89,7 @@ const AllParfums = () => {
             className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"
           >
             {filtered.map((p, i) => (
-              <ProductCard key={p.id} product={p} index={i} />
+              <ProductCard key={p.id} product={p as any} index={i} />
             ))}
           </motion.div>
 

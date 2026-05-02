@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { collections } from '@/data/products';
+import { collections, products } from '@/data/products';
 import { useParfums } from '@/hooks/useParfums';
 import ProductCard from '@/components/ProductCard';
 import { Recycle, Gift, Sparkles } from 'lucide-react';
@@ -139,11 +139,18 @@ const Index = () => {
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
   const heroOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
   const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
-  const { parfums } = useParfums();
-  const bestSellers = useMemo(
-    () => BEST_SELLER_IDS.map(id => parfums.find(p => p.id === id)).filter(Boolean) as typeof parfums,
-    [parfums]
-  );
+  const { parfums: parfumsDB } = useParfums();
+  const bestSellers = useMemo(() => {
+    const dbMap = new Map(parfumsDB.map(p => [p.id, p]));
+    return BEST_SELLER_IDS
+      .map(id => {
+        const staticP = products.find(p => p.id === id);
+        if (!staticP) return null;
+        const db = dbMap.get(id);
+        return db ? { ...staticP, statut: db.statut, stock: db.stock } : staticP;
+      })
+      .filter(Boolean);
+  }, [parfumsDB]);
 
   return (
     <PageTransition>
