@@ -89,7 +89,7 @@ const AllParfums = () => {
             className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"
           >
             {filtered.map((p, i) => (
-              <ProductCard key={p.id} product={p as any} index={i} />
+              <ProductCard key={p.id} product={p} index={i} />
             ))}
           </motion.div>
 

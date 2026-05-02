@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { collections, products } from '@/data/products';
+import { collections, products, type Product } from '@/data/products';
 import { useParfums } from '@/hooks/useParfums';
 import ProductCard from '@/components/ProductCard';
 import { Recycle, Gift, Sparkles } from 'lucide-react';
@@ -140,16 +140,15 @@ const Index = () => {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
   const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
   const { parfums: parfumsDB } = useParfums();
-  const bestSellers = useMemo(() => {
+  const bestSellers = useMemo((): Product[] => {
     const dbMap = new Map(parfumsDB.map(p => [p.id, p]));
-    return BEST_SELLER_IDS
-      .map(id => {
-        const staticP = products.find(p => p.id === id);
-        if (!staticP) return null;
-        const db = dbMap.get(id);
-        return db ? { ...staticP, statut: db.statut, stock: db.stock } : staticP;
-      })
-      .filter(Boolean);
+    return BEST_SELLER_IDS.reduce<Product[]>((acc, id) => {
+      const staticP = products.find(p => p.id === id);
+      if (!staticP) return acc;
+      const db = dbMap.get(id);
+      acc.push(db ? { ...staticP, statut: db.statut, stock: db.stock } : staticP);
+      return acc;
+    }, []);
   }, [parfumsDB]);
 
   return (

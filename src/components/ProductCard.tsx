@@ -121,7 +121,7 @@ const ProductCard = ({ product, index = 0 }: Props) => {
   const [liked, setLiked] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
-  const isComingSoon = product.status === 'prochainement' || (product as any).statut === 'prochainement';
+  const isComingSoon = product.status === 'prochainement' || product.statut === 'prochainement';
 
   const handleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();

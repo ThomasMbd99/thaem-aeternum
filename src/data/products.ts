@@ -15,6 +15,7 @@ export interface Product {
   notes: Note;
   stock?: number;
   status?: 'prochainement';
+  statut?: string;
 }
 
 export interface CollectionInfo {
