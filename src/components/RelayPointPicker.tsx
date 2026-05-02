@@ -20,6 +20,7 @@ const RelayPointPicker = ({ onSelect, selected }: Props) => {
   const widgetRef = useRef<HTMLDivElement>(null);
   const [widgetReady, setWidgetReady] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [widgetError, setWidgetError] = useState(false);
 
   useEffect(() => {
     if (!BRAND) {
@@ -29,21 +30,28 @@ const RelayPointPicker = ({ onSelect, selected }: Props) => {
 
     const loadScript = (src: string): Promise<void> =>
       new Promise((resolve, reject) => {
-        if (document.querySelector(`script[src="${src}"]`)) { resolve(); return; }
+        const existing = document.querySelector(`script[src="${src}"]`);
+        if (existing) { resolve(); return; }
         const s = document.createElement('script');
         s.src = src;
         s.onload = () => resolve();
-        s.onerror = () => reject();
+        s.onerror = () => reject(new Error(`Failed to load: ${src}`));
         document.head.appendChild(s);
       });
 
     const init = async () => {
       try {
         await loadScript('https://code.jquery.com/jquery-3.6.0.min.js');
-        await loadScript('https://widget.mondialrelay.com/parcelshop-picker/v4_0/en/jQuery.ParcelShopPicker.min.js');
+        await loadScript('https://widget.mondialrelay.com/parcelshop-picker/v4_0/fr/jQuery.ParcelShopPicker.min.js');
+        // Vérifier que le plugin est bien enregistré
+        const $ = (window as any).jQuery;
+        if (!$ || typeof $.fn?.MRParcelShopPicker !== 'function') {
+          throw new Error('Plugin MR non chargé');
+        }
         setWidgetReady(true);
-      } catch {
-        // Widget failed to load
+      } catch (e) {
+        console.error('Mondial Relay widget error:', e);
+        setWidgetError(true);
       } finally {
         setLoading(false);
       }
@@ -56,7 +64,7 @@ const RelayPointPicker = ({ onSelect, selected }: Props) => {
     if (!widgetReady || !widgetRef.current || !BRAND) return;
 
     const $ = (window as any).jQuery;
-    if (!$) return;
+    if (!$ || typeof $.fn?.MRParcelShopPicker !== 'function') return;
 
     $('#MRWidget').MRParcelShopPicker({
       Target: '#MRTargetHidden',
@@ -87,6 +95,14 @@ const RelayPointPicker = ({ onSelect, selected }: Props) => {
           Ajoutez votre code marchand Mondial Relay dans la variable{' '}
           <code className="text-primary">VITE_MONDIAL_RELAY_BRAND</code> pour activer cette fonctionnalité.
         </p>
+      </div>
+    );
+  }
+
+  if (widgetError) {
+    return (
+      <div className="p-6 rounded border text-center" style={{ background: 'rgba(239,68,68,0.05)', borderColor: 'rgba(239,68,68,0.2)' }}>
+        <p className="font-body text-xs text-red-400">Le widget Mondial Relay n'a pas pu se charger. Vérifiez votre code enseigne.</p>
       </div>
     );
   }
