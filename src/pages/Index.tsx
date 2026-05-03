@@ -211,7 +211,7 @@ const Index = () => {
         <section ref={heroRef} className="relative h-screen flex items-center justify-center overflow-hidden">
 
           {/* Canvas animation */}
-          <GoldWaveCanvas />
+          <InkCanvas />
 
           {/* Overlay sombre en haut et bas */}
           <div className="absolute inset-0 pointer-events-none"
