@@ -76,6 +76,7 @@ export function useParfums() {
       const { data, error } = await supabase
         .from('parfums')
         .select('*')
+        .or('en_promo.eq.false,en_promo.is.null')
         .order('famille')
         .order('nom');
       if (error) setError(error.message);
