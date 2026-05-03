@@ -137,7 +137,7 @@ const RelayPointPicker = ({ onSelect, selected }: Props) => {
       )}
 
       <input type="hidden" id="MRTargetHidden" />
-      <div id="MRWidget" ref={widgetRef} className="rounded overflow-hidden w-full" style={{ minHeight: loading ? 0 : 550, height: 550 }} />
+      <div id="MRWidget" ref={widgetRef} className="rounded overflow-hidden w-full" style={{ minHeight: loading ? 0 : 700, height: 700 }} />
 
       {selected && (
         <div

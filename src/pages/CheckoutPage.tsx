@@ -286,10 +286,10 @@ const CheckoutPage = () => {
           <>
             <Steps current={2} />
 
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+            <div className={`grid grid-cols-1 gap-8 ${deliveryMode === 'relay' ? '' : 'lg:grid-cols-5'}`}>
 
               {/* Formulaire livraison */}
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="lg:col-span-3 space-y-5">
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className={`space-y-5 ${deliveryMode === 'relay' ? '' : 'lg:col-span-3'}`}>
 
                 {/* Mode de livraison */}
                 <div>
@@ -374,7 +374,7 @@ const CheckoutPage = () => {
               </motion.div>
 
               {/* Récapitulatif */}
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="lg:col-span-2 space-y-3">
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className={`space-y-3 ${deliveryMode === 'relay' ? '' : 'lg:col-span-2'}`}>
                 <h2 className="font-display italic text-lg mb-4">Récapitulatif</h2>
 
                 <div className="space-y-2 mb-4">
