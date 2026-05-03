@@ -611,6 +611,15 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
                     </button>
                   )}
                   {uploadError && <p className="font-body text-xs text-red-400 mt-1">{uploadError}</p>}
+                  <div className="mt-2">
+                    <p className="font-body text-[10px] text-foreground/30 mb-1">Ou colle une URL directement :</p>
+                    <input
+                      className={inputCls}
+                      placeholder="https://www.thaem-aeternum.com/almae.jpg"
+                      value={editingParfum.image_url ?? ''}
+                      onChange={e => setField('image_url', e.target.value || null)}
+                    />
+                  </div>
                 </div>
 
                 {/* Promo */}
