@@ -39,15 +39,26 @@ const RelayPointPicker = ({ onSelect, selected }: Props) => {
         document.head.appendChild(s);
       });
 
+    const waitForPlugin = (retries = 20): Promise<void> =>
+      new Promise((resolve, reject) => {
+        const check = (n: number) => {
+          const $ = (window as any).jQuery;
+          if ($ && typeof $.fn?.MRParcelShopPicker === 'function') {
+            resolve();
+          } else if (n <= 0) {
+            reject(new Error('Plugin MR non disponible'));
+          } else {
+            setTimeout(() => check(n - 1), 200);
+          }
+        };
+        check(retries);
+      });
+
     const init = async () => {
       try {
         await loadScript('https://code.jquery.com/jquery-3.6.0.min.js');
         await loadScript('https://widget.mondialrelay.com/parcelshop-picker/v4_0/fr/jQuery.ParcelShopPicker.min.js');
-        // Vérifier que le plugin est bien enregistré
-        const $ = (window as any).jQuery;
-        if (!$ || typeof $.fn?.MRParcelShopPicker !== 'function') {
-          throw new Error('Plugin MR non chargé');
-        }
+        await waitForPlugin();
         setWidgetReady(true);
       } catch (e) {
         console.error('Mondial Relay widget error:', e);
