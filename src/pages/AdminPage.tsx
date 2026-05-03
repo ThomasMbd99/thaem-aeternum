@@ -558,6 +558,26 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
                   <div><label className={labelCls}>Note (/5)</label><input type="number" min={0} max={5} step={0.1} className={inputCls} value={editingParfum.note ?? ''} onChange={e => setField('note', parseFloat(e.target.value) || null)} /></div>
                 </div>
 
+                {/* Image URL */}
+                <div><label className={labelCls}>URL de l'image</label><input className={inputCls} value={editingParfum.image_url ?? ''} onChange={e => setField('image_url', e.target.value || null)} placeholder="https://..." /></div>
+
+                {/* Promo */}
+                <div className="p-4 rounded border border-white/8 space-y-4" style={{ background: 'rgba(196,149,106,0.04)' }}>
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <div
+                      onClick={() => setField('en_promo', !editingParfum.en_promo)}
+                      className="w-4 h-4 rounded border flex items-center justify-center transition-all"
+                      style={{ background: editingParfum.en_promo ? '#C4956A' : 'transparent', borderColor: editingParfum.en_promo ? '#C4956A' : 'rgba(255,255,255,0.2)' }}
+                    >
+                      {editingParfum.en_promo && <span className="text-black text-[10px] font-bold">✓</span>}
+                    </div>
+                    <span className="font-body text-xs text-foreground/50">Mettre en promotion (Les Offres Æ)</span>
+                  </label>
+                  {editingParfum.en_promo && (
+                    <div><label className={labelCls}>Prix promo 50ml (€)</label><input type="number" min={0} step={0.01} className={inputCls} value={editingParfum.prix_promo ?? ''} onChange={e => setField('prix_promo', parseFloat(e.target.value) || null)} placeholder="ex: 34.99" /></div>
+                  )}
+                </div>
+
                 {/* Flagship */}
                 <label className="flex items-center gap-3 cursor-pointer">
                   <div

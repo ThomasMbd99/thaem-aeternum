@@ -11,6 +11,7 @@ const navLinks = [
   { to: '/collections', label: 'Nos Gammes' },
   { to: '/parfums', label: 'Tous les Parfums' },
   { to: '/coffret', label: 'Coffret Découverte' },
+  { to: '/offres', label: 'Les Offres Æ' },
   { to: '/quiz', label: 'Quiz Olfactif' },
   { to: '/histoire', label: 'Notre Histoire' },
   { to: '/contact', label: 'Contact' },

@@ -37,6 +37,7 @@ import NotFound from "./pages/NotFound";
 import AllParfums from "./pages/AllParfums";
 import InvoicePage from "./pages/InvoicePage";
 import AdminPage from "./pages/AdminPage";
+import OffresPage from "./pages/OffresPage";
 
 const queryClient = new QueryClient();
 
@@ -84,6 +85,7 @@ const AnimatedRoutes = () => {
           <Route path="/collection/:id" element={<CollectionPage />} />
           <Route path="/produit/:id" element={<ProductPage />} />
           <Route path="/coffret" element={<DiscoveryBox />} />
+          <Route path="/offres" element={<OffresPage />} />
           <Route path="/histoire" element={<OurStory />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/quiz" element={<Quiz />} />

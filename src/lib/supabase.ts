@@ -22,4 +22,7 @@ export interface ParfumDB {
   phrase_signature: string | null;
   flagship: boolean;
   stock: number;
+  en_promo: boolean;
+  prix_promo: number | null;
+  image_url: string | null;
 }
