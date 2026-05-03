@@ -43,7 +43,7 @@ const RelayPointPicker = ({ onSelect, selected }: Props) => {
       new Promise((resolve, reject) => {
         const check = (n: number) => {
           const $ = (window as any).jQuery;
-          if ($ && typeof $.fn?.MRParcelShopPicker === 'function') {
+          if ($ && typeof $.fn?.MR_ParcelShopPicker === 'function') {
             resolve();
           } else if (n <= 0) {
             reject(new Error('Plugin MR non disponible'));
@@ -54,10 +54,19 @@ const RelayPointPicker = ({ onSelect, selected }: Props) => {
         check(retries);
       });
 
+    const loadCss = (href: string) => {
+      if (document.querySelector(`link[href="${href}"]`)) return;
+      const l = document.createElement('link');
+      l.rel = 'stylesheet'; l.href = href;
+      document.head.appendChild(l);
+    };
+
     const init = async () => {
       try {
         await loadScript('https://code.jquery.com/jquery-3.6.0.min.js');
-        await loadScript('https://widget.mondialrelay.com/parcelshop-picker/v4_0/fr/jQuery.ParcelShopPicker.min.js');
+        loadCss('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css');
+        await loadScript('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js');
+        await loadScript('https://widget.mondialrelay.com/parcelshop-picker/jquery.plugin.mondialrelay.parcelshoppicker.min.js');
         await waitForPlugin();
         setWidgetReady(true);
       } catch (e) {
@@ -75,9 +84,9 @@ const RelayPointPicker = ({ onSelect, selected }: Props) => {
     if (!widgetReady || !widgetRef.current || !BRAND) return;
 
     const $ = (window as any).jQuery;
-    if (!$ || typeof $.fn?.MRParcelShopPicker !== 'function') return;
+    if (!$ || typeof $.fn?.MR_ParcelShopPicker !== 'function') return;
 
-    $('#MRWidget').MRParcelShopPicker({
+    $('#MRWidget').MR_ParcelShopPicker({
       Target: '#MRTargetHidden',
       Brand: BRAND,
       Country: 'FR',
