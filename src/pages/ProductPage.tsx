@@ -278,9 +278,9 @@ const ProductPage = () => {
                 {/* Flacon */}
                 <motion.img
                   style={{ y: imgY }}
-                  src={getBottleImage(product.collection)}
+                  src={product.image_url ?? getBottleImage(product.collection)}
                   alt={product.name}
-                  className="relative z-10 h-[65%] w-auto object-contain drop-shadow-2xl"
+                  className={`relative z-10 object-contain drop-shadow-2xl ${product.image_url ? 'w-full h-full object-cover' : 'h-[65%] w-auto'}`}
                 />
 
                 {/* Nom en filigrane */}

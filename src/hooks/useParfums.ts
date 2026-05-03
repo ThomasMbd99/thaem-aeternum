@@ -31,6 +31,7 @@ export interface ParfumFull {
   statut: string;
   stock: number;
   en_promo: boolean;
+  image_url: string | null;
 }
 
 function parseNotes(str: string | null): string[] {
@@ -64,6 +65,7 @@ function mapParfum(p: ParfumDB): ParfumFull {
     statut: (p.statut ?? '').trim().toLowerCase(),
     stock: p.stock ?? 0,
     en_promo: p.en_promo ?? false,
+    image_url: p.image_url ?? null,
   };
 }
 
