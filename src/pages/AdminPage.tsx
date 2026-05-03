@@ -122,9 +122,9 @@ const AdminPage = () => {
 
   const fetchParfums = async () => {
     setFetchingParfums(true);
-    const { data } = await supabase.from('parfums').select('nom, statut, stock, famille').order('famille').order('nom');
+    const { data } = await supabase.from('parfums').select('*').order('famille').order('nom');
     if (data) {
-      setParfums(data);
+      setParfums(data as ParfumDB[]);
       const edits: Record<string, { statut: string; stock: number }> = {};
       data.forEach((p: any) => {
         edits[p.nom] = { statut: (p.statut ?? 'disponible').trim().toLowerCase(), stock: p.stock ?? 0 };
