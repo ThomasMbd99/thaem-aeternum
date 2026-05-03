@@ -57,6 +57,7 @@ const AdminPage = () => {
   const [isNewParfum, setIsNewParfum] = useState(false);
   const [savingForm, setSavingForm] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -176,10 +177,13 @@ const AdminPage = () => {
 
   const uploadImage = async (file: File) => {
     setUploadingImage(true);
-    const ext = file.name.split('.').pop();
-    const path = `parfums/${Date.now()}.${ext}`;
+    setUploadError(null);
+    const ext = file.name.split('.').pop() ?? 'jpg';
+    const path = `${Date.now()}.${ext}`;
     const { error } = await supabase.storage.from('parfums').upload(path, file, { upsert: true });
-    if (!error) {
+    if (error) {
+      setUploadError(`Erreur upload : ${error.message}`);
+    } else {
       const { data } = supabase.storage.from('parfums').getPublicUrl(path);
       setField('image_url', data.publicUrl);
     }
@@ -577,13 +581,23 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
                   <label className={labelCls}>Photo du parfum</label>
                   <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={e => e.target.files?.[0] && uploadImage(e.target.files[0])} />
                   {editingParfum.image_url ? (
-                    <div className="relative rounded overflow-hidden border border-white/10" style={{ height: 160 }}>
-                      <img src={editingParfum.image_url} alt="" className="w-full h-full object-cover" />
+                    <div className="space-y-2">
+                      <div className="relative rounded overflow-hidden border border-white/10" style={{ height: 160 }}>
+                        <img src={editingParfum.image_url} alt="" className="w-full h-full object-cover" />
+                        <button
+                          onClick={() => setField('image_url', null)}
+                          className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/60 flex items-center justify-center text-white/60 hover:text-white transition-colors"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                       <button
-                        onClick={() => setField('image_url', null)}
-                        className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/60 flex items-center justify-center text-white/60 hover:text-white transition-colors"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={uploadingImage}
+                        className="w-full flex items-center justify-center gap-2 py-2 rounded border border-white/8 text-foreground/30 hover:text-foreground/50 transition-all text-xs font-body disabled:opacity-50"
                       >
-                        <X className="w-3.5 h-3.5" />
+                        {uploadingImage ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
+                        Changer la photo
                       </button>
                     </div>
                   ) : (
@@ -593,9 +607,10 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
                       className="w-full flex items-center justify-center gap-2 py-4 rounded border border-dashed border-white/15 text-foreground/30 hover:text-foreground/50 hover:border-white/25 transition-all disabled:opacity-50"
                     >
                       {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                      <span className="font-body text-xs">{uploadingImage ? 'Envoi en cours...' : 'Choisir une photo'}</span>
+                      <span className="font-body text-xs">{uploadingImage ? 'Envoi en cours...' : 'Choisir une photo depuis ton PC'}</span>
                     </button>
                   )}
+                  {uploadError && <p className="font-body text-xs text-red-400 mt-1">{uploadError}</p>}
                 </div>
 
                 {/* Promo */}

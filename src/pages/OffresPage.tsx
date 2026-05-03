@@ -141,35 +141,37 @@ const OffresPage = () => {
                           className="rounded-xl border border-white/8 overflow-hidden hover:border-white/16 transition-all duration-300 group flex flex-col"
                           style={{ background: 'rgba(255,255,255,0.02)' }}
                         >
-                          {/* Image */}
-                          <div
-                            className="relative h-72 overflow-hidden flex items-center justify-center"
-                            style={{ background: familleGradients[p.famille] ?? familleGradients['SACRÆ'] }}
-                          >
-                            {p.image_url ? (
-                              <img
-                                src={p.image_url} alt={p.nom}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                              />
-                            ) : (
-                              <p className="font-display italic text-5xl font-light select-none" style={{ color: accent, opacity: 0.18 }}>{p.nom}</p>
-                            )}
+                          {/* Image cliquable → page produit */}
+                          <Link to={`/produit/${toSlug(p.nom)}`} className="block">
                             <div
-                              className="absolute top-4 right-4 px-3 py-1 rounded-full"
-                              style={{ background: `${accent}18`, border: `1px solid ${accent}50`, backdropFilter: 'blur(8px)' }}
+                              className="relative h-72 overflow-hidden flex items-center justify-center"
+                              style={{ background: familleGradients[p.famille] ?? familleGradients['SACRÆ'] }}
                             >
-                              <p className="font-body text-[9px] uppercase tracking-[0.25em]" style={{ color: accent }}>Offre Æ</p>
+                              {p.image_url ? (
+                                <img
+                                  src={p.image_url} alt={p.nom}
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                />
+                              ) : (
+                                <p className="font-display italic text-5xl font-light select-none" style={{ color: accent, opacity: 0.18 }}>{p.nom}</p>
+                              )}
+                              <div
+                                className="absolute top-4 right-4 px-3 py-1 rounded-full"
+                                style={{ background: `${accent}18`, border: `1px solid ${accent}50`, backdropFilter: 'blur(8px)' }}
+                              >
+                                <p className="font-body text-[9px] uppercase tracking-[0.25em]" style={{ color: accent }}>Offre Æ</p>
+                              </div>
                             </div>
-                          </div>
+                          </Link>
 
                           {/* Contenu carte */}
                           <div className="p-5 flex flex-col flex-1">
-                            <div className="flex-1 mb-4">
+                            <Link to={`/produit/${toSlug(p.nom)}`} className="flex-1 mb-4 block hover:opacity-80 transition-opacity">
                               <p className="font-display italic text-xl mb-1" style={{ color: accent }}>{p.nom}</p>
                               {p.texte_court && (
                                 <p className="font-body text-xs text-foreground/40 leading-relaxed">{p.texte_court}</p>
                               )}
-                            </div>
+                            </Link>
 
                             {/* Sélecteur format */}
                             <div className="flex gap-2 mb-4">
@@ -207,23 +209,14 @@ const OffresPage = () => {
                             </div>
 
                             {/* Actions */}
-                            <div className="flex gap-2">
-                              <button
-                                onClick={() => handleAdd(p)}
-                                className="flex-1 flex items-center justify-center gap-2 py-3 font-body text-xs uppercase tracking-widest rounded transition-all duration-200 hover:opacity-80"
-                                style={{ background: `${accent}15`, border: `1px solid ${accent}40`, color: accent }}
-                              >
-                                <ShoppingBag className="w-3.5 h-3.5" />
-                                Panier
-                              </button>
-                              <Link
-                                to={`/produit/${toSlug(p.nom)}`}
-                                className="flex items-center justify-center gap-1.5 px-4 py-3 font-body text-xs uppercase tracking-widest rounded transition-all duration-200 hover:opacity-80"
-                                style={{ border: `1px solid rgba(255,255,255,0.1)`, color: 'rgba(255,255,255,0.4)' }}
-                              >
-                                <ArrowRight className="w-3.5 h-3.5" />
-                              </Link>
-                            </div>
+                            <button
+                              onClick={() => handleAdd(p)}
+                              className="w-full flex items-center justify-center gap-2 py-3 font-body text-xs uppercase tracking-widest rounded transition-all duration-200 hover:opacity-80"
+                              style={{ background: `${accent}15`, border: `1px solid ${accent}40`, color: accent }}
+                            >
+                              <ShoppingBag className="w-3.5 h-3.5" />
+                              Ajouter au panier
+                            </button>
                           </div>
                         </motion.div>
                       );
