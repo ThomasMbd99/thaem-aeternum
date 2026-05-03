@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { Sparkles, ShoppingBag } from 'lucide-react';
+import { Sparkles, ShoppingBag, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { supabase, type ParfumDB } from '@/lib/supabase';
 import { useCart } from '@/context/CartContext';
 import { formats, type FormatId } from '@/data/products';
 import PageTransition from '@/components/PageTransition';
+
+const toSlug = (nom: string) =>
+  nom.toLowerCase().replace(/æ/g, 'ae').replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 
 const familleGradients: Record<string, string> = {
   'SACRÆ':  'linear-gradient(160deg, #1A0E06 0%, #3D2B1F 60%, #6B4227 100%)',
@@ -202,15 +206,24 @@ const OffresPage = () => {
                               )}
                             </div>
 
-                            {/* Panier */}
-                            <button
-                              onClick={() => handleAdd(p)}
-                              className="w-full flex items-center justify-center gap-2 py-3 font-body text-xs uppercase tracking-widest rounded transition-all duration-200 hover:opacity-80"
-                              style={{ background: `${accent}15`, border: `1px solid ${accent}40`, color: accent }}
-                            >
-                              <ShoppingBag className="w-3.5 h-3.5" />
-                              Ajouter au panier
-                            </button>
+                            {/* Actions */}
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => handleAdd(p)}
+                                className="flex-1 flex items-center justify-center gap-2 py-3 font-body text-xs uppercase tracking-widest rounded transition-all duration-200 hover:opacity-80"
+                                style={{ background: `${accent}15`, border: `1px solid ${accent}40`, color: accent }}
+                              >
+                                <ShoppingBag className="w-3.5 h-3.5" />
+                                Panier
+                              </button>
+                              <Link
+                                to={`/produit/${toSlug(p.nom)}`}
+                                className="flex items-center justify-center gap-1.5 px-4 py-3 font-body text-xs uppercase tracking-widest rounded transition-all duration-200 hover:opacity-80"
+                                style={{ border: `1px solid rgba(255,255,255,0.1)`, color: 'rgba(255,255,255,0.4)' }}
+                              >
+                                <ArrowRight className="w-3.5 h-3.5" />
+                              </Link>
+                            </div>
                           </div>
                         </motion.div>
                       );

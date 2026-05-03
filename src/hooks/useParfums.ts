@@ -30,6 +30,7 @@ export interface ParfumFull {
   note: number | null;
   statut: string;
   stock: number;
+  en_promo: boolean;
 }
 
 function parseNotes(str: string | null): string[] {
@@ -62,6 +63,7 @@ function mapParfum(p: ParfumDB): ParfumFull {
     note: p.note,
     statut: (p.statut ?? '').trim().toLowerCase(),
     stock: p.stock ?? 0,
+    en_promo: p.en_promo ?? false,
   };
 }
 
@@ -76,7 +78,6 @@ export function useParfums() {
       const { data, error } = await supabase
         .from('parfums')
         .select('*')
-        .or('en_promo.eq.false,en_promo.is.null')
         .order('famille')
         .order('nom');
       if (error) setError(error.message);

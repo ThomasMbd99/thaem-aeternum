@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Package, TrendingUp, Clock, CheckCircle, Truck, XCircle, ChevronDown, RefreshCw, AlertTriangle, Droplets, Save, Plus, X, Trash2 } from 'lucide-react';
+import { Package, TrendingUp, Clock, CheckCircle, Truck, XCircle, ChevronDown, RefreshCw, AlertTriangle, Droplets, Save, Plus, X, Trash2, Upload, Loader2 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { supabase, type ParfumDB } from '@/lib/supabase';
 
@@ -56,6 +56,8 @@ const AdminPage = () => {
   const [editingParfum, setEditingParfum] = useState<Partial<ParfumDB> | null>(null);
   const [isNewParfum, setIsNewParfum] = useState(false);
   const [savingForm, setSavingForm] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (loading) return;
@@ -171,6 +173,18 @@ const AdminPage = () => {
 
   const setField = (key: keyof ParfumDB, val: any) =>
     setEditingParfum(prev => prev ? { ...prev, [key]: val } : prev);
+
+  const uploadImage = async (file: File) => {
+    setUploadingImage(true);
+    const ext = file.name.split('.').pop();
+    const path = `parfums/${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from('parfums').upload(path, file, { upsert: true });
+    if (!error) {
+      const { data } = supabase.storage.from('parfums').getPublicUrl(path);
+      setField('image_url', data.publicUrl);
+    }
+    setUploadingImage(false);
+  };
 
   const filtered = filter === 'all' ? orders : orders.filter(o => (o.statut ?? 'pending') === filter);
   const totalRevenue = orders.reduce((sum, o) => sum + (parseFloat(o.total) || 0), 0);
@@ -558,8 +572,31 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
                   <div><label className={labelCls}>Note (/5)</label><input type="number" min={0} max={5} step={0.1} className={inputCls} value={editingParfum.note ?? ''} onChange={e => setField('note', parseFloat(e.target.value) || null)} /></div>
                 </div>
 
-                {/* Image URL */}
-                <div><label className={labelCls}>URL de l'image</label><input className={inputCls} value={editingParfum.image_url ?? ''} onChange={e => setField('image_url', e.target.value || null)} placeholder="https://..." /></div>
+                {/* Image */}
+                <div>
+                  <label className={labelCls}>Photo du parfum</label>
+                  <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={e => e.target.files?.[0] && uploadImage(e.target.files[0])} />
+                  {editingParfum.image_url ? (
+                    <div className="relative rounded overflow-hidden border border-white/10" style={{ height: 160 }}>
+                      <img src={editingParfum.image_url} alt="" className="w-full h-full object-cover" />
+                      <button
+                        onClick={() => setField('image_url', null)}
+                        className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/60 flex items-center justify-center text-white/60 hover:text-white transition-colors"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploadingImage}
+                      className="w-full flex items-center justify-center gap-2 py-4 rounded border border-dashed border-white/15 text-foreground/30 hover:text-foreground/50 hover:border-white/25 transition-all disabled:opacity-50"
+                    >
+                      {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                      <span className="font-body text-xs">{uploadingImage ? 'Envoi en cours...' : 'Choisir une photo'}</span>
+                    </button>
+                  )}
+                </div>
 
                 {/* Promo */}
                 <div className="p-4 rounded border border-white/8 space-y-4" style={{ background: 'rgba(196,149,106,0.04)' }}>

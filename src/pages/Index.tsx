@@ -10,8 +10,8 @@ import PageTransition from '@/components/PageTransition';
 import almaePromo from '@/assets/bottles/almae-promo.png';
 import { useRef, useEffect, useCallback, useMemo } from 'react';
 
-// ── CANVAS : vague dorée lente + particules flottantes
-const GoldWaveCanvas = () => {
+// ── CANVAS : encre / fumée sombre + particules dorées
+const InkCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef<number>(0);
 
@@ -25,14 +25,25 @@ const GoldWaveCanvas = () => {
     let H = canvas.height = window.innerHeight;
     let t = 0;
 
-    // Particles
-    const particles = Array.from({ length: 55 }, () => ({
+    // Volutes de fumée
+    const blobs = Array.from({ length: 7 }, (_, i) => ({
+      x: W * (0.15 + i * 0.12),
+      y: H * (0.4 + Math.random() * 0.3),
+      r: 80 + Math.random() * 140,
+      vx: (Math.random() - 0.5) * 0.12,
+      vy: -(0.08 + Math.random() * 0.12),
+      phase: Math.random() * Math.PI * 2,
+      hue: Math.random() > 0.5 ? '196,149,106' : '80,50,20',
+    }));
+
+    // Particules fines
+    const dust = Array.from({ length: 35 }, () => ({
       x: Math.random() * W,
       y: Math.random() * H,
-      r: 0.8 + Math.random() * 2,
-      vx: (Math.random() - 0.5) * 0.25,
-      vy: -(0.1 + Math.random() * 0.3),
-      opacity: 0.2 + Math.random() * 0.5,
+      r: 0.5 + Math.random() * 1.2,
+      vx: (Math.random() - 0.5) * 0.15,
+      vy: -(0.05 + Math.random() * 0.18),
+      opacity: 0.15 + Math.random() * 0.35,
       phase: Math.random() * Math.PI * 2,
     }));
 
@@ -44,66 +55,51 @@ const GoldWaveCanvas = () => {
 
     const animate = () => {
       ctx.clearRect(0, 0, W, H);
-      t += 0.008;
+      t += 0.004;
 
-      // ── Vagues dorées lentes
-      for (let w = 0; w < 3; w++) {
-        ctx.beginPath();
-        const amp = 55 + w * 20;
-        const freq = 0.0018 + w * 0.0006;
-        const speed = t * (0.4 + w * 0.15);
-        const yBase = H * (0.35 + w * 0.12);
-        const alpha = 0.035 - w * 0.008;
-
-        ctx.moveTo(0, yBase);
-        for (let x = 0; x <= W; x += 4) {
-          const y = yBase
-            + Math.sin(x * freq + speed) * amp
-            + Math.sin(x * freq * 1.7 + speed * 0.8) * (amp * 0.4);
-          ctx.lineTo(x, y);
-        }
-        ctx.lineTo(W, H);
-        ctx.lineTo(0, H);
-        ctx.closePath();
-
-        const grad = ctx.createLinearGradient(0, yBase - amp, 0, yBase + amp);
-        grad.addColorStop(0, `rgba(196,149,106,0)`);
-        grad.addColorStop(0.5, `rgba(196,149,106,${alpha})`);
-        grad.addColorStop(1, `rgba(196,149,106,0)`);
-        ctx.fillStyle = grad;
-        ctx.fill();
-      }
-
-      // ── Lueur centrale pulsante
-      const pulse = 0.06 + Math.sin(t * 1.2) * 0.025;
-      const radial = ctx.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, W * 0.55);
+      // Lueur centrale très douce
+      const pulse = 0.04 + Math.sin(t * 0.8) * 0.015;
+      const radial = ctx.createRadialGradient(W / 2, H * 0.45, 0, W / 2, H * 0.45, W * 0.5);
       radial.addColorStop(0, `rgba(196,149,106,${pulse})`);
-      radial.addColorStop(0.5, `rgba(196,149,106,0.015)`);
-      radial.addColorStop(1, 'rgba(196,149,106,0)');
+      radial.addColorStop(0.6, `rgba(80,40,10,0.02)`);
+      radial.addColorStop(1, 'rgba(0,0,0,0)');
       ctx.fillStyle = radial;
       ctx.fillRect(0, 0, W, H);
 
-      // ── Particules dorées flottantes
-      for (const p of particles) {
-        p.x += p.vx + Math.sin(t + p.phase) * 0.15;
-        p.y += p.vy;
-        if (p.y < -10) { p.y = H + 10; p.x = Math.random() * W; }
-        if (p.x < -10) p.x = W + 10;
-        if (p.x > W + 10) p.x = -10;
-
-        const flicker = p.opacity * (0.7 + Math.sin(t * 2 + p.phase) * 0.3);
-
-        // Glow autour de la particule
-        const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 5);
-        glow.addColorStop(0, `rgba(220,180,120,${flicker * 0.4})`);
-        glow.addColorStop(1, 'rgba(220,180,120,0)');
-        ctx.fillStyle = glow;
+      // Volutes de fumée / encre
+      for (const b of blobs) {
+        b.x += b.vx + Math.sin(t * 0.5 + b.phase) * 0.3;
+        b.y += b.vy;
+        if (b.y < -b.r * 2) {
+          b.y = H + b.r;
+          b.x = Math.random() * W;
+        }
+        const wobble = 1 + Math.sin(t * 0.7 + b.phase) * 0.15;
+        const alpha = 0.018 + Math.sin(t * 0.6 + b.phase) * 0.008;
+        const g = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r * wobble);
+        g.addColorStop(0, `rgba(${b.hue},${alpha * 2})`);
+        g.addColorStop(0.4, `rgba(${b.hue},${alpha})`);
+        g.addColorStop(1, `rgba(${b.hue},0)`);
+        ctx.fillStyle = g;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r * 5, 0, Math.PI * 2);
+        ctx.ellipse(b.x, b.y, b.r * wobble, b.r * 1.4 * wobble, Math.sin(t * 0.3 + b.phase) * 0.4, 0, Math.PI * 2);
         ctx.fill();
+      }
 
-        // Point central
-        ctx.fillStyle = `rgba(245,230,190,${flicker})`;
+      // Poussière dorée
+      for (const p of dust) {
+        p.x += p.vx + Math.sin(t * 1.5 + p.phase) * 0.1;
+        p.y += p.vy;
+        if (p.y < -5) { p.y = H + 5; p.x = Math.random() * W; }
+        const flicker = p.opacity * (0.6 + Math.sin(t * 3 + p.phase) * 0.4);
+        const g2 = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 4);
+        g2.addColorStop(0, `rgba(220,175,110,${flicker * 0.5})`);
+        g2.addColorStop(1, 'rgba(220,175,110,0)');
+        ctx.fillStyle = g2;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r * 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = `rgba(240,210,160,${flicker})`;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fill();
@@ -128,7 +124,56 @@ const GoldWaveCanvas = () => {
     <canvas
       ref={canvasRef}
       className="absolute inset-0 w-full h-full pointer-events-none"
-      style={{ opacity: 1 }}
+    />
+  );
+};
+
+// ── GRAIN cinématographique (overlay sur tout le site)
+const FilmGrain = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animRef = useRef<number>(0);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    const draw = () => {
+      const W = canvas.width;
+      const H = canvas.height;
+      const imageData = ctx.createImageData(W, H);
+      const data = imageData.data;
+      for (let i = 0; i < data.length; i += 4) {
+        const v = Math.random() * 255;
+        data[i] = v;
+        data[i + 1] = v;
+        data[i + 2] = v;
+        data[i + 3] = Math.random() * 18;
+      }
+      ctx.putImageData(imageData, 0, 0);
+      animRef.current = requestAnimationFrame(draw);
+    };
+
+    animRef.current = requestAnimationFrame(draw);
+    return () => {
+      cancelAnimationFrame(animRef.current);
+      window.removeEventListener('resize', resize);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 w-full h-full pointer-events-none z-[999]"
+      style={{ mixBlendMode: 'overlay', opacity: 0.45 }}
     />
   );
 };

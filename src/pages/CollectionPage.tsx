@@ -22,7 +22,7 @@ const CollectionPage = () => {
   const prods = useMemo(() => {
     if (!id) return [];
     const dbMap = buildDbMap(parfumsDB);
-    return getCollectionProducts(id as Collection).map(p => enrichProduct(p, dbMap));
+    return getCollectionProducts(id as Collection).map(p => enrichProduct(p, dbMap)).filter(p => !p.en_promo);
   }, [id, parfumsDB]);
   const story = id ? collectionStories[id as keyof typeof collectionStories] : undefined;
 
