@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Package, TrendingUp, Clock, CheckCircle, Truck, XCircle, ChevronDown, RefreshCw, AlertTriangle, Droplets, Save } from 'lucide-react';
+import { Package, TrendingUp, Clock, CheckCircle, Truck, XCircle, ChevronDown, RefreshCw, AlertTriangle, Droplets, Save, Plus, X, Trash2 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import { supabase } from '@/lib/supabase';
+import { supabase, type ParfumDB } from '@/lib/supabase';
+
+const FAMILLES = ['SACRÆ', 'VITÆA', 'UMBRÆ', 'NEROLÆ', 'ÆRA'];
+const inputCls = 'w-full px-3 py-2 bg-white/5 border border-white/10 rounded font-body text-sm text-foreground focus:outline-none focus:border-white/25 transition-colors';
+const labelCls = 'block font-body text-[10px] uppercase tracking-widest text-foreground/40 mb-1';
 
 const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL as string;
 
@@ -45,10 +49,13 @@ const AdminPage = () => {
   const [trackingInput, setTrackingInput] = useState('');
 
   // Parfums
-  const [parfums, setParfums] = useState<any[]>([]);
+  const [parfums, setParfums] = useState<ParfumDB[]>([]);
   const [fetchingParfums, setFetchingParfums] = useState(false);
   const [savingParfum, setSavingParfum] = useState<string | null>(null);
   const [parfumEdits, setParfumEdits] = useState<Record<string, { statut: string; stock: number }>>({});
+  const [editingParfum, setEditingParfum] = useState<Partial<ParfumDB> | null>(null);
+  const [isNewParfum, setIsNewParfum] = useState(false);
+  const [savingForm, setSavingForm] = useState(false);
 
   useEffect(() => {
     if (loading) return;
@@ -134,6 +141,37 @@ const AdminPage = () => {
     setSavingParfum(null);
   };
 
+  const openNew = () => {
+    setIsNewParfum(true);
+    setEditingParfum({ famille: 'SACRÆ', type: 'creation', statut: 'disponible', stock: 0, flagship: false });
+  };
+
+  const saveParfumFull = async () => {
+    if (!editingParfum) return;
+    setSavingForm(true);
+    if (isNewParfum) {
+      const { data } = await supabase.from('parfums').insert(editingParfum).select().single();
+      if (data) setParfums(prev => [...prev, data as ParfumDB]);
+    } else {
+      await supabase.from('parfums').update(editingParfum).eq('id', (editingParfum as ParfumDB).id);
+      setParfums(prev => prev.map(p => p.id === (editingParfum as ParfumDB).id ? { ...p, ...editingParfum } as ParfumDB : p));
+    }
+    setSavingForm(false);
+    setEditingParfum(null);
+    setIsNewParfum(false);
+  };
+
+  const deleteParfum = async () => {
+    if (!editingParfum || isNewParfum) return;
+    if (!confirm(`Supprimer "${(editingParfum as ParfumDB).nom}" ?`)) return;
+    await supabase.from('parfums').delete().eq('id', (editingParfum as ParfumDB).id);
+    setParfums(prev => prev.filter(p => p.id !== (editingParfum as ParfumDB).id));
+    setEditingParfum(null);
+  };
+
+  const setField = (key: keyof ParfumDB, val: any) =>
+    setEditingParfum(prev => prev ? { ...prev, [key]: val } : prev);
+
   const filtered = filter === 'all' ? orders : orders.filter(o => (o.statut ?? 'pending') === filter);
   const totalRevenue = orders.reduce((sum, o) => sum + (parseFloat(o.total) || 0), 0);
   const pendingCount = orders.filter(o => !o.statut || o.statut === 'pending').length;
@@ -203,64 +241,78 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
         )}
 
         {activeTab === 'parfums' && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+            <div className="flex justify-end mb-6">
+              <button
+                onClick={openNew}
+                className="flex items-center gap-2 px-4 py-2.5 font-body text-xs uppercase tracking-widest rounded transition-all duration-200"
+                style={{ background: 'rgba(196,149,106,0.12)', border: '1px solid rgba(196,149,106,0.3)', color: '#C4956A' }}
+              >
+                <Plus className="w-3.5 h-3.5" /> Ajouter un parfum
+              </button>
+            </div>
+
             {fetchingParfums ? (
               <p className="font-body text-sm text-foreground/40 text-center py-10">Chargement...</p>
             ) : (
-              <>
-                {Object.entries(
-                  parfums.reduce((acc: any, p: any) => {
-                    const f = p.famille ?? 'Autres';
-                    if (!acc[f]) acc[f] = [];
-                    acc[f].push(p);
-                    return acc;
-                  }, {})
-                ).map(([famille, items]: [string, any]) => (
-                  <div key={famille} className="mb-6">
-                    <p className="font-body text-[10px] uppercase tracking-[0.3em] text-foreground/30 mb-3">{famille}</p>
-                    <div className="space-y-2">
-                      {items.map((p: any) => {
-                        const edit = parfumEdits[p.nom] ?? { statut: 'disponible', stock: 0 };
-                        const cfg = statutParfumConfig[edit.statut] ?? statutParfumConfig.disponible;
-                        return (
-                          <div key={p.nom} className="flex items-center gap-4 p-4 border border-white/8 rounded-lg">
-                            <p className="font-display italic text-foreground/80 flex-1">{p.nom}</p>
-                            <select
-                              value={edit.statut}
-                              onChange={e => setParfumEdits(prev => ({ ...prev, [p.nom]: { ...edit, statut: e.target.value } }))}
-                              className="px-3 py-1.5 font-body text-[10px] uppercase tracking-widest rounded border border-white/10 bg-white/5 focus:outline-none cursor-pointer"
-                              style={{ color: cfg.color }}
-                            >
-                              {Object.entries(statutParfumConfig).map(([val, c]) => (
-                                <option key={val} value={val}>{c.label}</option>
-                              ))}
-                            </select>
-                            <div className="flex items-center gap-2">
-                              <span className="font-body text-xs text-foreground/40">Stock</span>
-                              <input
-                                type="number"
-                                min={0}
-                                value={edit.stock}
-                                onChange={e => setParfumEdits(prev => ({ ...prev, [p.nom]: { ...edit, stock: parseInt(e.target.value) || 0 } }))}
-                                className="w-16 px-2 py-1.5 bg-white/5 border border-white/10 rounded font-body text-sm text-center text-foreground focus:outline-none focus:border-white/25"
-                              />
-                            </div>
-                            <button
-                              onClick={() => saveParfum(p.nom)}
-                              disabled={savingParfum === p.nom}
-                              className="flex items-center gap-1.5 px-3 py-1.5 font-body text-[10px] uppercase tracking-widest rounded transition-all duration-200 disabled:opacity-50"
-                              style={{ background: 'rgba(196,149,106,0.1)', border: '1px solid rgba(196,149,106,0.25)', color: '#C4956A' }}
-                            >
-                              <Save className="w-3 h-3" />
-                              {savingParfum === p.nom ? 'Sauvegarde...' : 'Sauvegarder'}
-                            </button>
+              Object.entries(
+                parfums.reduce((acc: any, p) => {
+                  const f = p.famille ?? 'Autres';
+                  if (!acc[f]) acc[f] = [];
+                  acc[f].push(p);
+                  return acc;
+                }, {})
+              ).map(([famille, items]: [string, any]) => (
+                <div key={famille} className="mb-8">
+                  <p className="font-body text-[10px] uppercase tracking-[0.3em] text-foreground/30 mb-3">{famille}</p>
+                  <div className="space-y-2">
+                    {items.map((p: ParfumDB) => {
+                      const edit = parfumEdits[p.nom] ?? { statut: (p.statut ?? 'disponible').trim().toLowerCase(), stock: p.stock ?? 0 };
+                      const cfg = statutParfumConfig[edit.statut] ?? statutParfumConfig.disponible;
+                      return (
+                        <div key={p.nom} className="flex items-center gap-4 p-4 border border-white/8 rounded-lg hover:border-white/15 transition-colors">
+                          <div className="flex-1 min-w-0">
+                            <p className="font-display italic text-foreground/80">{p.nom}</p>
+                            <p className="font-body text-[10px] text-foreground/30 mt-0.5">{p.texte_court ?? ''}</p>
                           </div>
-                        );
-                      })}
-                    </div>
+                          <select
+                            value={edit.statut}
+                            onChange={e => setParfumEdits(prev => ({ ...prev, [p.nom]: { ...edit, statut: e.target.value } }))}
+                            className="px-3 py-1.5 font-body text-[10px] uppercase tracking-widest rounded border border-white/10 bg-white/5 focus:outline-none cursor-pointer"
+                            style={{ color: cfg.color }}
+                          >
+                            {Object.entries(statutParfumConfig).map(([val, c]) => (
+                              <option key={val} value={val}>{c.label}</option>
+                            ))}
+                          </select>
+                          <div className="flex items-center gap-2">
+                            <span className="font-body text-xs text-foreground/40">Stock</span>
+                            <input
+                              type="number" min={0} value={edit.stock}
+                              onChange={e => setParfumEdits(prev => ({ ...prev, [p.nom]: { ...edit, stock: parseInt(e.target.value) || 0 } }))}
+                              className="w-16 px-2 py-1.5 bg-white/5 border border-white/10 rounded font-body text-sm text-center text-foreground focus:outline-none focus:border-white/25"
+                            />
+                          </div>
+                          <button
+                            onClick={() => saveParfum(p.nom)}
+                            disabled={savingParfum === p.nom}
+                            className="flex items-center gap-1.5 px-3 py-1.5 font-body text-[10px] uppercase tracking-widest rounded transition-all duration-200 disabled:opacity-50"
+                            style={{ background: 'rgba(196,149,106,0.1)', border: '1px solid rgba(196,149,106,0.25)', color: '#C4956A' }}
+                          >
+                            <Save className="w-3 h-3" /> {savingParfum === p.nom ? '...' : 'Sauver'}
+                          </button>
+                          <button
+                            onClick={() => { setIsNewParfum(false); setEditingParfum({ ...p }); }}
+                            className="px-3 py-1.5 font-body text-[10px] uppercase tracking-widest rounded border border-white/10 text-foreground/40 hover:text-foreground hover:border-white/25 transition-all"
+                          >
+                            Modifier tout
+                          </button>
+                        </div>
+                      );
+                    })}
                   </div>
-                ))}
-              </>
+                </div>
+              ))
             )}
           </motion.div>
         )}
@@ -444,6 +496,125 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
       </div>
 
       </>}
+
+      {/* Panneau édition parfum */}
+      <AnimatePresence>
+        {editingParfum && (
+          <>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="fixed inset-0 z-40 bg-black/60" onClick={() => setEditingParfum(null)} />
+            <motion.div
+              initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+              className="fixed right-0 top-0 h-full w-full max-w-xl z-50 overflow-y-auto"
+              style={{ background: 'hsl(var(--background))', borderLeft: '1px solid rgba(255,255,255,0.08)' }}
+            >
+              <div className="p-6 space-y-5">
+                {/* Header panneau */}
+                <div className="flex items-center justify-between mb-2">
+                  <h2 className="font-display italic text-2xl">{isNewParfum ? 'Nouveau parfum' : (editingParfum as ParfumDB).nom}</h2>
+                  <button onClick={() => setEditingParfum(null)} className="text-foreground/40 hover:text-foreground transition-colors">
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Nom */}
+                <div><label className={labelCls}>Nom</label><input className={inputCls} value={editingParfum.nom ?? ''} onChange={e => setField('nom', e.target.value)} /></div>
+
+                {/* Gamme + Type */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className={labelCls}>Gamme</label>
+                    <select className={inputCls} value={editingParfum.famille ?? 'SACRÆ'} onChange={e => setField('famille', e.target.value)}>
+                      {FAMILLES.map(f => <option key={f} value={f}>{f}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className={labelCls}>Type</label>
+                    <select className={inputCls} value={editingParfum.type ?? 'creation'} onChange={e => setField('type', e.target.value as any)}>
+                      <option value="creation">Création</option>
+                      <option value="inspiration">Inspiration</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Marque + Inspiration (si type = inspiration) */}
+                {editingParfum.type === 'inspiration' && (
+                  <div className="grid grid-cols-2 gap-4">
+                    <div><label className={labelCls}>Marque inspirée</label><input className={inputCls} value={editingParfum.marque ?? ''} onChange={e => setField('marque', e.target.value)} /></div>
+                    <div><label className={labelCls}>Parfum inspiré</label><input className={inputCls} value={editingParfum.inspiration ?? ''} onChange={e => setField('inspiration', e.target.value)} /></div>
+                  </div>
+                )}
+
+                {/* Statut + Stock + Note */}
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <label className={labelCls}>Statut</label>
+                    <select className={inputCls} value={(editingParfum.statut ?? 'disponible').trim().toLowerCase()} onChange={e => setField('statut', e.target.value)}>
+                      {Object.entries(statutParfumConfig).map(([val, c]) => <option key={val} value={val}>{c.label}</option>)}
+                    </select>
+                  </div>
+                  <div><label className={labelCls}>Stock</label><input type="number" min={0} className={inputCls} value={editingParfum.stock ?? 0} onChange={e => setField('stock', parseInt(e.target.value) || 0)} /></div>
+                  <div><label className={labelCls}>Note (/5)</label><input type="number" min={0} max={5} step={0.1} className={inputCls} value={editingParfum.note ?? ''} onChange={e => setField('note', parseFloat(e.target.value) || null)} /></div>
+                </div>
+
+                {/* Flagship */}
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <div
+                    onClick={() => setField('flagship', !editingParfum.flagship)}
+                    className="w-4 h-4 rounded border flex items-center justify-center transition-all"
+                    style={{ background: editingParfum.flagship ? '#C4956A' : 'transparent', borderColor: editingParfum.flagship ? '#C4956A' : 'rgba(255,255,255,0.2)' }}
+                  >
+                    {editingParfum.flagship && <span className="text-black text-[10px] font-bold">✓</span>}
+                  </div>
+                  <span className="font-body text-xs text-foreground/50">Parfum flagship (mis en avant)</span>
+                </label>
+
+                {/* Phrase signature */}
+                <div><label className={labelCls}>Phrase signature</label><input className={inputCls} value={editingParfum.phrase_signature ?? ''} onChange={e => setField('phrase_signature', e.target.value)} /></div>
+
+                {/* Texte court */}
+                <div><label className={labelCls}>Texte court (tagline)</label><textarea rows={2} className={inputCls + ' resize-none'} value={editingParfum.texte_court ?? ''} onChange={e => setField('texte_court', e.target.value)} /></div>
+
+                {/* Texte long */}
+                <div><label className={labelCls}>Texte long (description)</label><textarea rows={5} className={inputCls + ' resize-none'} value={editingParfum.texte_long ?? ''} onChange={e => setField('texte_long', e.target.value)} /></div>
+
+                {/* Notes olfactives */}
+                <div>
+                  <label className={labelCls}>Notes de tête (séparées par virgule)</label>
+                  <input className={inputCls} value={editingParfum.notes_tete ?? ''} onChange={e => setField('notes_tete', e.target.value)} placeholder="Bergamote, Citron, Poivre..." />
+                </div>
+                <div>
+                  <label className={labelCls}>Notes de cœur (séparées par virgule)</label>
+                  <input className={inputCls} value={editingParfum.notes_coeur ?? ''} onChange={e => setField('notes_coeur', e.target.value)} placeholder="Rose, Jasmin, Iris..." />
+                </div>
+                <div>
+                  <label className={labelCls}>Notes de fond (séparées par virgule)</label>
+                  <input className={inputCls} value={editingParfum.notes_fond ?? ''} onChange={e => setField('notes_fond', e.target.value)} placeholder="Santal, Musc, Ambre..." />
+                </div>
+
+                {/* Actions */}
+                <div className="flex gap-3 pt-4 border-t border-white/8">
+                  {!isNewParfum && (
+                    <button onClick={deleteParfum} className="flex items-center gap-2 px-4 py-3 font-body text-xs uppercase tracking-widest rounded border border-red-500/20 text-red-400 hover:bg-red-500/10 transition-all">
+                      <Trash2 className="w-3.5 h-3.5" /> Supprimer
+                    </button>
+                  )}
+                  <button
+                    onClick={saveParfumFull}
+                    disabled={savingForm}
+                    className="flex-1 flex items-center justify-center gap-2 py-3 font-body text-xs uppercase tracking-widest rounded transition-all duration-200 disabled:opacity-50"
+                    style={{ background: 'rgba(196,149,106,0.15)', border: '1px solid rgba(196,149,106,0.4)', color: '#C4956A' }}
+                  >
+                    <Save className="w-3.5 h-3.5" />
+                    {savingForm ? 'Sauvegarde...' : isNewParfum ? 'Créer le parfum' : 'Sauvegarder'}
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Modale numéro de suivi */}
       <AnimatePresence>
