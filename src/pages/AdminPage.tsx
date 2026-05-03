@@ -493,9 +493,9 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
           )}
         </motion.div>
 
-      </div>
-
       </>}
+
+      </div>
 
       {/* Panneau édition parfum */}
       <AnimatePresence>
