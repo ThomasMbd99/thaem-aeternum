@@ -213,7 +213,7 @@ const ProductPage = () => {
       />
 
       {/* ── HERO PRODUIT ── */}
-      <div ref={heroRef} className="relative min-h-screen pt-20 flex items-center">
+      <div ref={heroRef} className="relative min-h-screen pt-20 lg:pt-20 flex items-start lg:items-center">
 
         {/* Glow fort hero */}
         <div
@@ -230,7 +230,7 @@ const ProductPage = () => {
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
-            className="mb-12"
+            className="mb-6 lg:mb-12"
           >
             <Link
               to={`/collection/${collection.id}`}
@@ -242,7 +242,7 @@ const ProductPage = () => {
             </Link>
           </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24 items-center py-6 lg:py-0">
 
             {/* ── IMAGE ── */}
             <motion.div
@@ -253,7 +253,7 @@ const ProductPage = () => {
             >
               {/* Cadre image */}
               <div
-                className="aspect-[3/4] rounded-lg relative overflow-hidden flex items-center justify-center"
+                className="aspect-[3/4] lg:aspect-[3/4] rounded-lg relative overflow-hidden flex items-center justify-center max-h-[55vh] lg:max-h-none"
                 style={{
                   background: `linear-gradient(145deg, hsl(0 0% 7%), hsl(0 0% 10%))`,
                   boxShadow: `0 0 80px rgba(${rgb}, 0.12), 0 40px 80px rgba(0,0,0,0.4)`,
@@ -317,7 +317,7 @@ const ProductPage = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2, duration: 0.8 }}
-                  className="font-display text-5xl lg:text-6xl tracking-wider mb-3"
+                  className="font-display text-4xl lg:text-6xl tracking-wider mb-3"
                 >
                   {product.name}
                 </motion.h1>
@@ -468,8 +468,8 @@ const ProductPage = () => {
                   )}
                 </button>
                 {product.stock !== undefined && product.stock > 0 && product.stock <= 10 && (
-                  <p className="w-full text-center font-body text-xs mt-2" style={{ color: 'rgba(239,68,68,0.7)' }}>
-                    Plus que {product.stock} en stock
+                  <p className="w-full text-center font-body text-xs mt-2 uppercase tracking-widest" style={{ color: 'rgba(239,68,68,0.6)' }}>
+                    Dernières pièces
                   </p>
                 )}
               </div>
