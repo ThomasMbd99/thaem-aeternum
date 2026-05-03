@@ -31,6 +31,7 @@ export interface ParfumFull {
   statut: string;
   stock: number;
   en_promo: boolean;
+  prix_promo: number | null;
   image_url: string | null;
 }
 
@@ -65,6 +66,7 @@ function mapParfum(p: ParfumDB): ParfumFull {
     statut: (p.statut ?? '').trim().toLowerCase(),
     stock: p.stock ?? 0,
     en_promo: p.en_promo ?? false,
+    prix_promo: p.prix_promo ?? null,
     image_url: p.image_url ?? null,
   };
 }

@@ -173,6 +173,7 @@ const ProductPage = () => {
   if (product.statut === 'prochainement') return null;
 
   const currentFormat = formats.find(f => f.id === selectedFormat)!;
+  const currentPrice = (selectedFormat === '50ml' && product.prix_promo) ? product.prix_promo : currentFormat.price;
   const relatedProducts = getByCollection(product.collection).filter(p => p.id !== product.id && p.statut !== 'prochainement').slice(0, 3);
 
   const acc = collection.colors.accent;
@@ -187,7 +188,7 @@ const ProductPage = () => {
   const handleAdd = () => {
     if (outOfStock) return;
     for (let i = 0; i < quantity; i++) {
-      addItem({ productId: product.id, format: selectedFormat, price: currentFormat.price, name: product.name });
+      addItem({ productId: product.id, format: selectedFormat, price: currentPrice, name: product.name });
     }
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
@@ -396,7 +397,14 @@ const ProductPage = () => {
                       }}
                     >
                       <span className="block">{f.label}</span>
-                      <span className="block text-xs mt-0.5 opacity-70">{f.price}€</span>
+                      {f.id === '50ml' && product.prix_promo ? (
+                        <span className="block text-xs mt-0.5">
+                          <span className="line-through opacity-40 mr-1">{f.price}€</span>
+                          <span style={{ color: acc }}>{product.prix_promo}€</span>
+                        </span>
+                      ) : (
+                        <span className="block text-xs mt-0.5 opacity-70">{f.price}€</span>
+                      )}
                       {'eco' in f && (f as any).eco && (
                         <span className="inline-flex items-center gap-1 text-[10px] mt-1" style={{ color: acc }}>
                           <Recycle className="w-3 h-3" /> Éco
@@ -433,9 +441,14 @@ const ProductPage = () => {
 
               {/* Prix + CTA */}
               <div className="flex items-center gap-6 pt-2">
-                <span className="font-display text-4xl" style={{ color: acc }}>
-                  {currentFormat.price * quantity}€
-                </span>
+                <div>
+                  {selectedFormat === '50ml' && product.prix_promo && (
+                    <span className="block font-body text-sm line-through text-foreground/30">{currentFormat.price * quantity}€</span>
+                  )}
+                  <span className="font-display text-4xl" style={{ color: acc }}>
+                    {(currentPrice * quantity).toFixed(2)}€
+                  </span>
+                </div>
                 <button
                   onClick={handleAdd}
                   disabled={added || outOfStock}
