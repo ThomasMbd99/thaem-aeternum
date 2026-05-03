@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Package, TrendingUp, Clock, CheckCircle, Truck, XCircle, ChevronDown, RefreshCw, AlertTriangle } from 'lucide-react';
+import { Package, TrendingUp, Clock, CheckCircle, Truck, XCircle, ChevronDown, RefreshCw, AlertTriangle, Droplets, Save } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
 
@@ -20,9 +20,20 @@ const statusConfig: Record<OrderStatus, { label: string; color: string; bg: stri
 
 const allStatuses: OrderStatus[] = ['pending', 'paid', 'confirmed', 'shipped', 'delivered', 'cancelled'];
 
+type AdminTab = 'commandes' | 'parfums';
+
+const statutParfumConfig: Record<string, { label: string; color: string }> = {
+  disponible:    { label: 'Disponible',    color: '#22C55E' },
+  prochainement: { label: 'Prochainement', color: '#EAB308' },
+  epuise:        { label: 'Épuisé',        color: '#EF4444' },
+};
+
 const AdminPage = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState<AdminTab>('commandes');
+
+  // Commandes
   const [orders, setOrders] = useState<any[]>([]);
   const [fetching, setFetching] = useState(true);
   const [filter, setFilter] = useState<OrderStatus | 'all'>('all');
@@ -33,12 +44,22 @@ const AdminPage = () => {
   const [shippingModal, setShippingModal] = useState<{ orderId: string; email: string } | null>(null);
   const [trackingInput, setTrackingInput] = useState('');
 
+  // Parfums
+  const [parfums, setParfums] = useState<any[]>([]);
+  const [fetchingParfums, setFetchingParfums] = useState(false);
+  const [savingParfum, setSavingParfum] = useState<string | null>(null);
+  const [parfumEdits, setParfumEdits] = useState<Record<string, { statut: string; stock: number }>>({});
+
   useEffect(() => {
     if (loading) return;
     if (!user) { navigate('/login'); return; }
     if (ADMIN_EMAIL && user.email !== ADMIN_EMAIL) { navigate('/'); return; }
     fetchOrders();
   }, [user, loading]);
+
+  useEffect(() => {
+    if (activeTab === 'parfums' && parfums.length === 0) fetchParfums();
+  }, [activeTab]);
 
   const fetchOrders = async () => {
     setFetching(true);
@@ -92,6 +113,27 @@ const AdminPage = () => {
     setShippingModal(null);
   };
 
+  const fetchParfums = async () => {
+    setFetchingParfums(true);
+    const { data } = await supabase.from('parfums').select('nom, statut, stock, famille').order('famille').order('nom');
+    if (data) {
+      setParfums(data);
+      const edits: Record<string, { statut: string; stock: number }> = {};
+      data.forEach((p: any) => {
+        edits[p.nom] = { statut: (p.statut ?? 'disponible').trim().toLowerCase(), stock: p.stock ?? 0 };
+      });
+      setParfumEdits(edits);
+    }
+    setFetchingParfums(false);
+  };
+
+  const saveParfum = async (nom: string) => {
+    setSavingParfum(nom);
+    const edit = parfumEdits[nom];
+    await supabase.from('parfums').update({ statut: edit.statut, stock: edit.stock }).eq('nom', nom);
+    setSavingParfum(null);
+  };
+
   const filtered = filter === 'all' ? orders : orders.filter(o => (o.statut ?? 'pending') === filter);
   const totalRevenue = orders.reduce((sum, o) => sum + (parseFloat(o.total) || 0), 0);
   const pendingCount = orders.filter(o => !o.statut || o.statut === 'pending').length;
@@ -110,15 +152,38 @@ const AdminPage = () => {
       <div className="container mx-auto px-4 lg:px-8 max-w-6xl relative z-10">
 
         {/* Header */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-10 flex items-center justify-between">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8 flex items-center justify-between">
           <div>
             <p className="font-body text-xs uppercase tracking-widest text-foreground/40 mb-2">Administration</p>
             <h1 className="font-display text-3xl lg:text-4xl italic font-light">Tableau de bord</h1>
           </div>
-          <button onClick={fetchOrders} className="flex items-center gap-2 px-4 py-2 font-body text-xs uppercase tracking-widest text-foreground/40 hover:text-foreground transition-colors border border-white/8 rounded">
+          <button
+            onClick={() => activeTab === 'commandes' ? fetchOrders() : fetchParfums()}
+            className="flex items-center gap-2 px-4 py-2 font-body text-xs uppercase tracking-widest text-foreground/40 hover:text-foreground transition-colors border border-white/8 rounded"
+          >
             <RefreshCw className="w-3 h-3" /> Actualiser
           </button>
         </motion.div>
+
+        {/* Onglets */}
+        <div className="flex gap-2 mb-8 border-b border-white/8 pb-0">
+          {([
+            { id: 'commandes', label: 'Commandes', icon: Package },
+            { id: 'parfums',   label: 'Parfums',   icon: Droplets },
+          ] as { id: AdminTab; label: string; icon: any }[]).map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              onClick={() => setActiveTab(id)}
+              className="flex items-center gap-2 px-5 py-3 font-body text-xs uppercase tracking-widest transition-all duration-200 border-b-2 -mb-px"
+              style={{
+                borderColor: activeTab === id ? '#C4956A' : 'transparent',
+                color: activeTab === id ? '#C4956A' : 'rgba(255,255,255,0.4)',
+              }}
+            >
+              <Icon className="w-3.5 h-3.5" /> {label}
+            </button>
+          ))}
+        </div>
 
         {/* Banner RLS si besoin */}
         {rlsError && (
@@ -137,6 +202,70 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
           </motion.div>
         )}
 
+        {activeTab === 'parfums' && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
+            {fetchingParfums ? (
+              <p className="font-body text-sm text-foreground/40 text-center py-10">Chargement...</p>
+            ) : (
+              <>
+                {Object.entries(
+                  parfums.reduce((acc: any, p: any) => {
+                    const f = p.famille ?? 'Autres';
+                    if (!acc[f]) acc[f] = [];
+                    acc[f].push(p);
+                    return acc;
+                  }, {})
+                ).map(([famille, items]: [string, any]) => (
+                  <div key={famille} className="mb-6">
+                    <p className="font-body text-[10px] uppercase tracking-[0.3em] text-foreground/30 mb-3">{famille}</p>
+                    <div className="space-y-2">
+                      {items.map((p: any) => {
+                        const edit = parfumEdits[p.nom] ?? { statut: 'disponible', stock: 0 };
+                        const cfg = statutParfumConfig[edit.statut] ?? statutParfumConfig.disponible;
+                        return (
+                          <div key={p.nom} className="flex items-center gap-4 p-4 border border-white/8 rounded-lg">
+                            <p className="font-display italic text-foreground/80 flex-1">{p.nom}</p>
+                            <select
+                              value={edit.statut}
+                              onChange={e => setParfumEdits(prev => ({ ...prev, [p.nom]: { ...edit, statut: e.target.value } }))}
+                              className="px-3 py-1.5 font-body text-[10px] uppercase tracking-widest rounded border border-white/10 bg-white/5 focus:outline-none cursor-pointer"
+                              style={{ color: cfg.color }}
+                            >
+                              {Object.entries(statutParfumConfig).map(([val, c]) => (
+                                <option key={val} value={val}>{c.label}</option>
+                              ))}
+                            </select>
+                            <div className="flex items-center gap-2">
+                              <span className="font-body text-xs text-foreground/40">Stock</span>
+                              <input
+                                type="number"
+                                min={0}
+                                value={edit.stock}
+                                onChange={e => setParfumEdits(prev => ({ ...prev, [p.nom]: { ...edit, stock: parseInt(e.target.value) || 0 } }))}
+                                className="w-16 px-2 py-1.5 bg-white/5 border border-white/10 rounded font-body text-sm text-center text-foreground focus:outline-none focus:border-white/25"
+                              />
+                            </div>
+                            <button
+                              onClick={() => saveParfum(p.nom)}
+                              disabled={savingParfum === p.nom}
+                              className="flex items-center gap-1.5 px-3 py-1.5 font-body text-[10px] uppercase tracking-widest rounded transition-all duration-200 disabled:opacity-50"
+                              style={{ background: 'rgba(196,149,106,0.1)', border: '1px solid rgba(196,149,106,0.25)', color: '#C4956A' }}
+                            >
+                              <Save className="w-3 h-3" />
+                              {savingParfum === p.nom ? 'Sauvegarde...' : 'Sauvegarder'}
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </>
+            )}
+          </motion.div>
+        )}
+
+        {activeTab === 'commandes' && <>
         {updateError && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-6 p-4 rounded border border-red-500/20 bg-red-500/5 flex items-start gap-3">
             <AlertTriangle className="w-4 h-4 shrink-0 text-red-400 mt-0.5" />
@@ -313,6 +442,8 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
         </motion.div>
 
       </div>
+
+      </>}
 
       {/* Modale numéro de suivi */}
       <AnimatePresence>
