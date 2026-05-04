@@ -82,7 +82,7 @@ const OurStory = () => (
                   whileInView={{ scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 1.2, ease: 'easeOut' }}
-                  className="relative h-[60vw] lg:h-[520px] overflow-hidden"
+                  className="relative h-[60vw] lg:h-[520px] overflow-hidden m-4 lg:m-8"
                 >
                   <img
                     src={section.image}
@@ -97,6 +97,19 @@ const OurStory = () => (
                         : 'linear-gradient(to left, transparent 60%, rgba(10,10,10,0.5) 100%)',
                     }}
                   />
+                  {/* Coins dorés */}
+                  {[
+                    'top-0 left-0 border-t border-l',
+                    'top-0 right-0 border-t border-r',
+                    'bottom-0 left-0 border-b border-l',
+                    'bottom-0 right-0 border-b border-r',
+                  ].map((pos, ci) => (
+                    <div
+                      key={ci}
+                      className={`absolute w-8 h-8 ${pos} pointer-events-none`}
+                      style={{ borderColor: 'rgba(196,149,106,0.7)' }}
+                    />
+                  ))}
                 </motion.div>
               </div>
 
