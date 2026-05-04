@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 const Footer = () => (
   <footer className="border-t border-border bg-background py-12">
     <div className="container mx-auto px-4 lg:px-8">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div>
           <h3 className="font-display text-lg font-semibold mb-4">
             TH<span className="ae-highlight">Æ</span>M <span className="ae-highlight">Æ</span>TERNUM
@@ -36,7 +36,7 @@ const Footer = () => (
     </div>
     <div className="border-t border-white/5 mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
         <p className="font-body text-xs text-foreground/30">© 2025 THÆM ÆTERNUM. Tous droits réservés.</p>
-        <div className="flex gap-6">
+        <div className="flex flex-wrap gap-x-4 gap-y-2 justify-center sm:justify-end">
           <a href="/mentions-legales" className="font-body text-xs text-foreground/30 hover:text-foreground/60 transition-colors">Mentions légales</a>
           <a href="/cgv" className="font-body text-xs text-foreground/30 hover:text-foreground/60 transition-colors">CGV</a>
           <a href="/politique-retour" className="font-body text-xs text-foreground/30 hover:text-foreground/60 transition-colors">Politique de retour</a>

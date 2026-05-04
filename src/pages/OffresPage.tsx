@@ -79,7 +79,7 @@ const OffresPage = () => {
           {/* Header */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-16">
             <p className="font-body text-xs uppercase tracking-[0.4em] text-foreground/40 mb-4">Sélection exclusive</p>
-            <h1 className="font-display text-4xl lg:text-6xl italic font-light mb-5">
+            <h1 className="font-display text-3xl lg:text-6xl italic font-light mb-5">
               Les Offres <span style={{ color: '#C4956A' }}>Æ</span>
             </h1>
             <div className="flex items-center gap-4 justify-center mb-6">
@@ -125,7 +125,7 @@ const OffresPage = () => {
                     <div className="h-px w-8" style={{ background: `${accent}40` }} />
                   </motion.div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
                     {items.map((p, idx) => {
                       const fmt = getFormat(p.id);
                       const price = getPrice(p, fmt);
@@ -144,7 +144,7 @@ const OffresPage = () => {
                           {/* Image cliquable → page produit */}
                           <Link to={`/produit/${toSlug(p.nom)}`} className="block">
                             <div
-                              className="relative h-72 overflow-hidden flex items-center justify-center"
+                              className="relative h-52 sm:h-72 overflow-hidden flex items-center justify-center"
                               style={{ background: familleGradients[p.famille] ?? familleGradients['SACRÆ'] }}
                             >
                               {p.image_url ? (
@@ -179,7 +179,7 @@ const OffresPage = () => {
                                 <button
                                   key={f.id}
                                   onClick={() => setSelectedFormats(prev => ({ ...prev, [p.id]: f.id }))}
-                                  className="flex-1 py-2 font-body text-[10px] uppercase tracking-widest rounded transition-all duration-200"
+                                  className="flex-1 py-1.5 sm:py-2 font-body text-[9px] sm:text-[10px] uppercase tracking-widest rounded transition-all duration-200"
                                   style={{
                                     background: fmt === f.id ? `${accent}18` : 'transparent',
                                     border: `1px solid ${fmt === f.id ? accent + '60' : 'rgba(255,255,255,0.08)'}`,

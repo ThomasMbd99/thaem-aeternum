@@ -321,11 +321,11 @@ const Index = () => {
         </section>
 
         {/* ── MANIFESTE ── */}
-        <section className="relative py-28 lg:py-40 overflow-hidden">
+        <section className="relative py-16 lg:py-40 overflow-hidden">
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
             <span className="font-display text-[30vw] font-bold leading-none" style={{ color: 'rgba(196,149,106,0.03)' }}>Æ</span>
           </div>
-          <div className="container mx-auto px-6 lg:px-16 relative z-10 max-w-2xl text-center">
+          <div className="container mx-auto px-4 lg:px-16 relative z-10 max-w-2xl text-center">
             <motion.div
               initial={{ scaleX: 0 }}
               whileInView={{ scaleX: 1 }}
@@ -395,7 +395,7 @@ const Index = () => {
                     >
                       <Link to={`/collection/${col.id}`} className="block h-full">
                         <div
-                          className="relative p-8 min-h-[320px] flex flex-col items-center justify-center text-center overflow-hidden rounded transition-all duration-700"
+                          className="relative p-6 min-h-[220px] sm:min-h-[320px] flex flex-col items-center justify-center text-center overflow-hidden rounded transition-all duration-700"
                           style={{ background: 'hsl(0 0% 7%)', border: '1px solid rgba(255,255,255,0.06)' }}
                         >
                           {/* Fond thème complet au hover */}

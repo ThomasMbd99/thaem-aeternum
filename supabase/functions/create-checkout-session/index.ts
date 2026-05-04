@@ -11,16 +11,8 @@ interface CartItem {
   quantity: number;
   price: number;
   name: string;
-}
-
-interface Address {
-  prenom: string;
-  nom: string;
-  telephone: string;
-  adresse: string;
-  ville: string;
-  code_postal: string;
-  pays: string;
+  isDiscoveryBox?: boolean;
+  selectedPerfumes?: string[];
 }
 
 Deno.serve(async (req) => {
@@ -37,14 +29,17 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { items, shippingCost, address, promoCode, successUrl, cancelUrl, commandeId } = await req.json() as {
+    const { items, shippingCost, bundleDiscount, address, promoCode, successUrl, cancelUrl, mode_livraison, userId, userEmail } = await req.json() as {
       items: CartItem[];
       shippingCost: number;
-      address: Address;
+      bundleDiscount: number;
+      address: any;
       promoCode?: string;
       successUrl: string;
       cancelUrl: string;
-      commandeId?: string;
+      mode_livraison: string;
+      userId: string | null;
+      userEmail: string;
     };
 
     const stripe = new Stripe(stripeKey, { apiVersion: '2023-10-16' });
@@ -69,10 +64,25 @@ Deno.serve(async (req) => {
       });
     }
 
-    const deliveryName = address ? `${address.prenom} ${address.nom}`.trim() : undefined;
-    const deliveryLine = address
-      ? `${address.adresse}, ${address.code_postal} ${address.ville}, ${address.pays}`
-      : undefined;
+    // Compact items: [[name, format, qty, price, isBox(0/1), selectedPerfumes?], ...]
+    const compactItems = items.map((item) => {
+      const base: any[] = [item.name, item.format, item.quantity, item.price, item.isDiscoveryBox ? 1 : 0];
+      if (item.isDiscoveryBox && item.selectedPerfumes?.length) {
+        base.push(item.selectedPerfumes);
+      }
+      return base;
+    });
+
+    const metadata: Record<string, string> = {
+      user_email: userEmail ?? '',
+      mode_livraison: mode_livraison ?? 'home',
+      shipping_cost: String(shippingCost ?? 0),
+      bundle_discount: String(bundleDiscount ?? 0),
+      items_json: JSON.stringify(compactItems),
+    };
+
+    if (userId) metadata.user_id = userId;
+    if (address) metadata.address_json = JSON.stringify(address);
 
     const sessionParams: any = {
       payment_method_types: ['card'],
@@ -80,15 +90,8 @@ Deno.serve(async (req) => {
       mode: 'payment',
       success_url: successUrl,
       cancel_url: cancelUrl,
-      ...(commandeId ? { client_reference_id: commandeId } : {}),
+      metadata,
       ...(promoCode ? { discounts: [{ coupon: promoCode }] } : {}),
-      ...(deliveryName && {
-        metadata: {
-          delivery_name: deliveryName,
-          delivery_address: deliveryLine ?? '',
-          delivery_phone: address?.telephone ?? '',
-        },
-      }),
     };
 
     const session = await stripe.checkout.sessions.create(sessionParams);

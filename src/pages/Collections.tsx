@@ -43,7 +43,7 @@ const Collections = () => {
       <div className="min-h-screen pt-24 lg:pt-28 pb-28">
 
         {/* ── HEADER ── */}
-        <div className="container mx-auto px-6 lg:px-16 max-w-4xl mb-20">
+        <div className="container mx-auto px-4 lg:px-16 max-w-4xl mb-12 lg:mb-20">
           <motion.div
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
@@ -61,7 +61,7 @@ const Collections = () => {
             <p className="font-body text-[10px] uppercase tracking-[0.4em] mb-4" style={{ color: 'rgba(196,149,106,0.6)' }}>
               Nos Univers
             </p>
-            <h1 className="font-display text-4xl lg:text-6xl italic font-light">
+            <h1 className="font-display text-3xl lg:text-6xl italic font-light">
               Nos <span style={{ color: 'hsl(43,50%,54%)' }}>Gammes</span>
             </h1>
           </motion.div>
@@ -103,7 +103,7 @@ const Collections = () => {
                 >
                   <button onClick={() => handleCollectionClick(col.id)} className="w-full block text-left">
                     <div
-                      className="relative p-8 min-h-[340px] flex flex-col items-center justify-center text-center overflow-hidden rounded transition-all duration-700"
+                      className="relative p-6 min-h-[260px] sm:min-h-[340px] flex flex-col items-center justify-center text-center overflow-hidden rounded transition-all duration-700"
                       style={{ background: 'hsl(0 0% 7%)', border: '1px solid rgba(255,255,255,0.06)' }}
                     >
                       <div
@@ -139,7 +139,7 @@ const Collections = () => {
         </div>
 
         {/* ── FORMATS ── */}
-        <div className="container mx-auto px-6 lg:px-16 max-w-4xl mt-28">
+        <div className="container mx-auto px-4 lg:px-16 max-w-4xl mt-14 lg:mt-28">
           <motion.div
             initial={{ scaleX: 0 }}
             whileInView={{ scaleX: 1 }}

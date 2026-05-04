@@ -142,67 +142,6 @@ const CheckoutPage = () => {
   const set = (key: keyof DeliveryAddress) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setAddress(a => ({ ...a, [key]: e.target.value }));
 
-  const saveOrderToSupabase = async (): Promise<string | null> => {
-    if (!user) return null;
-    try {
-      const { data: commande, error: cmdError } = await supabase
-        .from('commandes')
-        .insert({ user_id: user.id, email: user.email, statut: 'pending', total: finalTotal, mode_livraison: deliveryMode })
-        .select()
-        .single();
-
-      if (cmdError || !commande) return null;
-
-      await supabase.from('commande_items').insert(
-        items.map(item => ({
-          commande_id: commande.id,
-          parfum_nom: item.name,
-          format: item.isDiscoveryBox ? `Coffret 5×10ml` : item.format,
-          quantite: item.quantity,
-          prix_unitaire: item.price,
-        }))
-      );
-
-      // Décrémentation du stock
-      const { data: parfumsData } = await supabase.from('parfums').select('nom, stock');
-      if (!parfumsData) return;
-
-      const slugToNom = new Map<string, string>();
-      const nomToStock = new Map<string, number>();
-      for (const p of parfumsData) {
-        const slug = (p.nom as string).toLowerCase()
-          .replace(/æ/g, 'ae')
-          .replace(/\s+/g, '-')
-          .replace(/[^a-z0-9-]/g, '');
-        slugToNom.set(slug, p.nom as string);
-        nomToStock.set(p.nom as string, p.stock as number);
-      }
-
-      const decrements = new Map<string, number>();
-      for (const item of items) {
-        if (item.isDiscoveryBox && item.selectedPerfumes) {
-          for (const slug of item.selectedPerfumes) {
-            const nom = slugToNom.get(slug);
-            if (nom) decrements.set(nom, (decrements.get(nom) ?? 0) + item.quantity);
-          }
-        } else {
-          decrements.set(item.name, (decrements.get(item.name) ?? 0) + item.quantity);
-        }
-      }
-
-      await Promise.all(
-        Array.from(decrements.entries()).map(([nom, qty]) => {
-          const newStock = Math.max(0, (nomToStock.get(nom) ?? 0) - qty);
-          return supabase.from('parfums').update({ stock: newStock }).eq('nom', nom);
-        })
-      );
-
-      return commande.id as string;
-    } catch (e) {
-      return null;
-    }
-  };
-
   const handleCheckout = async () => {
     if (!isAddressComplete) {
       setError('Veuillez remplir tous les champs obligatoires (*).');
@@ -217,9 +156,11 @@ const CheckoutPage = () => {
     setPromoError(null);
 
     try {
+      const effectiveAddress = deliveryMode === 'relay' ? selectedRelay : deliveryMode === 'click_collect' ? null : address;
+
       sessionStorage.setItem('pendingOrder', JSON.stringify({
         items,
-        address: deliveryMode === 'relay' ? selectedRelay : deliveryMode === 'click_collect' ? null : address,
+        address: effectiveAddress,
         shippingCost,
         bundleDiscount,
         finalTotal,
@@ -227,18 +168,18 @@ const CheckoutPage = () => {
         mode_livraison: deliveryMode,
       }));
 
-      const commandeId = await saveOrderToSupabase();
-
       const { data, error: fnError } = await supabase.functions.invoke('create-checkout-session', {
         body: {
           items,
           shippingCost,
-          address: deliveryMode === 'relay' ? selectedRelay : deliveryMode === 'click_collect' ? null : address,
+          bundleDiscount,
+          address: effectiveAddress,
           promoCode: promoCode.trim() || undefined,
           successUrl: `${window.location.origin}/checkout/success`,
           cancelUrl: `${window.location.origin}/checkout`,
-          commandeId: commandeId ?? undefined,
           mode_livraison: deliveryMode,
+          userId: user?.id ?? null,
+          userEmail: user?.email ?? '',
         },
       });
 
