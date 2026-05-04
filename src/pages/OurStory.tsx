@@ -6,7 +6,7 @@ const sections = [
   {
     title: 'La Maison',
     text: "THÆM ÆTERNUM est née de trois frères, d'une même vision, et d'une même exigence. Celle de créer des parfums qui ne se contentent pas d'exister, mais qui laissent une trace.",
-    image: '/image-1.png',
+    image: '/image-1.2.png',
   },
   {
     title: "L'Intuition",
