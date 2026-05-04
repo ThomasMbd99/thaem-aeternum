@@ -213,6 +213,26 @@ const Index = () => {
           {/* Canvas animation */}
           <InkCanvas />
 
+          {/* Grand Æ en fond — subtil */}
+          <div
+            className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
+            aria-hidden="true"
+          >
+            <span
+              className="font-display"
+              style={{
+                fontSize: 'clamp(280px, 55vw, 700px)',
+                color: 'transparent',
+                WebkitTextStroke: '1px rgba(196,149,106,0.07)',
+                lineHeight: 1,
+                userSelect: 'none',
+                opacity: 0.9,
+              }}
+            >
+              Æ
+            </span>
+          </div>
+
           {/* Overlay sombre en haut et bas */}
           <div className="absolute inset-0 pointer-events-none"
             style={{ background: 'linear-gradient(to bottom, rgba(10,10,10,0.5) 0%, transparent 30%, transparent 70%, rgba(10,10,10,0.7) 100%)' }}
