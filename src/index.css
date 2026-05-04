@@ -162,6 +162,31 @@
     --navbar-border: 210 30% 82%;
     --theme-bg: #F5FAFF;
   }
+
+  /* ── Mode Blanc & Or ── */
+  [data-mode="light"] {
+    --background: 45 35% 97%;
+    --foreground: 30 25% 12%;
+    --card: 43 28% 93%;
+    --card-foreground: 30 25% 12%;
+    --popover: 43 28% 93%;
+    --popover-foreground: 30 25% 12%;
+    --primary: 43 55% 42%;
+    --primary-foreground: 45 35% 97%;
+    --secondary: 43 22% 87%;
+    --secondary-foreground: 30 25% 12%;
+    --muted: 43 18% 84%;
+    --muted-foreground: 30 18% 42%;
+    --accent: 43 55% 42%;
+    --accent-foreground: 45 35% 97%;
+    --border: 43 22% 80%;
+    --input: 43 22% 80%;
+    --ring: 43 55% 42%;
+    --gold: 43 55% 42%;
+    --gold-glow: 43 65% 52%;
+    --navbar-bg: 45 35% 97%;
+    --navbar-border: 43 22% 80%;
+  }
 }
 
 @layer base {

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, useRef } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import type { Collection } from '@/data/products';
 
 export type ThemeCollection = Collection | null;
@@ -8,6 +8,8 @@ interface ThemeContextType {
   pendingTheme: ThemeCollection;
   setTheme: (collection: ThemeCollection) => void;
   isTransitioning: boolean;
+  lightMode: boolean;
+  toggleLightMode: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | null>(null);
@@ -22,6 +24,25 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [activeTheme, setActiveTheme] = useState<ThemeCollection>(null);
   const [pendingTheme, setPendingTheme] = useState<ThemeCollection>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [lightMode, setLightMode] = useState(() => {
+    return localStorage.getItem('thaem-light-mode') === 'true';
+  });
+
+  useEffect(() => {
+    if (lightMode && !activeTheme) {
+      document.documentElement.setAttribute('data-mode', 'light');
+    } else {
+      document.documentElement.removeAttribute('data-mode');
+    }
+  }, [lightMode, activeTheme]);
+
+  const toggleLightMode = useCallback(() => {
+    setLightMode(prev => {
+      const next = !prev;
+      localStorage.setItem('thaem-light-mode', String(next));
+      return next;
+    });
+  }, []);
 
   const setTheme = useCallback((collection: ThemeCollection) => {
     setPendingTheme(collection);
@@ -30,17 +51,19 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       setActiveTheme(collection);
       if (collection) {
         document.documentElement.setAttribute('data-theme', collection);
+        document.documentElement.removeAttribute('data-mode');
       } else {
         document.documentElement.removeAttribute('data-theme');
+        if (lightMode) document.documentElement.setAttribute('data-mode', 'light');
       }
     }, 500);
     setTimeout(() => {
       setIsTransitioning(false);
     }, 1200);
-  }, []);
+  }, [lightMode]);
 
   return (
-    <ThemeContext.Provider value={{ activeTheme, pendingTheme, setTheme, isTransitioning }}>
+    <ThemeContext.Provider value={{ activeTheme, pendingTheme, setTheme, isTransitioning, lightMode, toggleLightMode }}>
       {children}
     </ThemeContext.Provider>
   );

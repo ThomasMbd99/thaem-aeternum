@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingBag, Menu, X, User } from 'lucide-react';
+import { ShoppingBag, Menu, X, User, Sun, Moon } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
@@ -23,10 +23,13 @@ const themeLabels: Record<string, string> = {
 
 const Navbar = () => {
   const { totalItems, setIsOpen } = useCart();
-  const { activeTheme } = useTheme();
+  const { activeTheme, lightMode, toggleLightMode } = useTheme();
   const { user } = useAuth();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const isCollectionPage = location.pathname.startsWith('/collection/') || location.pathname.startsWith('/produit/');
+  const showLightToggle = !isCollectionPage;
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b"
@@ -51,6 +54,21 @@ const Navbar = () => {
               </motion.span>
             )}
           </AnimatePresence>
+
+          {/* Toggle blanc & or */}
+          {showLightToggle && (
+            <button
+              onClick={toggleLightMode}
+              className="p-2 rounded-full hover:bg-black/5 transition-colors"
+              aria-label={lightMode ? 'Mode sombre' : 'Mode blanc & or'}
+              title={lightMode ? 'Mode sombre' : 'Mode blanc & or'}
+            >
+              {lightMode
+                ? <Moon className="w-4 h-4 text-muted-foreground hover:text-primary transition-colors" />
+                : <Sun className="w-4 h-4 text-muted-foreground hover:text-primary transition-colors" />
+              }
+            </button>
+          )}
 
           {/* Icône compte */}
           <Link

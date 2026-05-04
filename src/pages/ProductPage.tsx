@@ -323,12 +323,13 @@ const ProductPage = () => {
                 </motion.h1>
 
                 <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.35, duration: 0.8 }}
-                  className="font-display italic text-lg text-foreground/55"
+                  className="font-display italic text-xl lg:text-2xl leading-relaxed"
+                  style={{ color: acc, opacity: 0.85 }}
                 >
-                  {product.tagline}
+                  « {product.tagline} »
                 </motion.p>
 
                 <motion.div
