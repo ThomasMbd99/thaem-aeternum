@@ -392,20 +392,15 @@ const Index = () => {
                 Cinq gammes.<br />
                 <span className="text-foreground/40">Une maison.</span>
               </h2>
-              <p className="font-body text-xs leading-[2] text-muted-foreground max-w-2xl mx-auto mb-4" style={{ letterSpacing: '0.04em' }}>
-                THÆM ÆTERNUM a choisi de diviser sa maison en cinq gammes distinctes, chacune portant une âme propre.
-                La gamme gourmande et sucrée, créée pour ceux qui aiment les senteurs douces et réconfortantes, c'est{' '}
-                <span className="font-display italic" style={{ color: '#C4956A' }}>Sacræ</span>.
-                {' '}La gamme fruitée et solaire, vive et chaleureuse, pensée pour célébrer la lumière et l'éclat, c'est{' '}
-                <span className="font-display italic" style={{ color: '#FF6B2B' }}>Vitæ</span>.
-                {' '}La gamme au oud, profonde et envoûtante, pour ceux qui veulent laisser une empreinte puissante, c'est{' '}
-                <span className="font-display italic" style={{ color: '#8B6914' }}>Umbræ</span>.
-                {' '}La gamme florale et délicate, féminine et sensuelle, née pour séduire avec grâce, c'est{' '}
-                <span className="font-display italic" style={{ color: '#F0A0B8' }}>Nerolæ</span>.
-                {' '}Et la gamme fraîche et aérienne, légère comme un souffle, pour ceux qui habitent le mouvement, c'est{' '}
-                <span className="font-display italic" style={{ color: '#A8D4F0' }}>Æra</span>.
-              </p>
-              <p className="font-body text-xs text-muted-foreground/50 max-w-lg mx-auto mb-10 leading-relaxed" style={{ letterSpacing: '0.06em' }}>
+              <div className="font-body text-xs text-muted-foreground max-w-xl mx-auto mb-4 text-center" style={{ letterSpacing: '0.04em', lineHeight: '2.2' }}>
+                <p className="mb-4">THÆM ÆTERNUM a choisi de diviser sa maison en cinq gammes distinctes, chacune portant une âme propre.</p>
+                <p>La gamme gourmande, baumée et veloutée, est <span style={{ color: '#C4956A' }}>SACRÆ</span>.</p>
+                <p>La gamme fruitée, hespéridée et solaire, est <span style={{ color: '#FF6B2B' }}>VITÆ</span>.</p>
+                <p>La gamme oudiée, ambrée et résineuse, est <span style={{ color: '#8B6914' }}>UMBRÆ</span>.</p>
+                <p>La gamme florale, néroli et aldéhydée, est <span style={{ color: '#F0A0B8' }}>NEROLÆ</span>.</p>
+                <p>La gamme fraîche, aquatique et lumineuse, est <span style={{ color: '#A8D4F0' }}>ÆRA</span>.</p>
+              </div>
+              <p className="font-body text-xs text-muted-foreground/50 max-w-lg mx-auto mb-10 leading-relaxed text-center mt-6" style={{ letterSpacing: '0.06em' }}>
                 Chaque création naît d'un univers singulier. Cinq gammes olfactives, cinq façons de ressentir, choisissez celle qui vous ressemble.
               </p>
               <div className="h-px w-16 mx-auto mb-10" style={{ background: 'linear-gradient(to right, transparent, rgba(196,149,106,0.4), transparent)' }} />
