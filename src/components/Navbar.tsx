@@ -35,7 +35,7 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b"
       style={{ backgroundColor: `hsl(var(--navbar-bg) / 0.85)`, borderColor: `hsl(var(--navbar-border))`, transition: 'background-color 0.7s ease, border-color 0.6s ease' }}>
       <div className="container mx-auto px-4 lg:px-8 flex items-center justify-between h-16 lg:h-20">
-        <Link to="/" className="font-display text-xl lg:text-2xl font-semibold tracking-wider">
+        <Link to="/" className="font-display text-xl lg:text-2xl font-semibold tracking-wider whitespace-nowrap">
           TH<span className="ae-highlight">Æ</span>M <span className="ae-highlight">Æ</span>TERNUM
         </Link>
         <div className="hidden lg:flex items-center gap-8">
