@@ -392,25 +392,23 @@ const Index = () => {
                 Cinq gammes.<br />
                 <span className="text-foreground/40">Une maison.</span>
               </h2>
-              <p className="font-body text-sm leading-relaxed text-muted-foreground max-w-xl mx-auto mb-10">
-                Chaque création naît d'un univers singulier. Cinq gammes olfactives, cinq façons de ressentir — choisissez celle qui vous ressemble.
+              <p className="font-body text-xs leading-[2] text-muted-foreground max-w-2xl mx-auto mb-4" style={{ letterSpacing: '0.04em' }}>
+                THÆM ÆTERNUM a choisi de diviser sa maison en cinq gammes distinctes, chacune portant une âme propre.
+                La gamme gourmande et sucrée, créée pour ceux qui aiment les senteurs douces et réconfortantes, c'est{' '}
+                <span className="font-display italic" style={{ color: '#C4956A' }}>Sacræ</span>.
+                {' '}La gamme fruitée et solaire, vive et chaleureuse, pensée pour célébrer la lumière et l'éclat, c'est{' '}
+                <span className="font-display italic" style={{ color: '#FF6B2B' }}>Vitæ</span>.
+                {' '}La gamme au oud, profonde et envoûtante, pour ceux qui veulent laisser une empreinte puissante, c'est{' '}
+                <span className="font-display italic" style={{ color: '#8B6914' }}>Umbræ</span>.
+                {' '}La gamme florale et délicate, féminine et sensuelle, née pour séduire avec grâce, c'est{' '}
+                <span className="font-display italic" style={{ color: '#F0A0B8' }}>Nerolæ</span>.
+                {' '}Et la gamme fraîche et aérienne, légère comme un souffle, pour ceux qui habitent le mouvement, c'est{' '}
+                <span className="font-display italic" style={{ color: '#A8D4F0' }}>Æra</span>.
               </p>
-              {/* Descripteurs des 5 gammes */}
-              <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
-                {[
-                  { name: 'SACRÆ',  mots: 'Gourmand · Sucré · Enveloppant' },
-                  { name: 'VITÆ',   mots: 'Fruité · Solaire · Vivant' },
-                  { name: 'UMBRÆ',  mots: 'Oud · Ambré · Intense' },
-                  { name: 'NEROLÆ', mots: 'Floral · Délicat · Sensuel' },
-                  { name: 'ÆRA',    mots: 'Frais · Aérien · Lumineux' },
-                ].map((g, i) => (
-                  <div key={i} className="flex flex-col items-center gap-1">
-                    <span className="font-display italic text-base" style={{ color: 'rgba(196,149,106,0.9)' }}>{g.name}</span>
-                    <span className="font-body text-[10px] tracking-[0.18em] uppercase" style={{ color: 'rgba(255,255,255,0.35)' }}>{g.mots}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-8 h-px w-16 mx-auto" style={{ background: 'linear-gradient(to right, transparent, rgba(196,149,106,0.4), transparent)' }} />
+              <p className="font-body text-xs text-muted-foreground/50 max-w-lg mx-auto mb-10 leading-relaxed" style={{ letterSpacing: '0.06em' }}>
+                Chaque création naît d'un univers singulier. Cinq gammes olfactives, cinq façons de ressentir, choisissez celle qui vous ressemble.
+              </p>
+              <div className="h-px w-16 mx-auto mb-10" style={{ background: 'linear-gradient(to right, transparent, rgba(196,149,106,0.4), transparent)' }} />
             </motion.div>
 
             {(() => {
