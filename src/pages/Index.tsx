@@ -398,10 +398,10 @@ const Index = () => {
               {/* Descripteurs des 5 gammes */}
               <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
                 {[
-                  { name: 'SACRÆ',  mots: 'Boisé · Enveloppant · Sacré' },
-                  { name: 'VITÆ',   mots: 'Ardent · Solaire · Vivace' },
-                  { name: 'UMBRÆ',  mots: 'Sombre · Profond · Mystique' },
-                  { name: 'NEROLÆ', mots: 'Fleuri · Sensuel · Délicat' },
+                  { name: 'SACRÆ',  mots: 'Gourmand · Sucré · Enveloppant' },
+                  { name: 'VITÆ',   mots: 'Fruité · Solaire · Vivant' },
+                  { name: 'UMBRÆ',  mots: 'Oud · Ambré · Intense' },
+                  { name: 'NEROLÆ', mots: 'Floral · Délicat · Sensuel' },
                   { name: 'ÆRA',    mots: 'Frais · Aérien · Lumineux' },
                 ].map((g, i) => (
                   <div key={i} className="flex flex-col items-center gap-1">
