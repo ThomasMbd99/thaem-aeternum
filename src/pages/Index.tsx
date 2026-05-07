@@ -9,6 +9,7 @@ import { Recycle, Gift, Sparkles } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
 import almaePromo from '@/assets/bottles/almae-promo.png';
 import { useRef, useEffect, useCallback, useMemo } from 'react';
+import CinematicHero from '@/components/CinematicHero';
 
 // ── CANVAS : encre / fumée sombre + particules dorées
 const InkCanvas = () => {
@@ -207,8 +208,11 @@ const Index = () => {
       </Helmet>
       <div className="min-h-screen">
 
-        {/* ── HERO ── */}
-        <section ref={heroRef} className="relative h-screen flex items-center justify-center overflow-hidden">
+        {/* ── HERO CINÉMATIQUE ── */}
+        <CinematicHero />
+
+        {/* ── HERO LEGACY (caché) ── */}
+        <section ref={heroRef} className="relative h-0 overflow-hidden" style={{ display: 'none' }}>
 
           {/* Canvas animation */}
           <InkCanvas />
