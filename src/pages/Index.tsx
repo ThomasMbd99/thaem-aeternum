@@ -383,15 +383,34 @@ const Index = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-center mb-16"
+              className="text-center mb-12"
             >
               <p className="font-body text-[10px] tracking-[0.4em] uppercase mb-3" style={{ color: 'rgba(196,149,106,0.6)' }}>
                 Nos Univers
               </p>
-              <h2 className="font-display text-3xl lg:text-5xl italic font-light">
+              <h2 className="font-display text-3xl lg:text-5xl italic font-light mb-6">
                 Cinq gammes.<br />
                 <span className="text-foreground/40">Une maison.</span>
               </h2>
+              <p className="font-body text-sm leading-relaxed text-muted-foreground max-w-xl mx-auto mb-10">
+                Chaque création naît d'un univers singulier. Cinq gammes olfactives, cinq façons de ressentir — choisissez celle qui vous ressemble.
+              </p>
+              {/* Descripteurs des 5 gammes */}
+              <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
+                {[
+                  { name: 'SACRÆ',  mots: 'Boisé · Enveloppant · Sacré' },
+                  { name: 'VITÆ',   mots: 'Ardent · Solaire · Vivace' },
+                  { name: 'UMBRÆ',  mots: 'Sombre · Profond · Mystique' },
+                  { name: 'NEROLÆ', mots: 'Fleuri · Sensuel · Délicat' },
+                  { name: 'ÆRA',    mots: 'Frais · Aérien · Lumineux' },
+                ].map((g, i) => (
+                  <div key={i} className="flex flex-col items-center gap-1">
+                    <span className="font-display italic text-base" style={{ color: 'rgba(196,149,106,0.9)' }}>{g.name}</span>
+                    <span className="font-body text-[10px] tracking-[0.18em] uppercase" style={{ color: 'rgba(255,255,255,0.35)' }}>{g.mots}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-8 h-px w-16 mx-auto" style={{ background: 'linear-gradient(to right, transparent, rgba(196,149,106,0.4), transparent)' }} />
             </motion.div>
 
             {(() => {
