@@ -14,27 +14,21 @@ const NoteItem = ({ name, accentColor, index, sectionIndex }: NoteItemProps) => 
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: 10 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ delay: sectionIndex * 0.12 + index * 0.07 }}
-      className="flex flex-col items-center gap-2 group"
+      transition={{ delay: sectionIndex * 0.1 + index * 0.06 }}
+      className="flex flex-col items-center gap-1.5 group"
+      style={{ width: '72px', flexShrink: 0 }}
     >
       {/* Photo circle */}
       <div
-        className="relative w-14 h-14 rounded-full overflow-hidden ring-1 transition-all duration-300 group-hover:scale-110"
-        style={{
-          ringColor: `${accentColor}44`,
-          boxShadow: `0 0 0 1px ${accentColor}33`,
-        }}
+        className="w-12 h-12 rounded-full overflow-hidden transition-all duration-300 group-hover:scale-110"
+        style={{ boxShadow: `0 0 0 1.5px ${accentColor}44` }}
       >
-        {isLoading && (
-          <div
-            className="absolute inset-0 animate-pulse rounded-full"
-            style={{ background: `${accentColor}22` }}
-          />
-        )}
-        {imageUrl ? (
+        {isLoading ? (
+          <div className="w-full h-full animate-pulse rounded-full" style={{ background: `${accentColor}22` }} />
+        ) : imageUrl ? (
           <img
             src={imageUrl}
             alt={name}
@@ -42,83 +36,41 @@ const NoteItem = ({ name, accentColor, index, sectionIndex }: NoteItemProps) => 
             loading="lazy"
           />
         ) : (
-          !isLoading && (
-            <div
-              className="w-full h-full flex items-center justify-center"
-              style={{ background: `${accentColor}18` }}
-            >
-              <span
-                className="font-display text-lg italic"
-                style={{ color: `${accentColor}99` }}
-              >
-                {name.charAt(0).toUpperCase()}
-              </span>
-            </div>
-          )
+          <div
+            className="w-full h-full flex items-center justify-center rounded-full"
+            style={{ background: `${accentColor}1a` }}
+          >
+            <span className="font-display text-base italic" style={{ color: `${accentColor}99` }}>
+              {name.charAt(0).toUpperCase()}
+            </span>
+          </div>
         )}
         {/* Hover glow */}
         <div
           className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-          style={{ background: `radial-gradient(circle, ${accentColor}30 0%, transparent 70%)` }}
+          style={{ background: `radial-gradient(circle, ${accentColor}28 0%, transparent 70%)` }}
         />
       </div>
 
       {/* Note name */}
       <span
-        className="font-body text-[10px] uppercase tracking-widest text-center leading-tight max-w-[64px] transition-colors duration-300"
-        style={{ color: `${accentColor}aa` }}
+        className="font-body text-center leading-tight"
+        style={{
+          color: `${accentColor}bb`,
+          fontSize: '8px',
+          letterSpacing: '0.12em',
+          textTransform: 'uppercase',
+          width: '72px',
+          display: 'block',
+          wordBreak: 'break-word',
+          hyphens: 'auto',
+        }}
       >
         {name}
       </span>
     </motion.div>
   );
 };
-
-interface SectionProps {
-  label: string;
-  sublabel: string;
-  items: string[];
-  width: string;
-  accentColor: string;
-  sectionIndex: number;
-}
-
-const PyramidSection = ({ label, sublabel, items, width, accentColor, sectionIndex }: SectionProps) => (
-  <motion.div
-    initial={{ opacity: 0, x: -16 }}
-    whileInView={{ opacity: 1, x: 0 }}
-    viewport={{ once: true }}
-    transition={{ delay: sectionIndex * 0.15 }}
-    className="flex flex-col items-center gap-4"
-    style={{ width }}
-  >
-    {/* Section header */}
-    <div className="w-full text-center pb-3 border-b" style={{ borderColor: `${accentColor}22` }}>
-      <p
-        className="font-body text-[9px] uppercase tracking-[0.3em] mb-0.5"
-        style={{ color: `${accentColor}99` }}
-      >
-        {sublabel}
-      </p>
-      <p className="font-display text-sm italic" style={{ color: `${accentColor}cc` }}>
-        {label}
-      </p>
-    </div>
-
-    {/* Notes grid */}
-    <div className="flex flex-wrap justify-center gap-4 pb-2">
-      {items.map((note, i) => (
-        <NoteItem
-          key={note}
-          name={note}
-          accentColor={accentColor}
-          index={i}
-          sectionIndex={sectionIndex}
-        />
-      ))}
-    </div>
-  </motion.div>
-);
 
 interface Props {
   notes: Note;
@@ -127,8 +79,8 @@ interface Props {
 
 const OlfactoryPyramid = ({ notes, accentColor = 'hsl(var(--gold))' }: Props) => {
   const sections = [
-    { label: 'Notes de Tête', sublabel: 'Ouverture', items: notes.top, width: '60%' },
-    { label: 'Notes de Cœur', sublabel: 'Signature', items: notes.heart, width: '80%' },
+    { label: 'Notes de Tête', sublabel: 'Ouverture', items: notes.top, width: '55%' },
+    { label: 'Notes de Cœur', sublabel: 'Signature', items: notes.heart, width: '75%' },
     { label: 'Notes de Fond', sublabel: 'Sillage', items: notes.base, width: '100%' },
   ];
 
@@ -143,17 +95,50 @@ const OlfactoryPyramid = ({ notes, accentColor = 'hsl(var(--gold))' }: Props) =>
         Pyramide Olfactive
       </motion.h4>
 
-      <div className="flex flex-col items-center gap-6">
+      <div className="flex flex-col items-center gap-3">
         {sections.map((section, i) => (
-          <PyramidSection
+          <motion.div
             key={section.label}
-            label={section.label}
-            sublabel={section.sublabel}
-            items={section.items}
-            width={section.width}
-            accentColor={accentColor}
-            sectionIndex={i}
-          />
+            initial={{ opacity: 0, x: -16 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: i * 0.15 }}
+            className="flex flex-col items-center gap-4 rounded-sm py-4 px-3"
+            style={{
+              width: section.width,
+              background: `linear-gradient(135deg, ${accentColor}22, ${accentColor}0e)`,
+              borderLeft: `2px solid ${accentColor}88`,
+              borderTop: `1px solid ${accentColor}33`,
+              borderBottom: `1px solid ${accentColor}1a`,
+              boxShadow: `0 2px 20px ${accentColor}10`,
+            }}
+          >
+            {/* Header */}
+            <div className="text-center">
+              <p
+                className="font-body uppercase"
+                style={{ fontSize: '9px', letterSpacing: '0.3em', color: `${accentColor}88` }}
+              >
+                {section.sublabel}
+              </p>
+              <p className="font-display text-sm italic" style={{ color: `${accentColor}cc` }}>
+                {section.label}
+              </p>
+            </div>
+
+            {/* Notes */}
+            <div className="flex flex-wrap justify-center gap-3">
+              {section.items.map((note, j) => (
+                <NoteItem
+                  key={note}
+                  name={note}
+                  accentColor={accentColor}
+                  index={j}
+                  sectionIndex={i}
+                />
+              ))}
+            </div>
+          </motion.div>
         ))}
       </div>
     </div>
