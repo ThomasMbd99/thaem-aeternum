@@ -1,6 +1,6 @@
 import { Note } from '@/data/products';
 import { motion } from 'framer-motion';
-import { useNoteImage } from '@/hooks/useNoteImage';
+import { getNoteImagePath } from '@/data/noteImages';
 
 interface NoteItemProps {
   name: string;
@@ -10,7 +10,7 @@ interface NoteItemProps {
 }
 
 const NoteItem = ({ name, accentColor, index, sectionIndex }: NoteItemProps) => {
-  const { data: imageUrl, isLoading } = useNoteImage(name);
+  const imagePath = getNoteImagePath(name);
 
   return (
     <motion.div
@@ -26,11 +26,9 @@ const NoteItem = ({ name, accentColor, index, sectionIndex }: NoteItemProps) => 
         className="w-12 h-12 rounded-full overflow-hidden transition-all duration-300 group-hover:scale-110"
         style={{ boxShadow: `0 0 0 1.5px ${accentColor}44` }}
       >
-        {isLoading ? (
-          <div className="w-full h-full animate-pulse rounded-full" style={{ background: `${accentColor}22` }} />
-        ) : imageUrl ? (
+        {imagePath ? (
           <img
-            src={imageUrl}
+            src={imagePath}
             alt={name}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
             loading="lazy"
@@ -45,11 +43,6 @@ const NoteItem = ({ name, accentColor, index, sectionIndex }: NoteItemProps) => 
             </span>
           </div>
         )}
-        {/* Hover glow */}
-        <div
-          className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-          style={{ background: `radial-gradient(circle, ${accentColor}28 0%, transparent 70%)` }}
-        />
       </div>
 
       {/* Note name */}
@@ -63,7 +56,6 @@ const NoteItem = ({ name, accentColor, index, sectionIndex }: NoteItemProps) => 
           width: '72px',
           display: 'block',
           wordBreak: 'break-word',
-          hyphens: 'auto',
         }}
       >
         {name}
@@ -113,12 +105,8 @@ const OlfactoryPyramid = ({ notes, accentColor = 'hsl(var(--gold))' }: Props) =>
               boxShadow: `0 2px 20px ${accentColor}10`,
             }}
           >
-            {/* Header */}
             <div className="text-center">
-              <p
-                className="font-body uppercase"
-                style={{ fontSize: '9px', letterSpacing: '0.3em', color: `${accentColor}88` }}
-              >
+              <p className="font-body uppercase" style={{ fontSize: '9px', letterSpacing: '0.3em', color: `${accentColor}88` }}>
                 {section.sublabel}
               </p>
               <p className="font-display text-sm italic" style={{ color: `${accentColor}cc` }}>
@@ -126,16 +114,9 @@ const OlfactoryPyramid = ({ notes, accentColor = 'hsl(var(--gold))' }: Props) =>
               </p>
             </div>
 
-            {/* Notes */}
             <div className="flex flex-wrap justify-center gap-3">
               {section.items.map((note, j) => (
-                <NoteItem
-                  key={note}
-                  name={note}
-                  accentColor={accentColor}
-                  index={j}
-                  sectionIndex={i}
-                />
+                <NoteItem key={note} name={note} accentColor={accentColor} index={j} sectionIndex={i} />
               ))}
             </div>
           </motion.div>
