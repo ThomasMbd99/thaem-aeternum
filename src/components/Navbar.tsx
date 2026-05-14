@@ -3,7 +3,7 @@ import { ShoppingBag, Menu, X, User } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const navLinks = [
@@ -27,9 +27,26 @@ const Navbar = () => {
   const { user } = useAuth();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [navVisible, setNavVisible] = useState(true);
+  const lastY = useRef(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(max > 0 ? y / max : 0);
+      setNavVisible(y < lastY.current || y < 80);
+      lastY.current = y;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
-    <nav
+    <motion.nav
+      animate={{ y: navVisible ? 0 : '-100%' }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b"
       style={{
         backgroundColor: `hsl(var(--navbar-bg) / 0.88)`,
@@ -110,6 +127,18 @@ const Navbar = () => {
         </div>
       </div>
 
+      {/* Barre de progression scroll */}
+      <div className="absolute bottom-0 left-0 right-0 h-px" style={{ background: `hsl(var(--navbar-border))` }}>
+        <motion.div
+          className="h-full origin-left"
+          style={{
+            scaleX: scrollProgress,
+            background: 'linear-gradient(90deg, hsl(var(--primary)), rgba(196,149,106,0.6))',
+            boxShadow: '0 0 6px rgba(196,149,106,0.5)',
+          }}
+        />
+      </div>
+
       {/* Menu mobile */}
       <AnimatePresence>
         {mobileOpen && (
@@ -145,7 +174,7 @@ const Navbar = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+    </motion.nav>
   );
 };
 

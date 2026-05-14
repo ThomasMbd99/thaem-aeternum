@@ -119,6 +119,8 @@ const ProductCard = ({ product, index = 0 }: Props) => {
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const [liked, setLiked] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
   const isComingSoon = product.status === 'prochainement' || product.statut === 'prochainement';
@@ -172,13 +174,27 @@ const ProductCard = ({ product, index = 0 }: Props) => {
           ref={cardRef}
           className="aspect-[3/4] rounded overflow-hidden relative mb-4 flex items-center justify-center transition-all duration-500 group-hover:scale-[1.03]"
           style={{ background: `linear-gradient(135deg, hsl(0 0% 8%), hsl(0 0% 12%))` }}
-          onMouseEnter={handleMouseEnter}
+          onMouseEnter={() => { handleMouseEnter(); setIsHovered(true); }}
+          onMouseLeave={() => setIsHovered(false)}
+          onMouseMove={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+          }}
         >
-          {/* Hover glow */}
+          {/* Hover glow ring */}
           <div
-            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded"
-            style={{ boxShadow: `0 0 40px ${collection?.colors.accent}44, 0 0 80px ${collection?.colors.accent}18` }}
+            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded pointer-events-none"
+            style={{ boxShadow: `inset 0 0 0 1px ${collection?.colors.accent}55, 0 0 40px ${collection?.colors.accent}33` }}
           />
+          {/* Shimmer curseur */}
+          {isHovered && (
+            <div
+              className="absolute inset-0 pointer-events-none z-[15] rounded"
+              style={{
+                background: `radial-gradient(circle 90px at ${mousePos.x}px ${mousePos.y}px, ${collection?.colors.accent}22 0%, transparent 65%)`,
+              }}
+            />
+          )}
 
           {/* Bottle */}
           <img

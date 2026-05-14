@@ -139,27 +139,33 @@ const FilmGrain = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    // Canvas offscreen à demi-résolution → CPU ÷ 4
+    const off = document.createElement('canvas');
+    const offCtx = off.getContext('2d')!;
+
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      off.width = Math.floor(window.innerWidth / 2);
+      off.height = Math.floor(window.innerHeight / 2);
     };
     resize();
     window.addEventListener('resize', resize);
 
     const draw = () => {
-      const W = canvas.width;
-      const H = canvas.height;
-      const imageData = ctx.createImageData(W, H);
+      const W = off.width;
+      const H = off.height;
+      const imageData = offCtx.createImageData(W, H);
       const data = imageData.data;
       for (let i = 0; i < data.length; i += 4) {
-        const v = Math.random() * 255;
-        data[i] = v;
-        data[i + 1] = v;
-        data[i + 2] = v;
-        data[i + 3] = Math.random() * 18;
+        const v = (Math.random() * 255) | 0;
+        data[i] = v; data[i + 1] = v; data[i + 2] = v;
+        data[i + 3] = (Math.random() * 18) | 0;
       }
-      ctx.putImageData(imageData, 0, 0);
-      animRef.current = requestAnimationFrame(draw);
+      offCtx.putImageData(imageData, 0, 0);
+      ctx.drawImage(off, 0, 0, canvas.width, canvas.height);
+      // Throttle à ~20fps
+      setTimeout(() => { animRef.current = requestAnimationFrame(draw); }, 50);
     };
 
     animRef.current = requestAnimationFrame(draw);
