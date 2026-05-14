@@ -63,7 +63,12 @@ const NOTE_MAP: Record<string, string> = {
   'cuir': 'cuir', 'cuir de russie': 'cuir',
   'daim': 'daim',
   'bois ambré': 'ambre', 'bois ambrés': 'ambre',
-  "bois d'akigala": 'cedre',
+  "bois d'akigala": 'bois',
+  'bois': 'bois', 'bois crémeux': 'bois-cremeux',
+  'sapin baumier': 'sapin-baumier',
+  'chouchou': 'chouchou',
+  'mahonial': 'mahonial',
+  'oud du vietnam': 'oud-du-vietnam',
 
   // Résines
   'encens': 'encens',
