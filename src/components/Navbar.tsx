@@ -1,20 +1,23 @@
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingBag, Menu, X, User } from 'lucide-react';
+import { ShoppingBag, Menu, X, User, ChevronDown, Instagram } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const navLinks = [
-  { to: '/',             label: 'Accueil' },
+const boutiqueLinks = [
   { to: '/collections',  label: 'Nos Gammes' },
   { to: '/parfums',      label: 'Tous les Parfums' },
   { to: '/coffret',      label: 'Coffret Découverte' },
   { to: '/offres',       label: 'Les Offres Æ' },
-  { to: '/quiz',         label: 'Quiz Olfactif' },
-  { to: '/histoire',     label: 'Notre Histoire' },
-  { to: '/contact',      label: 'Contact' },
+];
+
+const mainLinks = [
+  { to: '/sillages',  label: 'Sillages' },
+  { to: '/quiz',      label: 'Quiz' },
+  { to: '/histoire',  label: 'La Maison' },
+  { to: '/contact',   label: 'Contact' },
 ];
 
 const themeLabels: Record<string, string> = {
@@ -27,9 +30,11 @@ const Navbar = () => {
   const { user } = useAuth();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [boutiqueOpen, setBoutiqueOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [navVisible, setNavVisible] = useState(true);
   const lastY = useRef(0);
+  const boutiqueRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => {
@@ -42,6 +47,23 @@ const Navbar = () => {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (boutiqueRef.current && !boutiqueRef.current.contains(e.target as Node)) {
+        setBoutiqueOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
+  useEffect(() => { setBoutiqueOpen(false); setMobileOpen(false); }, [location.pathname]);
+
+  const isBoutiqueActive = boutiqueLinks.some(l => location.pathname === l.to || location.pathname.startsWith('/collection/') || location.pathname.startsWith('/produit/'));
+
+  const linkCls = (active: boolean) =>
+    `font-body uppercase whitespace-nowrap transition-colors duration-300 hover:text-primary ${active ? 'text-primary' : 'text-muted-foreground'}`;
 
   return (
     <motion.nav
@@ -67,14 +89,58 @@ const Navbar = () => {
         </Link>
 
         {/* Liens desktop */}
-        <div className="hidden lg:flex items-center justify-center flex-1 gap-4 xl:gap-6">
-          {navLinks.map(link => (
+        <div className="hidden lg:flex items-center justify-center flex-1 gap-5 xl:gap-7">
+
+          {/* Boutique dropdown */}
+          <div ref={boutiqueRef} className="relative">
+            <button
+              onClick={() => setBoutiqueOpen(v => !v)}
+              className={`flex items-center gap-1 font-body uppercase whitespace-nowrap transition-colors duration-300 hover:text-primary ${isBoutiqueActive ? 'text-primary' : 'text-muted-foreground'}`}
+              style={{ fontSize: '9px', letterSpacing: '0.2em' }}
+            >
+              Boutique
+              <ChevronDown
+                className="w-3 h-3 transition-transform duration-200"
+                style={{ transform: boutiqueOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+              />
+            </button>
+
+            <AnimatePresence>
+              {boutiqueOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 6, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 4, scale: 0.97 }}
+                  transition={{ duration: 0.18 }}
+                  className="absolute top-full left-1/2 -translate-x-1/2 mt-4 py-2 rounded-xl border w-48"
+                  style={{
+                    background: 'hsl(var(--navbar-bg) / 0.98)',
+                    borderColor: 'rgba(255,255,255,0.08)',
+                    backdropFilter: 'blur(20px)',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+                  }}
+                >
+                  {boutiqueLinks.map(link => (
+                    <Link
+                      key={link.to}
+                      to={link.to}
+                      className="block px-4 py-2.5 font-body text-[9px] uppercase tracking-[0.2em] transition-colors hover:text-primary"
+                      style={{ color: location.pathname === link.to ? 'hsl(var(--primary))' : 'rgba(255,255,255,0.5)' }}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Liens principaux */}
+          {mainLinks.map(link => (
             <Link
               key={link.to}
               to={link.to}
-              className={`font-body uppercase whitespace-nowrap transition-colors duration-300 hover:text-primary ${
-                location.pathname === link.to ? 'text-primary' : 'text-muted-foreground'
-              }`}
+              className={linkCls(location.pathname === link.to || location.pathname.startsWith(link.to + '/'))}
               style={{ fontSize: '9px', letterSpacing: '0.2em' }}
             >
               {link.label}
@@ -98,6 +164,16 @@ const Navbar = () => {
               </motion.span>
             )}
           </AnimatePresence>
+
+          <a
+            href="https://www.instagram.com/thaem_aeternum"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden lg:flex p-2 rounded-full hover:bg-white/5 transition-colors"
+            aria-label="Instagram"
+          >
+            <Instagram className="w-4 h-4 text-muted-foreground hover:text-primary transition-colors" />
+          </a>
 
           <Link
             to={user ? '/account' : '/login'}
@@ -150,7 +226,29 @@ const Navbar = () => {
             style={{ backgroundColor: `hsl(var(--navbar-bg))`, borderColor: `hsl(var(--navbar-border))` }}
           >
             <div className="container mx-auto px-4 py-4 flex flex-col">
-              {navLinks.map(link => (
+              {/* Boutique section */}
+              <p className="font-body text-[9px] uppercase tracking-[0.3em] py-2 mb-1" style={{ color: 'rgba(255,255,255,0.25)' }}>
+                Boutique
+              </p>
+              {boutiqueLinks.map(link => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  onClick={() => setMobileOpen(false)}
+                  className={`font-body text-sm tracking-widest uppercase py-3 border-b pl-3 transition-colors ${
+                    location.pathname === link.to ? 'text-primary' : 'text-muted-foreground'
+                  }`}
+                  style={{ borderColor: 'rgba(255,255,255,0.05)' }}
+                >
+                  {link.label}
+                </Link>
+              ))}
+
+              {/* Séparateur */}
+              <div className="my-2" />
+
+              {/* Liens principaux */}
+              {mainLinks.map(link => (
                 <Link
                   key={link.to}
                   to={link.to}
@@ -163,6 +261,7 @@ const Navbar = () => {
                   {link.label}
                 </Link>
               ))}
+
               <Link
                 to={user ? '/account' : '/login'}
                 onClick={() => setMobileOpen(false)}

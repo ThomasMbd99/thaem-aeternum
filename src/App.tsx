@@ -39,6 +39,8 @@ import AllParfums from "./pages/AllParfums";
 import InvoicePage from "./pages/InvoicePage";
 import AdminPage from "./pages/AdminPage";
 import OffresPage from "./pages/OffresPage";
+import Sillages from "./pages/Sillages";
+import SillageArticle from "./pages/SillageArticle";
 
 const queryClient = new QueryClient();
 
@@ -100,6 +102,8 @@ const AnimatedRoutes = () => {
             <Route path="/invoice/:id" element={<InvoicePage />} />
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/politique-retour" element={<PolitiqueRetour />} />
+            <Route path="/sillages" element={<Sillages />} />
+            <Route path="/sillages/:slug" element={<SillageArticle />} />
             <Route path="*" element={<NotFound />} />
         </Routes>
       </motion.div>
