@@ -9,7 +9,7 @@ const Footer = () => (
             TH<span className="ae-highlight">Æ</span>M <span className="ae-highlight">Æ</span>TERNUM
           </h3>
           <p className="font-body text-sm text-muted-foreground leading-relaxed">
-            L'essence de l'éternel. Parfumerie artisanale française.
+            Le souffle de l'âme. Parfumerie artisanale française.
           </p>
         </div>
         <div>
