@@ -99,7 +99,7 @@ const Sillages = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.07 }}
                   >
-                    <Link to={`/sillages/${article.slug}`} className="group block rounded-xl border border-white/8 overflow-hidden hover:border-white/16 transition-all duration-300" style={{ background: 'rgba(255,255,255,0.02)' }}>
+                    <Link to={`/journal/${article.slug}`} className="group block rounded-xl border border-white/8 overflow-hidden hover:border-white/16 transition-all duration-300" style={{ background: 'rgba(255,255,255,0.02)' }}>
                       {/* Image */}
                       <div className="h-52 overflow-hidden relative" style={{ background: 'hsl(0 0% 8%)' }}>
                         {article.image_url ? (
