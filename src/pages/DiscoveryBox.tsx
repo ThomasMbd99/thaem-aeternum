@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { products, getCollection } from '@/data/products';
+import { getCollection } from '@/data/products';
 import { useCart } from '@/context/CartContext';
 import { useParfums } from '@/hooks/useParfums';
 import { normalizeNom } from '@/lib/parfumUtils';
@@ -373,7 +373,7 @@ const DiscoveryBox = () => {
               <div className="flex gap-2">
                 {Array.from({ length: 5 }).map((_, i) => {
                   const perfume = selected[i]
-                    ? products.find(p => p.id === selected[i])
+                    ? parfumsDB.find(p => p.id === selected[i])
                     : null;
                   const col = perfume ? getCollection(perfume.collection) : null;
                   const perfumeTheme = perfume ? perfumeThemes[perfume.id] : null;
@@ -467,7 +467,7 @@ const DiscoveryBox = () => {
 
           {(['sacrae', 'vitae', 'umbrae', 'nerolae', 'aera'] as const).map((colId, ci) => {
             const col = getCollection(colId)!;
-            const colProducts = products.filter(p => p.collection === colId);
+            const colProducts = parfumsDB.filter(p => p.collection === colId && !p.en_promo);
             const collectionTheme = collectionThemes[colId];
 
             return (
