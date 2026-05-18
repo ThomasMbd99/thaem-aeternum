@@ -2,6 +2,8 @@ import { useEffect, useRef, useCallback } from 'react';
 import { type Collection } from '@/data/products';
 import { useTheme } from '@/context/ThemeContext';
 
+const LIGHT_BG = 'hsl(45, 35%, 97%)';
+
 // Per-collection particle/atmosphere configs
 const collectionThemes: Record<Collection, {
   gradient: string;
@@ -99,17 +101,24 @@ const AnimatedBackground = () => {
   const bokehRef = useRef<Bokeh[]>([]);
   const themeRef = useRef(defaultTheme);
   const transRef = useRef({ from: defaultTheme, to: defaultTheme, progress: 1 });
-  const { pendingTheme } = useTheme();
+  const { pendingTheme, lightMode } = useTheme();
   const collectionId: Collection | null = pendingTheme;
 
   // Apply background gradient to body
   useEffect(() => {
     const body = document.body;
     body.style.transition = 'background 1s ease-in-out';
-    const theme = collectionId ? collectionThemes[collectionId] : defaultTheme;
-    body.style.background = theme.gradient;
-    return () => { body.style.background = '#0A0A0A'; body.style.transition = ''; };
-  }, [collectionId]);
+    if (lightMode && !collectionId) {
+      body.style.background = LIGHT_BG;
+    } else {
+      const theme = collectionId ? collectionThemes[collectionId] : defaultTheme;
+      body.style.background = theme.gradient;
+    }
+    return () => {
+      body.style.background = lightMode && !collectionId ? LIGHT_BG : '#0A0A0A';
+      body.style.transition = '';
+    };
+  }, [collectionId, lightMode]);
 
   // Transition theme when collection changes
   useEffect(() => {
@@ -296,6 +305,8 @@ const AnimatedBackground = () => {
       window.removeEventListener('resize', resize);
     };
   }, [createParticle, createBokeh]);
+
+  if (lightMode && !collectionId) return null;
 
   return (
     <canvas
