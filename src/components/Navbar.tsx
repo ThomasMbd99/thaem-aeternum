@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingBag, Menu, X, User, ChevronDown, Instagram } from 'lucide-react';
+import { ShoppingBag, Menu, X, User, ChevronDown, Instagram, Home } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
@@ -90,6 +90,15 @@ const Navbar = () => {
 
         {/* Liens desktop */}
         <div className="hidden lg:flex items-center justify-center flex-1 gap-5 xl:gap-7">
+
+          {/* Accueil icône */}
+          <Link
+            to="/"
+            className={`transition-colors duration-300 hover:text-primary ${location.pathname === '/' ? 'text-primary' : 'text-muted-foreground'}`}
+            aria-label="Accueil"
+          >
+            <Home className="w-3.5 h-3.5" />
+          </Link>
 
           {/* Boutique dropdown */}
           <div ref={boutiqueRef} className="relative">
@@ -226,6 +235,15 @@ const Navbar = () => {
             style={{ backgroundColor: `hsl(var(--navbar-bg))`, borderColor: `hsl(var(--navbar-border))` }}
           >
             <div className="container mx-auto px-4 py-4 flex flex-col">
+              <Link
+                to="/"
+                onClick={() => setMobileOpen(false)}
+                className={`font-body text-sm tracking-widest uppercase py-3 border-b transition-colors ${location.pathname === '/' ? 'text-primary' : 'text-muted-foreground'}`}
+                style={{ borderColor: 'rgba(255,255,255,0.05)' }}
+              >
+                Accueil
+              </Link>
+
               {/* Boutique section */}
               <p className="font-body text-[9px] uppercase tracking-[0.3em] py-2 mb-1" style={{ color: 'rgba(255,255,255,0.25)' }}>
                 Boutique
