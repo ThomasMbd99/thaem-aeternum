@@ -34,7 +34,7 @@ const OurStory = () => (
   <PageTransition>
     <Helmet>
       <title>Notre Histoire — THÆM ÆTERNUM</title>
-      <meta name="description" content="Découvrez l'histoire de THÆM ÆTERNUM, maison de parfumerie artisanale française. L'essence de l'éternel, née d'une passion pour les matières nobles." />
+      <meta name="description" content="Découvrez l'histoire de THÆM ÆTERNUM, maison de parfumerie artisanale française. Le souffle de l'âme, née d'une passion pour les matières nobles." />
       <meta property="og:title" content="Notre Histoire — THÆM ÆTERNUM" />
     </Helmet>
     <div className="min-h-screen pt-24 lg:pt-28 pb-28 relative">
