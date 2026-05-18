@@ -102,8 +102,8 @@ const AnimatedRoutes = () => {
             <Route path="/invoice/:id" element={<InvoicePage />} />
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/politique-retour" element={<PolitiqueRetour />} />
-            <Route path="/sillages" element={<Sillages />} />
-            <Route path="/sillages/:slug" element={<SillageArticle />} />
+            <Route path="/journal" element={<Sillages />} />
+            <Route path="/journal/:slug" element={<SillageArticle />} />
             <Route path="*" element={<NotFound />} />
         </Routes>
       </motion.div>

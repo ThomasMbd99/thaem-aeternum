@@ -25,8 +25,8 @@ const Sillages = () => {
   return (
     <PageTransition>
       <Helmet>
-        <title>Sillages — THÆM ÆTERNUM</title>
-        <meta name="description" content="Actualités, collections, événements et collaborations de THÆM ÆTERNUM." />
+        <title>Le Journal Æ — THÆM ÆTERNUM</title>
+        <meta name="description" content="Le journal de la maison THÆM ÆTERNUM — actualités, collections, événements et collaborations." />
       </Helmet>
 
       <div className="min-h-screen pt-24 lg:pt-28 pb-28">
@@ -38,7 +38,7 @@ const Sillages = () => {
               La Maison
             </p>
             <h1 className="font-display text-4xl lg:text-6xl italic font-light mb-4">
-              Sill<span style={{ color: 'hsl(43,50%,54%)' }}>a</span>ges
+              Le Journal <span style={{ color: 'hsl(43,50%,54%)' }}>Æ</span>
             </h1>
             <p className="font-display italic text-foreground/40 text-base lg:text-lg max-w-md mx-auto">
               Actualités, collections, événements et collaborations.
@@ -83,7 +83,7 @@ const Sillages = () => {
           ) : filtered.length === 0 ? (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-24">
               <p className="font-display italic text-2xl text-foreground/30 mb-2">Bientôt.</p>
-              <p className="font-body text-xs text-foreground/25 uppercase tracking-widest">Les premiers sillages arrivent.</p>
+              <p className="font-body text-xs text-foreground/25 uppercase tracking-widest">Les premières pages arrivent.</p>
             </motion.div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -60,7 +60,7 @@ const SillageArticle = () => {
         <div className="min-h-screen pt-24 pb-28 flex items-center justify-center">
           <div className="text-center">
             <p className="font-display italic text-2xl text-foreground/30 mb-4">Article introuvable.</p>
-            <Link to="/sillages" className="font-body text-xs uppercase tracking-widest text-primary hover:underline">
+            <Link to="/journal" className="font-body text-xs uppercase tracking-widest text-primary hover:underline">
               ← Retour aux Sillages
             </Link>
           </div>
@@ -92,11 +92,11 @@ const SillageArticle = () => {
           {/* Back */}
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-12">
             <Link
-              to="/sillages"
+              to="/journal"
               className="font-body text-[10px] uppercase tracking-[0.3em] transition-colors hover:text-primary"
               style={{ color: 'rgba(255,255,255,0.3)' }}
             >
-              ← Sillages
+              ← Le Journal Æ
             </Link>
           </motion.div>
 
@@ -168,11 +168,11 @@ const SillageArticle = () => {
             style={{ borderColor: 'rgba(255,255,255,0.06)' }}
           >
             <Link
-              to="/sillages"
+              to="/journal"
               className="font-body text-[10px] uppercase tracking-[0.3em] transition-colors hover:text-primary"
               style={{ color: 'rgba(255,255,255,0.35)' }}
             >
-              ← Tous les sillages
+              ← Tous les articles
             </Link>
             <span
               className="font-display italic text-lg"

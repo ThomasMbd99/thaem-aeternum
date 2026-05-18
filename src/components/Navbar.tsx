@@ -14,7 +14,7 @@ const boutiqueLinks = [
 ];
 
 const mainLinks = [
-  { to: '/sillages',  label: 'Sillages' },
+  { to: '/journal',  label: 'Journal Æ' },
   { to: '/quiz',      label: 'Quiz' },
   { to: '/histoire',  label: 'La Maison' },
   { to: '/contact',   label: 'Contact' },
