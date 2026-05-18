@@ -648,7 +648,7 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
                   >
                     {editingParfum.flagship && <span className="text-black text-[10px] font-bold">✓</span>}
                   </div>
-                  <span className="font-body text-xs text-foreground/50">Parfum flagship (mis en avant)</span>
+                  <span className="font-body text-xs text-foreground/50">Best seller (affiché sur la page d'accueil)</span>
                 </label>
 
                 {/* Phrase signature */}

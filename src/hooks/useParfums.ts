@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { supabase, type ParfumDB } from '@/lib/supabase';
 import type { Collection } from '@/data/products';
 
@@ -33,6 +33,7 @@ export interface ParfumFull {
   en_promo: boolean;
   prix_promo: number | null;
   image_url: string | null;
+  flagship: boolean;
 }
 
 function parseNotes(str: string | null): string[] {
@@ -68,28 +69,26 @@ function mapParfum(p: ParfumDB): ParfumFull {
     en_promo: p.en_promo ?? false,
     prix_promo: p.prix_promo ?? null,
     image_url: p.image_url ?? null,
+    flagship: p.flagship ?? false,
   };
 }
 
-export function useParfums() {
-  const [parfums, setParfums] = useState<ParfumFull[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+async function fetchParfums(): Promise<ParfumFull[]> {
+  const { data, error } = await supabase
+    .from('parfums')
+    .select('*')
+    .order('famille')
+    .order('nom');
+  if (error) throw new Error(error.message);
+  return (data as ParfumDB[]).map(mapParfum);
+}
 
-  useEffect(() => {
-    async function fetch() {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('parfums')
-        .select('*')
-        .order('famille')
-        .order('nom');
-      if (error) setError(error.message);
-      else setParfums((data as ParfumDB[]).map(mapParfum));
-      setLoading(false);
-    }
-    fetch();
-  }, []);
+export function useParfums() {
+  const { data: parfums = [], isLoading: loading, error } = useQuery({
+    queryKey: ['parfums'],
+    queryFn: fetchParfums,
+    staleTime: 5 * 60 * 1000,
+  });
 
   const getByCollection = (col: Collection) =>
     parfums.filter(p => p.collection === col);
@@ -97,5 +96,5 @@ export function useParfums() {
   const getById = (id: string) =>
     parfums.find(p => p.id === id);
 
-  return { parfums, loading, error, getByCollection, getById };
+  return { parfums, loading, error: error?.message ?? null, getByCollection, getById };
 }

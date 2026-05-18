@@ -1,8 +1,7 @@
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { products, collections } from '@/data/products';
+import { collections, type Product } from '@/data/products';
 import { useParfums } from '@/hooks/useParfums';
-import { buildDbMap, enrichProduct } from '@/lib/parfumUtils';
 import ProductCard from '@/components/ProductCard';
 import PageTransition from '@/components/PageTransition';
 
@@ -10,10 +9,8 @@ const AllParfums = () => {
   const [filter, setFilter] = useState<string>('all');
   const { parfums: parfumsDB } = useParfums();
 
-  // Enrichit les données statiques avec statut/stock Supabase
   const enrichedProducts = useMemo(() => {
-    const dbMap = buildDbMap(parfumsDB);
-    return products.map(p => enrichProduct(p, dbMap)).filter(p => !p.en_promo);
+    return parfumsDB.filter(p => !p.en_promo) as unknown as Product[];
   }, [parfumsDB]);
 
   const filtered = filter === 'all' ? enrichedProducts : enrichedProducts.filter(p => p.collection === filter);

@@ -2,8 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { useEffect, useRef, useMemo } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { getCollection, getCollectionProducts, type Collection } from '@/data/products';
-import { buildDbMap, enrichProduct } from '@/lib/parfumUtils';
+import { getCollection, type Collection, type Product } from '@/data/products';
 import { useParfums } from '@/hooks/useParfums';
 import { collectionStories } from '@/data/collectionStories';
 import { useTheme } from '@/context/ThemeContext';
@@ -18,11 +17,9 @@ const CollectionPage = () => {
   const collection = id ? getCollection(id as Collection) : undefined;
   const { parfums: parfumsDB, loading } = useParfums();
 
-  // Données statiques enrichies avec statut/stock Supabase
   const prods = useMemo(() => {
-    if (!id) return [];
-    const dbMap = buildDbMap(parfumsDB);
-    return getCollectionProducts(id as Collection).map(p => enrichProduct(p, dbMap)).filter(p => !p.en_promo);
+    if (!id) return [] as Product[];
+    return parfumsDB.filter(p => p.collection === id && !p.en_promo) as unknown as Product[];
   }, [id, parfumsDB]);
   const story = id ? collectionStories[id as keyof typeof collectionStories] : undefined;
 

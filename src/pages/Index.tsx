@@ -1,8 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { collections, products, type Product } from '@/data/products';
-import { buildDbMap, enrichProduct } from '@/lib/parfumUtils';
+import { collections, type Product } from '@/data/products';
 import { useParfums } from '@/hooks/useParfums';
 import ProductCard from '@/components/ProductCard';
 import { Recycle, Gift, Sparkles } from 'lucide-react';
@@ -184,8 +183,6 @@ const FilmGrain = () => {
   );
 };
 
-const BEST_SELLER_IDS = ['zaemyr', 'velae', 'koyaen', 'aeonis', 'alnae'];
-
 const Index = () => {
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
@@ -193,13 +190,7 @@ const Index = () => {
   const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
   const { parfums: parfumsDB } = useParfums();
   const bestSellers = useMemo((): Product[] => {
-    const dbMap = buildDbMap(parfumsDB);
-    return BEST_SELLER_IDS.reduce<Product[]>((acc, id) => {
-      const staticP = products.find(p => p.id === id);
-      if (!staticP) return acc;
-      acc.push(enrichProduct(staticP, dbMap));
-      return acc;
-    }, []);
+    return parfumsDB.filter(p => p.flagship && !p.en_promo) as unknown as Product[];
   }, [parfumsDB]);
 
   return (
