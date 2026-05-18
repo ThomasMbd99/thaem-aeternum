@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" fill="#0a0a0a"/>
+  <rect width="100" height="100" fill="url(#bg)" opacity="0.6"/>
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#C4956A" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#0a0a0a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D4A870"/>
+      <stop offset="50%" stop-color="#C4956A"/>
+      <stop offset="100%" stop-color="#A87840"/>
+    </linearGradient>
+  </defs>
+  <text
+    x="50"
+    y="72"
+    text-anchor="middle"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="68"
+    font-weight="400"
+    fill="url(#gold)"
+    letter-spacing="-1"
+  >Æ</text>
+</svg>
