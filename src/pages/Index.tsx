@@ -8,6 +8,7 @@ import { Recycle, Gift, Sparkles } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
 import almaePromo from '@/assets/bottles/almae-promo.png';
 import { useRef, useEffect, useCallback, useMemo } from 'react';
+import { useArticles } from '@/hooks/useArticles';
 
 // ── CANVAS : encre / fumée sombre + particules dorées
 const InkCanvas = () => {
@@ -189,6 +190,8 @@ const Index = () => {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
   const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
   const { parfums: parfumsDB } = useParfums();
+  const { articles } = useArticles();
+  const lastArticle = articles[0] ?? null;
   const bestSellers = useMemo((): Product[] => {
     return parfumsDB.filter(p => p.flagship && !p.en_promo) as unknown as Product[];
   }, [parfumsDB]);
@@ -648,6 +651,64 @@ const Index = () => {
             </motion.div>
           </div>
         </section>
+
+        {/* ── JOURNAL ── */}
+        {lastArticle && (
+          <section className="py-20 lg:py-28 border-t" style={{ borderColor: 'rgba(196,149,106,0.1)' }}>
+            <div className="container mx-auto px-4 lg:px-8 max-w-5xl">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+              >
+                <div className="flex items-center justify-between mb-10">
+                  <div>
+                    <p className="font-body text-[10px] uppercase tracking-[0.4em] mb-2" style={{ color: 'rgba(196,149,106,0.6)' }}>La Maison</p>
+                    <h2 className="font-display text-3xl lg:text-4xl italic font-light">Le Journal <span style={{ color: 'hsl(43,50%,54%)' }}>Æ</span></h2>
+                  </div>
+                  <Link
+                    to="/journal"
+                    className="hidden md:flex font-body text-[10px] uppercase tracking-[0.25em] transition-colors hover:text-primary"
+                    style={{ color: 'rgba(255,255,255,0.3)' }}
+                  >
+                    Tous les articles →
+                  </Link>
+                </div>
+
+                <Link to={`/journal/${lastArticle.slug}`} className="group flex flex-col md:flex-row gap-8 items-center">
+                  <div
+                    className="w-full md:w-1/2 rounded-xl overflow-hidden border border-white/8 group-hover:border-white/16 transition-all duration-500 shrink-0"
+                    style={{ aspectRatio: '16/9', background: 'hsl(0 0% 8%)' }}
+                  >
+                    {lastArticle.image_url
+                      ? <img src={lastArticle.image_url} alt={lastArticle.titre} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                      : <div className="w-full h-full flex items-center justify-center"><span className="font-display text-7xl font-bold" style={{ color: 'rgba(196,149,106,0.08)' }}>Æ</span></div>
+                    }
+                  </div>
+                  <div className="flex-1">
+                    <span className="inline-block font-body text-[9px] uppercase tracking-widest px-2.5 py-1 rounded mb-4" style={{ background: 'rgba(196,149,106,0.12)', color: '#C4956A', border: '1px solid rgba(196,149,106,0.25)' }}>
+                      {lastArticle.categorie}
+                    </span>
+                    <h3 className="font-display italic text-2xl lg:text-3xl font-light mb-3 group-hover:text-primary transition-colors leading-snug">
+                      {lastArticle.titre}
+                    </h3>
+                    {lastArticle.extrait && (
+                      <p className="font-body text-sm text-foreground/45 leading-relaxed mb-6 line-clamp-3">{lastArticle.extrait}</p>
+                    )}
+                    <p className="font-body text-[10px] uppercase tracking-widest" style={{ color: '#C4956A' }}>Lire l'article →</p>
+                  </div>
+                </Link>
+
+                <div className="mt-8 text-center md:hidden">
+                  <Link to="/journal" className="font-body text-[10px] uppercase tracking-[0.25em] text-foreground/35 hover:text-primary transition-colors">
+                    Tous les articles →
+                  </Link>
+                </div>
+              </motion.div>
+            </div>
+          </section>
+        )}
 
         {/* ── ECO ── */}
         <section className="py-20 lg:py-28 border-t" style={{ borderColor: 'rgba(196,149,106,0.1)' }}>
