@@ -389,43 +389,25 @@ const Index = () => {
                 Cinq gammes.<br />
                 <span className="text-foreground/40">Une maison.</span>
               </h2>
-              <p className="font-body text-xs text-muted-foreground/50 mb-10" style={{ letterSpacing: '0.08em' }}>
-                Cinq âmes. Cinq univers. Une seule maison.
-              </p>
-
-              {/* Bande des 5 gammes */}
-              <div className="w-full grid grid-cols-5 border border-white/6 rounded-lg overflow-hidden mb-10">
+              <div className="space-y-3 mb-10">
+                <p className="font-body text-xs text-muted-foreground/40 mb-6" style={{ letterSpacing: '0.08em' }}>
+                  Cinq âmes. Cinq univers. Une seule maison.
+                </p>
                 {[
-                  { name: 'SACRÆ',  sub: 'gourmande',  color: '#C4956A', to: '/collection/sacrae' },
-                  { name: 'VITÆ',   sub: 'fruitée',    color: '#FF6B2B', to: '/collection/vitae' },
-                  { name: 'UMBRÆ',  sub: 'boisée',     color: '#8B6914', to: '/collection/umbrae' },
-                  { name: 'NEROLÆ', sub: 'florale',    color: '#F0A0B8', to: '/collection/nerolae' },
-                  { name: 'ÆRA',    sub: 'aérienne',   color: '#A8D4F0', to: '/collection/aera' },
-                ].map((col, i) => (
-                  <a
-                    key={col.name}
-                    href={col.to}
-                    className="group flex flex-col items-center justify-center py-6 lg:py-8 border-r last:border-r-0 transition-all duration-500 cursor-pointer"
-                    style={{
-                      borderColor: 'rgba(255,255,255,0.06)',
-                      background: 'transparent',
-                    }}
-                    onMouseEnter={e => (e.currentTarget.style.background = `${col.color}08`)}
-                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-                  >
-                    <span
-                      className="font-display italic text-lg lg:text-2xl xl:text-3xl font-light transition-all duration-300 group-hover:opacity-100"
-                      style={{ color: col.color, opacity: 0.6, letterSpacing: '0.05em' }}
-                    >
+                  { name: 'SACRÆ',  sub: 'gourmande et envoûtante',  color: '#C4956A', to: '/collection/sacrae' },
+                  { name: 'VITÆ',   sub: 'fruitée et solaire',        color: '#FF6B2B', to: '/collection/vitae' },
+                  { name: 'UMBRÆ',  sub: 'boisée et silencieuse',     color: '#8B6914', to: '/collection/umbrae' },
+                  { name: 'NEROLÆ', sub: 'florale et raffinée',       color: '#F0A0B8', to: '/collection/nerolae' },
+                  { name: 'ÆRA',    sub: 'propre et aérienne',        color: '#A8D4F0', to: '/collection/aera' },
+                ].map(col => (
+                  <Link key={col.name} to={col.to} className="group flex items-baseline justify-center gap-3 hover:opacity-100 transition-opacity duration-300" style={{ opacity: 0.75 }}>
+                    <span className="font-display italic text-2xl lg:text-3xl font-light" style={{ color: col.color }}>
                       {col.name}
                     </span>
-                    <span
-                      className="font-body text-[8px] uppercase tracking-[0.2em] mt-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                      style={{ color: col.color }}
-                    >
+                    <span className="font-body text-[9px] uppercase tracking-[0.2em] text-foreground/30 group-hover:text-foreground/50 transition-colors">
                       {col.sub}
                     </span>
-                  </a>
+                  </Link>
                 ))}
               </div>
 
