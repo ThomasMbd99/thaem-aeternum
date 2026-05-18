@@ -1,11 +1,10 @@
-import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Sparkles, ShoppingBag } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useParfums, type ParfumFull } from '@/hooks/useParfums';
 import { useCart } from '@/context/CartContext';
-import { formats, type FormatId } from '@/data/products';
+import { formats } from '@/data/products';
 import PageTransition from '@/components/PageTransition';
 
 const toSlug = (nom: string) =>
@@ -34,8 +33,8 @@ const familleFromCollection: Record<string, string> = {
 const OffresPage = () => {
   const { parfums, loading } = useParfums();
   const promos = parfums.filter(p => p.en_promo);
-  const [selectedFormats, setSelectedFormats] = useState<Record<string, FormatId>>({});
   const { addItem } = useCart();
+  const originalPrice50ml = formats.find(f => f.id === '50ml')?.price ?? 44.99;
 
   const grouped = promos.reduce((acc: Record<string, ParfumFull[]>, p) => {
     const f = familleFromCollection[p.collection] ?? 'Autres';
@@ -44,16 +43,8 @@ const OffresPage = () => {
     return acc;
   }, {});
 
-  const getFormat = (id: string): FormatId => selectedFormats[id] ?? '50ml';
-
-  const getPrice = (p: ParfumFull, fmt: FormatId): number => {
-    if (fmt === '50ml' && p.prix_promo) return p.prix_promo;
-    return formats.find(f => f.id === fmt)?.price ?? 44.99;
-  };
-
   const handleAdd = (p: ParfumFull) => {
-    const fmt = getFormat(p.id);
-    addItem({ productId: p.id, format: fmt, name: p.nom, price: getPrice(p, fmt) });
+    addItem({ productId: p.id, format: '50ml', name: p.nom, price: p.prix_promo ?? originalPrice50ml });
   };
 
   return (
@@ -117,12 +108,10 @@ const OffresPage = () => {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
                     {items.map((p, idx) => {
-                      const fmt = getFormat(p.id);
-                      const price = getPrice(p, fmt);
                       const famille = familleFromCollection[p.collection] ?? 'SACRÆ';
-                      const originalPrice = formats.find(f => f.id === fmt)?.price ?? 44.99;
-                      const hasPromo = fmt === '50ml' && !!p.prix_promo && p.prix_promo < originalPrice;
-                      const discount = hasPromo ? Math.round((1 - p.prix_promo! / originalPrice) * 100) : 0;
+                      const hasPromo = !!p.prix_promo && p.prix_promo < originalPrice50ml;
+                      const price = hasPromo ? p.prix_promo! : originalPrice50ml;
+                      const discount = hasPromo ? Math.round((1 - p.prix_promo! / originalPrice50ml) * 100) : 0;
 
                       return (
                         <motion.div
@@ -164,29 +153,12 @@ const OffresPage = () => {
                               )}
                             </Link>
 
-                            {/* Sélecteur format */}
-                            <div className="flex gap-2 mb-4">
-                              {formats.map(f => (
-                                <button
-                                  key={f.id}
-                                  onClick={() => setSelectedFormats(prev => ({ ...prev, [p.id as string]: f.id }))}
-                                  className="flex-1 py-1.5 sm:py-2 font-body text-[9px] sm:text-[10px] uppercase tracking-widest rounded transition-all duration-200"
-                                  style={{
-                                    background: fmt === f.id ? `${accent}18` : 'transparent',
-                                    border: `1px solid ${fmt === f.id ? accent + '60' : 'rgba(255,255,255,0.08)'}`,
-                                    color: fmt === f.id ? accent : 'rgba(255,255,255,0.3)',
-                                  }}
-                                >
-                                  {f.id === 'recharge' ? 'Rech.' : f.label}
-                                </button>
-                              ))}
-                            </div>
-
                             {/* Prix */}
                             <div className="flex items-center justify-between mb-4">
                               <div className="flex items-baseline gap-2">
+                                <span className="font-body text-[10px] uppercase tracking-widest text-foreground/30 mr-1">50ml</span>
                                 {hasPromo && (
-                                  <span className="font-body text-sm text-foreground/30 line-through">{originalPrice.toFixed(2)}€</span>
+                                  <span className="font-body text-sm text-foreground/30 line-through">{originalPrice50ml.toFixed(2)}€</span>
                                 )}
                                 <span className="font-display italic text-2xl" style={{ color: hasPromo ? accent : 'rgba(255,255,255,0.75)' }}>
                                   {price.toFixed(2)}€
