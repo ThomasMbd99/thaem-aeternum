@@ -429,7 +429,7 @@ const Index = () => {
                 vitae: 'linear-gradient(160deg, #7a1500 0%, #c03000 25%, #e05500 55%, #cc7700 80%, #a08800 100%)',
                 umbrae: 'radial-gradient(ellipse at 30% 60%, #3D1A00 0%, #1A0A00 45%, #0D0500 100%)',
                 nerolae: 'linear-gradient(135deg, #FFF0F5 0%, #FFD6E7 40%, #FFCCE0 70%, #FFF0F5 100%)',
-                aera:    'linear-gradient(135deg, #F5FAFF 0%, #D6EEFF 40%, #C0E4FF 70%, #F0F8FF 100%)',
+                aera:    'linear-gradient(135deg, #0D2A42 0%, #1A4A6E 35%, #1E5C8A 65%, #0D2A42 100%)',
               };
               return (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
@@ -453,7 +453,7 @@ const Index = () => {
                             style={{ background: themeBgs[col.id] }}
                           />
                           {(() => {
-                            const lightThemes = ['sacrae', 'nerolae', 'aera'];
+                            const lightThemes = ['sacrae', 'nerolae'];
                             const isLight = lightThemes.includes(col.id);
                             const textColor = isLight ? col.colors.text : 'hsl(var(--foreground))';
                             const subColor = isLight ? col.colors.text + '99' : 'var(--c-w50)';
