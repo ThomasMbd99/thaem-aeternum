@@ -105,7 +105,7 @@ const Navbar = () => {
             <button
               onClick={() => setBoutiqueOpen(v => !v)}
               className={`flex items-center gap-1 font-body uppercase whitespace-nowrap transition-colors duration-300 hover:text-primary ${isBoutiqueActive ? 'text-primary' : 'text-muted-foreground'}`}
-              style={{ fontSize: '9px', letterSpacing: '0.2em' }}
+              style={{ fontSize: '10.5px', letterSpacing: '0.2em' }}
             >
               Boutique
               <ChevronDown
@@ -150,7 +150,7 @@ const Navbar = () => {
               key={link.to}
               to={link.to}
               className={linkCls(location.pathname === link.to || location.pathname.startsWith(link.to + '/'))}
-              style={{ fontSize: '9px', letterSpacing: '0.2em' }}
+              style={{ fontSize: '10.5px', letterSpacing: '0.2em' }}
             >
               {link.label}
             </Link>
