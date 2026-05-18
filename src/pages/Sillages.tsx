@@ -29,8 +29,8 @@ const Sillages = () => {
   return (
     <PageTransition>
       <Helmet>
-        <title>Le Journal Æ — THÆM ÆTERNUM</title>
-        <meta name="description" content="Le journal de la maison THÆM ÆTERNUM — actualités, collections, événements et collaborations." />
+        <title>Le Journal Æ, THÆM ÆTERNUM</title>
+        <meta name="description" content="Le journal de la maison THÆM ÆTERNUM , actualités, collections, événements et collaborations." />
       </Helmet>
 
       <div className="min-h-screen pt-24 lg:pt-28 pb-28">

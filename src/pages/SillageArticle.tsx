@@ -79,10 +79,10 @@ const SillageArticle = () => {
   return (
     <PageTransition>
       <Helmet>
-        <title>{article.titre} — THÆM ÆTERNUM</title>
+        <title>{article.titre}, THÆM ÆTERNUM</title>
         <meta name="description" content={article.extrait ?? article.titre} />
         {article.image_url && <meta property="og:image" content={article.image_url} />}
-        <meta property="og:title" content={`${article.titre} — THÆM ÆTERNUM`} />
+        <meta property="og:title" content={`${article.titre}, THÆM ÆTERNUM`} />
         {article.extrait && <meta property="og:description" content={article.extrait} />}
       </Helmet>
 

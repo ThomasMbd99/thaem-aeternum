@@ -36,7 +36,7 @@ const Contact = () => {
   return (
     <div className="min-h-screen pt-24 lg:pt-28 pb-20">
       <Helmet>
-        <title>Contact — THÆM ÆTERNUM</title>
+        <title>Contact, THÆM ÆTERNUM</title>
         <meta name="description" content="Contactez THÆM ÆTERNUM pour toute question sur nos parfums artisanaux, commandes ou collaborations." />
       </Helmet>
       <div className="container mx-auto px-4 lg:px-8 max-w-xl">

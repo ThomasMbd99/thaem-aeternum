@@ -201,9 +201,9 @@ const Index = () => {
   return (
     <PageTransition>
       <Helmet>
-        <title>THÆM ÆTERNUM — Parfumerie d'Exception</title>
+        <title>THÆM ÆTERNUM, Parfumerie d'Exception</title>
         <meta name="description" content="Le souffle de l'âme. Découvrez nos créations parfumées artisanales à travers 5 univers olfactifs uniques. Extraits de parfum 100% français." />
-        <meta property="og:title" content="THÆM ÆTERNUM — Parfumerie d'Exception" />
+        <meta property="og:title" content="THÆM ÆTERNUM, Parfumerie d'Exception" />
         <meta property="og:description" content="Le souffle de l'âme. Extraits de parfum artisanaux d'exception." />
         <meta property="og:type" content="website" />
       </Helmet>

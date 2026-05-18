@@ -197,9 +197,9 @@ const ProductPage = () => {
   return (
     <div className="min-h-screen bg-background relative">
       <Helmet>
-        <title>{product ? `${product.nom} — THÆM ÆTERNUM` : 'Parfum — THÆM ÆTERNUM'}</title>
-        <meta name="description" content={product ? `${product.tagline} — Extrait de parfum artisanal THÆM ÆTERNUM.` : 'Extrait de parfum artisanal THÆM ÆTERNUM.'} />
-        <meta property="og:title" content={product ? `${product.nom} — THÆM ÆTERNUM` : 'Parfum — THÆM ÆTERNUM'} />
+        <title>{product ? `${product.nom}, THÆM ÆTERNUM` : 'Parfum, THÆM ÆTERNUM'}</title>
+        <meta name="description" content={product ? `${product.tagline} , Extrait de parfum artisanal THÆM ÆTERNUM.` : 'Extrait de parfum artisanal THÆM ÆTERNUM.'} />
+        <meta property="og:title" content={product ? `${product.nom}, THÆM ÆTERNUM` : 'Parfum, THÆM ÆTERNUM'} />
         <meta property="og:description" content={product?.tagline ?? ''} />
       </Helmet>
 

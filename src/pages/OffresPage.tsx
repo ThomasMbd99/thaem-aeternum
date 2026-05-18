@@ -50,7 +50,7 @@ const OffresPage = () => {
   return (
     <PageTransition>
       <Helmet>
-        <title>Les Offres Æ — Thæm Æternum</title>
+        <title>Les Offres Æ, Thæm Æternum</title>
         <meta name="description" content="Créations sélectionnées à des tarifs privilégiés." />
       </Helmet>
 

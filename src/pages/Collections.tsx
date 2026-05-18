@@ -35,9 +35,9 @@ const Collections = () => {
   return (
     <PageTransition>
       <Helmet>
-        <title>Nos Gammes — THÆM ÆTERNUM</title>
+        <title>Nos Gammes, THÆM ÆTERNUM</title>
         <meta name="description" content="Explorez les 5 univers olfactifs de THÆM ÆTERNUM : SACRÆ, VITÆA, UMBRÆ, NEROLÆ et ÆRA. Des créations parfumées artisanales d'exception." />
-        <meta property="og:title" content="Nos Gammes — THÆM ÆTERNUM" />
+        <meta property="og:title" content="Nos Gammes, THÆM ÆTERNUM" />
         <meta property="og:description" content="5 univers olfactifs, des créations artisanales d'exception." />
       </Helmet>
       <div className="min-h-screen pt-24 lg:pt-28 pb-28">

@@ -48,9 +48,9 @@ const CollectionPage = () => {
   return (
     <PageTransition>
       <Helmet>
-        <title>{collection ? `${collection.name} — THÆM ÆTERNUM` : 'Collection — THÆM ÆTERNUM'}</title>
+        <title>{collection ? `${collection.name}, THÆM ÆTERNUM` : 'Collection, THÆM ÆTERNUM'}</title>
         <meta name="description" content={collection ? `${collection.description} Découvrez la gamme ${collection.name} de THÆM ÆTERNUM.` : 'Découvrez nos gammes de parfums artisanaux.'} />
-        <meta property="og:title" content={collection ? `${collection.name} — THÆM ÆTERNUM` : 'Collection — THÆM ÆTERNUM'} />
+        <meta property="og:title" content={collection ? `${collection.name}, THÆM ÆTERNUM` : 'Collection, THÆM ÆTERNUM'} />
         <meta property="og:description" content={collection?.description ?? ''} />
       </Helmet>
       <CollectionSplash collection={collection} />
