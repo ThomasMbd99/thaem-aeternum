@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useArticles } from '@/hooks/useArticles';
 import PageTransition from '@/components/PageTransition';
+import { useState } from 'react';
 
 const CATEGORIES = ['tous', 'actualité', 'collection', 'événement', 'collaboration', 'conseil'];
 
@@ -14,13 +15,16 @@ const categoryColor: Record<string, string> = {
   'conseil':       '#8B6914',
 };
 
-import { useState } from 'react';
-
 const Sillages = () => {
   const { articles, loading } = useArticles();
   const [cat, setCat] = useState('tous');
 
   const filtered = cat === 'tous' ? articles : articles.filter(a => a.categorie === cat);
+
+  const formatDate = (d: string | null) =>
+    d ? new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+
+  const [hero, ...rest] = filtered;
 
   return (
     <PageTransition>
@@ -30,7 +34,7 @@ const Sillages = () => {
       </Helmet>
 
       <div className="min-h-screen pt-24 lg:pt-28 pb-28">
-        <div className="container mx-auto px-4 lg:px-8 max-w-6xl">
+        <div className="container mx-auto px-4 lg:px-8 max-w-5xl">
 
           {/* Header */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-16">
@@ -68,12 +72,13 @@ const Sillages = () => {
 
           {/* Contenu */}
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[1,2,3].map(i => (
-                <div key={i} className="animate-pulse rounded-xl overflow-hidden border border-white/8">
-                  <div className="h-52 bg-white/5" />
-                  <div className="p-5 space-y-3">
-                    <div className="h-4 bg-white/5 rounded w-1/3" />
+            <div className="space-y-8">
+              <div className="animate-pulse rounded-xl overflow-hidden border border-white/8 h-72 bg-white/5" />
+              {[1,2].map(i => (
+                <div key={i} className="animate-pulse flex gap-6">
+                  <div className="w-48 h-32 rounded-xl bg-white/5 shrink-0" />
+                  <div className="flex-1 space-y-3 py-2">
+                    <div className="h-3 bg-white/5 rounded w-1/4" />
                     <div className="h-5 bg-white/5 rounded w-2/3" />
                     <div className="h-3 bg-white/5 rounded w-full" />
                   </div>
@@ -86,49 +91,86 @@ const Sillages = () => {
               <p className="font-body text-xs text-foreground/25 uppercase tracking-widest">Les premières pages arrivent.</p>
             </motion.div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filtered.map((article, i) => {
-                const acc = categoryColor[article.categorie] ?? '#C4956A';
-                const date = article.published_at
-                  ? new Date(article.published_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
-                  : '';
-                return (
-                  <motion.div
-                    key={article.id}
-                    initial={{ opacity: 0, y: 24 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.07 }}
-                  >
-                    <Link to={`/journal/${article.slug}`} className="group block rounded-xl border border-white/8 overflow-hidden hover:border-white/16 transition-all duration-300" style={{ background: 'rgba(255,255,255,0.02)' }}>
-                      {/* Image */}
-                      <div className="h-52 overflow-hidden relative" style={{ background: 'hsl(0 0% 8%)' }}>
-                        {article.image_url ? (
-                          <img src={article.image_url} alt={article.titre} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center">
-                            <span className="font-display text-6xl font-bold" style={{ color: `${acc}15` }}>Æ</span>
-                          </div>
-                        )}
-                        <div className="absolute top-3 left-3 px-2.5 py-1 rounded font-body text-[9px] uppercase tracking-widest" style={{ background: `${acc}20`, color: acc, border: `1px solid ${acc}40`, backdropFilter: 'blur(8px)' }}>
-                          {article.categorie}
-                        </div>
-                      </div>
+            <div className="space-y-0">
 
-                      {/* Contenu */}
-                      <div className="p-5">
-                        {date && <p className="font-body text-[10px] text-foreground/30 uppercase tracking-widest mb-2">{date}</p>}
-                        <h2 className="font-display italic text-xl mb-2 group-hover:text-primary transition-colors leading-snug">{article.titre}</h2>
-                        {article.extrait && (
-                          <p className="font-body text-xs text-foreground/45 leading-relaxed line-clamp-3">{article.extrait}</p>
-                        )}
-                        <p className="font-body text-[10px] uppercase tracking-widest mt-4" style={{ color: acc }}>
-                          Lire →
-                        </p>
+              {/* Hero — premier article pleine largeur */}
+              {hero && (() => {
+                const acc = categoryColor[hero.categorie] ?? '#C4956A';
+                return (
+                  <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
+                    <Link to={`/journal/${hero.slug}`} className="group block rounded-xl overflow-hidden border border-white/8 hover:border-white/16 transition-all duration-300 relative" style={{ background: 'rgba(255,255,255,0.02)' }}>
+                      <div className="relative h-72 lg:h-96 overflow-hidden" style={{ background: 'hsl(0 0% 8%)' }}>
+                        {hero.image_url
+                          ? <img src={hero.image_url} alt={hero.titre} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                          : <div className="w-full h-full flex items-center justify-center"><span className="font-display text-8xl font-bold" style={{ color: `${acc}10` }}>Æ</span></div>
+                        }
+                        <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 50%)' }} />
+                        <div className="absolute top-4 left-4 px-2.5 py-1 rounded font-body text-[9px] uppercase tracking-widest" style={{ background: `${acc}25`, color: acc, border: `1px solid ${acc}40`, backdropFilter: 'blur(8px)' }}>
+                          {hero.categorie}
+                        </div>
+                        <div className="absolute bottom-0 left-0 right-0 p-6 lg:p-8">
+                          {formatDate(hero.published_at) && <p className="font-body text-[10px] text-white/40 uppercase tracking-widest mb-2">{formatDate(hero.published_at)}</p>}
+                          <h2 className="font-display italic text-2xl lg:text-4xl font-light text-white group-hover:text-primary transition-colors leading-snug mb-2">{hero.titre}</h2>
+                          {hero.extrait && <p className="font-body text-xs text-white/50 leading-relaxed line-clamp-2 max-w-xl">{hero.extrait}</p>}
+                          <p className="font-body text-[10px] uppercase tracking-widest mt-4" style={{ color: acc }}>Lire →</p>
+                        </div>
                       </div>
                     </Link>
                   </motion.div>
                 );
-              })}
+              })()}
+
+              {/* Séparateur */}
+              {rest.length > 0 && (
+                <div className="h-px mb-12" style={{ background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.06), transparent)' }} />
+              )}
+
+              {/* Articles suivants — alternance gauche/droite */}
+              <div className="space-y-10">
+                {rest.map((article, i) => {
+                  const acc = categoryColor[article.categorie] ?? '#C4956A';
+                  const imageRight = i % 2 !== 0;
+                  return (
+                    <motion.div
+                      key={article.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.07 }}
+                    >
+                      <Link
+                        to={`/journal/${article.slug}`}
+                        className={`group flex flex-col md:flex-row gap-6 items-center ${imageRight ? 'md:flex-row-reverse' : ''}`}
+                      >
+                        {/* Image */}
+                        <div className="w-full md:w-2/5 rounded-xl overflow-hidden shrink-0 border border-white/8 group-hover:border-white/16 transition-all duration-300" style={{ aspectRatio: '4/3', background: 'hsl(0 0% 8%)' }}>
+                          {article.image_url
+                            ? <img src={article.image_url} alt={article.titre} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                            : <div className="w-full h-full flex items-center justify-center"><span className="font-display text-5xl font-bold" style={{ color: `${acc}15` }}>Æ</span></div>
+                          }
+                        </div>
+
+                        {/* Texte */}
+                        <div className="flex-1 py-2">
+                          <div className="flex items-center gap-3 mb-3">
+                            <span className="font-body text-[9px] uppercase tracking-widest px-2.5 py-1 rounded" style={{ background: `${acc}15`, color: acc, border: `1px solid ${acc}30` }}>
+                              {article.categorie}
+                            </span>
+                            {formatDate(article.published_at) && (
+                              <span className="font-body text-[10px] text-foreground/25 uppercase tracking-widest">{formatDate(article.published_at)}</span>
+                            )}
+                          </div>
+                          <h2 className="font-display italic text-xl lg:text-2xl font-light mb-3 group-hover:text-primary transition-colors leading-snug">{article.titre}</h2>
+                          {article.extrait && (
+                            <p className="font-body text-xs text-foreground/45 leading-relaxed line-clamp-3 mb-4">{article.extrait}</p>
+                          )}
+                          <p className="font-body text-[10px] uppercase tracking-widest" style={{ color: acc }}>Lire →</p>
+                        </div>
+                      </Link>
+                    </motion.div>
+                  );
+                })}
+              </div>
+
             </div>
           )}
         </div>
