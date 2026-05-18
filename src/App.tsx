@@ -22,6 +22,7 @@ import AnimatedBackground from "@/components/AnimatedBackground";
 import SplashScreen from "@/components/SplashScreen";
 import ThemeTransition from "@/components/ThemeTransition";
 import CookieBanner from "@/components/CookieBanner";
+import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { useTheme } from "@/context/ThemeContext";
 import Index from "./pages/Index";
 import Collections from "./pages/Collections";
@@ -125,6 +126,7 @@ const App = () => (
               <CartDrawer />
               <main><AnimatedRoutes /></main>
               <Footer />
+              <ScrollToTopButton />
             </SplashScreen>
           </BrowserRouter>
         </CartProvider>

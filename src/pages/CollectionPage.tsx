@@ -7,6 +7,7 @@ import { useParfums } from '@/hooks/useParfums';
 import { collectionStories } from '@/data/collectionStories';
 import { useTheme } from '@/context/ThemeContext';
 import ProductCard from '@/components/ProductCard';
+import { ProductGridSkeleton } from '@/components/ProductSkeleton';
 import PageTransition from '@/components/PageTransition';
 import NotFound from './NotFound';
 import CollectionSplash from '@/components/CollectionSplash';
@@ -239,9 +240,12 @@ const CollectionPage = () => {
             </h3>
           </motion.div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
-            {prods.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
-          </div>
+          {loading
+            ? <ProductGridSkeleton count={6} />
+            : <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
+                {prods.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
+              </div>
+          }
         </div>
 
       </div>

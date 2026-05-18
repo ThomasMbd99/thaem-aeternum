@@ -3,11 +3,12 @@ import { motion } from 'framer-motion';
 import { collections, type Product } from '@/data/products';
 import { useParfums } from '@/hooks/useParfums';
 import ProductCard from '@/components/ProductCard';
+import { ProductGridSkeleton } from '@/components/ProductSkeleton';
 import PageTransition from '@/components/PageTransition';
 
 const AllParfums = () => {
   const [filter, setFilter] = useState<string>('all');
-  const { parfums: parfumsDB } = useParfums();
+  const { parfums: parfumsDB, loading } = useParfums();
 
   const enrichedProducts = useMemo(() => {
     return parfumsDB.filter(p => !p.en_promo) as unknown as Product[];
@@ -76,17 +77,19 @@ const AllParfums = () => {
           </motion.div>
 
           {/* Grille */}
-          <motion.div
-            key={filter}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.4 }}
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-6"
-          >
-            {filtered.map((p, i) => (
-              <ProductCard key={p.id} product={p} index={i} />
-            ))}
-          </motion.div>
+          {loading ? <ProductGridSkeleton count={10} /> : (
+            <motion.div
+              key={filter}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4 }}
+              className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-6"
+            >
+              {filtered.map((p, i) => (
+                <ProductCard key={p.id} product={p} index={i} />
+              ))}
+            </motion.div>
+          )}
 
           {/* Compteur */}
           <p className="text-center font-body text-xs mt-12" style={{ color: 'rgba(255,255,255,0.2)' }}>
