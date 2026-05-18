@@ -22,7 +22,6 @@ import AnimatedBackground from "@/components/AnimatedBackground";
 import SplashScreen from "@/components/SplashScreen";
 import ThemeTransition from "@/components/ThemeTransition";
 import CookieBanner from "@/components/CookieBanner";
-import CustomCursor from "@/components/CustomCursor";
 import { useTheme } from "@/context/ThemeContext";
 import Index from "./pages/Index";
 import Collections from "./pages/Collections";
@@ -114,7 +113,6 @@ const App = () => (
       <AuthProvider>
       <ThemeProvider>
         <CartProvider>
-          <CustomCursor />
           <Toaster />
           <Sonner />
           <BrowserRouter>
