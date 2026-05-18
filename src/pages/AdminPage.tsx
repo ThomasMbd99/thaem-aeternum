@@ -88,6 +88,7 @@ const AdminPage = () => {
   const [isNewArticle, setIsNewArticle] = useState(false);
   const [savingArticle, setSavingArticle] = useState(false);
   const [uploadingArticleImg, setUploadingArticleImg] = useState(false);
+  const [uploadArticleError, setUploadArticleError] = useState<string | null>(null);
 
   useEffect(() => {
     if (loading) return;
@@ -260,10 +261,13 @@ const AdminPage = () => {
 
   const uploadArticleImage = async (file: File) => {
     setUploadingArticleImg(true);
+    setUploadArticleError(null);
     const ext = file.name.split('.').pop() ?? 'jpg';
-    const path = `articles/${Date.now()}.${ext}`;
+    const path = `art-${Date.now()}.${ext}`;
     const { error } = await supabase.storage.from('parfums').upload(path, file, { upsert: true });
-    if (!error) {
+    if (error) {
+      setUploadArticleError(`Erreur : ${error.message}`);
+    } else {
       const { data } = supabase.storage.from('parfums').getPublicUrl(path);
       setArticleField('image_url', data.publicUrl);
     }
@@ -894,6 +898,9 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
                       {uploadingArticleImg ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
                       <span className="font-body text-xs">{uploadingArticleImg ? 'Envoi...' : 'Choisir une image'}</span>
                     </button>
+                  )}
+                  {uploadArticleError && (
+                    <p className="font-body text-xs text-red-400 mt-2">{uploadArticleError}</p>
                   )}
                   <div className="mt-2">
                     <p className="font-body text-[10px] text-foreground/30 mb-1">Ou colle une URL :</p>
