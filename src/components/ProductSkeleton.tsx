@@ -1,8 +1,8 @@
 const ProductSkeleton = () => (
   <div className="animate-pulse">
-    <div className="aspect-[3/4] rounded overflow-hidden mb-4" style={{ background: 'hsl(0 0% 10%)' }} />
-    <div className="h-4 rounded w-2/3 mb-2" style={{ background: 'hsl(0 0% 10%)' }} />
-    <div className="h-3 rounded w-1/2" style={{ background: 'hsl(0 0% 8%)' }} />
+    <div className="aspect-[3/4] rounded overflow-hidden mb-4" style={{ background: 'var(--c-bg10)' }} />
+    <div className="h-4 rounded w-2/3 mb-2" style={{ background: 'var(--c-bg10)' }} />
+    <div className="h-3 rounded w-1/2" style={{ background: 'var(--c-bg8)' }} />
   </div>
 );
 

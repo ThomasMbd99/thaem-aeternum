@@ -318,7 +318,7 @@ const AdminPage = () => {
               className="flex items-center gap-2 px-5 py-3 font-body text-xs uppercase tracking-widest transition-all duration-200 border-b-2 -mb-px"
               style={{
                 borderColor: activeTab === id ? '#C4956A' : 'transparent',
-                color: activeTab === id ? '#C4956A' : 'rgba(255,255,255,0.4)',
+                color: activeTab === id ? '#C4956A' : 'var(--c-w40)',
               }}
             >
               <Icon className="w-3.5 h-3.5" /> {label}
@@ -452,9 +452,9 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
                       <p className="font-display italic text-foreground/80">{a.titre}</p>
                       <p className="font-body text-[10px] text-foreground/30 mt-0.5 uppercase tracking-widest">{a.categorie}</p>
                     </div>
-                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded" style={{ background: a.publie ? 'rgba(34,197,94,0.1)' : 'rgba(255,255,255,0.05)' }}>
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded" style={{ background: a.publie ? 'rgba(34,197,94,0.1)' : 'var(--c-w05)' }}>
                       {a.publie ? <Eye className="w-3 h-3" style={{ color: '#22C55E' }} /> : <EyeOff className="w-3 h-3 text-foreground/30" />}
-                      <span className="font-body text-[9px] uppercase tracking-widest" style={{ color: a.publie ? '#22C55E' : 'rgba(255,255,255,0.3)' }}>
+                      <span className="font-body text-[9px] uppercase tracking-widest" style={{ color: a.publie ? '#22C55E' : 'var(--c-w30)' }}>
                         {a.publie ? 'Publié' : 'Brouillon'}
                       </span>
                     </div>
@@ -508,8 +508,8 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
             className="px-4 py-2 font-body text-xs uppercase tracking-widest rounded transition-all duration-200"
             style={{
               background: filter === 'all' ? 'rgba(196,149,106,0.15)' : 'transparent',
-              border: `1px solid ${filter === 'all' ? 'rgba(196,149,106,0.4)' : 'rgba(255,255,255,0.08)'}`,
-              color: filter === 'all' ? '#C4956A' : 'rgba(255,255,255,0.4)',
+              border: `1px solid ${filter === 'all' ? 'rgba(196,149,106,0.4)' : 'var(--c-w08)'}`,
+              color: filter === 'all' ? '#C4956A' : 'var(--c-w40)',
             }}
           >
             Toutes ({orders.length})
@@ -524,8 +524,8 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
                 className="px-4 py-2 font-body text-xs uppercase tracking-widest rounded transition-all duration-200"
                 style={{
                   background: filter === s ? cfg.bg : 'transparent',
-                  border: `1px solid ${filter === s ? cfg.color + '60' : 'rgba(255,255,255,0.08)'}`,
-                  color: filter === s ? cfg.color : 'rgba(255,255,255,0.4)',
+                  border: `1px solid ${filter === s ? cfg.color + '60' : 'var(--c-w08)'}`,
+                  color: filter === s ? cfg.color : 'var(--c-w40)',
                 }}
               >
                 {cfg.label} ({count})
@@ -661,7 +661,7 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
               initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 300 }}
               className="fixed right-0 top-0 h-full w-full max-w-xl z-50 overflow-y-auto"
-              style={{ background: 'hsl(var(--background))', borderLeft: '1px solid rgba(255,255,255,0.08)' }}
+              style={{ background: 'hsl(var(--background))', borderLeft: '1px solid var(--c-w08)' }}
             >
               <div className="p-6 space-y-5">
                 {/* Header panneau */}
@@ -764,7 +764,7 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
                     <div
                       onClick={() => setField('en_promo', !editingParfum.en_promo)}
                       className="w-4 h-4 rounded border flex items-center justify-center transition-all"
-                      style={{ background: editingParfum.en_promo ? '#C4956A' : 'transparent', borderColor: editingParfum.en_promo ? '#C4956A' : 'rgba(255,255,255,0.2)' }}
+                      style={{ background: editingParfum.en_promo ? '#C4956A' : 'transparent', borderColor: editingParfum.en_promo ? '#C4956A' : 'var(--c-w20)' }}
                     >
                       {editingParfum.en_promo && <span className="text-black text-[10px] font-bold">✓</span>}
                     </div>
@@ -780,7 +780,7 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
                   <div
                     onClick={() => setField('flagship', !editingParfum.flagship)}
                     className="w-4 h-4 rounded border flex items-center justify-center transition-all"
-                    style={{ background: editingParfum.flagship ? '#C4956A' : 'transparent', borderColor: editingParfum.flagship ? '#C4956A' : 'rgba(255,255,255,0.2)' }}
+                    style={{ background: editingParfum.flagship ? '#C4956A' : 'transparent', borderColor: editingParfum.flagship ? '#C4956A' : 'var(--c-w20)' }}
                   >
                     {editingParfum.flagship && <span className="text-black text-[10px] font-bold">✓</span>}
                   </div>
@@ -843,7 +843,7 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
               initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 300 }}
               className="fixed right-0 top-0 h-full w-full max-w-xl z-50 overflow-y-auto"
-              style={{ background: 'hsl(var(--background))', borderLeft: '1px solid rgba(255,255,255,0.08)' }}
+              style={{ background: 'hsl(var(--background))', borderLeft: '1px solid var(--c-w08)' }}
             >
               <div className="p-6 space-y-5">
                 <div className="flex items-center justify-between mb-2">
@@ -925,7 +925,7 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
                   <div
                     onClick={() => setArticleField('publie', !editingArticle.publie)}
                     className="w-4 h-4 rounded border flex items-center justify-center transition-all"
-                    style={{ background: editingArticle.publie ? '#22C55E' : 'transparent', borderColor: editingArticle.publie ? '#22C55E' : 'rgba(255,255,255,0.2)' }}
+                    style={{ background: editingArticle.publie ? '#22C55E' : 'transparent', borderColor: editingArticle.publie ? '#22C55E' : 'var(--c-w20)' }}
                   >
                     {editingArticle.publie && <span className="text-black text-[10px] font-bold">✓</span>}
                   </div>

@@ -185,7 +185,7 @@ const Quiz = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: rank * 0.15, duration: 0.6 }}
                     className="relative border rounded-lg overflow-hidden"
-                    style={{ borderColor: rank === 0 ? `${acc}40` : 'rgba(255,255,255,0.08)' }}
+                    style={{ borderColor: rank === 0 ? `${acc}40` : 'var(--c-w08)' }}
                   >
                     {rank === 0 && (
                       <div className="absolute top-3 left-3 z-10 px-2.5 py-1 rounded font-body text-[9px] uppercase tracking-widest"
@@ -195,13 +195,13 @@ const Quiz = () => {
                     )}
                     {rank === 1 && (
                       <div className="absolute top-3 left-3 z-10 px-2.5 py-1 rounded font-body text-[9px] uppercase tracking-widest"
-                        style={{ background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.4)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                        style={{ background: 'var(--c-w05)', color: 'var(--c-w40)', border: '1px solid var(--c-w10)' }}>
                         Accord secondaire
                       </div>
                     )}
                     {rank === 2 && (
                       <div className="absolute top-3 left-3 z-10 px-2.5 py-1 rounded font-body text-[9px] uppercase tracking-widest"
-                        style={{ background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.4)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                        style={{ background: 'var(--c-w05)', color: 'var(--c-w40)', border: '1px solid var(--c-w10)' }}>
                         À explorer
                       </div>
                     )}
@@ -225,7 +225,7 @@ const Quiz = () => {
                         className="block text-center py-2.5 font-body text-[10px] uppercase tracking-widest rounded transition-all duration-300"
                         style={rank === 0
                           ? { background: `${acc}20`, border: `1px solid ${acc}40`, color: acc }
-                          : { background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)' }
+                          : { background: 'var(--c-w05)', border: '1px solid var(--c-w10)', color: 'var(--c-w50)' }
                         }
                       >
                         Découvrir {parfum.nom}
@@ -301,14 +301,14 @@ const Quiz = () => {
                   transition={{ delay: i * 0.08 }}
                   whileHover={{ x: 4 }}
                   className="w-full text-left px-5 py-4 rounded border transition-all duration-300 group"
-                  style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'rgba(255,255,255,0.08)' }}
+                  style={{ background: 'var(--c-w02)', borderColor: 'var(--c-w08)' }}
                   onMouseEnter={e => {
                     (e.currentTarget as HTMLElement).style.borderColor = 'rgba(196,149,106,0.3)';
                     (e.currentTarget as HTMLElement).style.background = 'rgba(196,149,106,0.05)';
                   }}
                   onMouseLeave={e => {
-                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.08)';
-                    (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.02)';
+                    (e.currentTarget as HTMLElement).style.borderColor = 'var(--c-w08)';
+                    (e.currentTarget as HTMLElement).style.background = 'var(--c-w02)';
                   }}
                 >
                   <p className="font-display italic text-base text-foreground group-hover:text-foreground transition-colors">

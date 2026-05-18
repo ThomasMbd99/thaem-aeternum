@@ -173,7 +173,7 @@ const ProductCard = ({ product, index = 0 }: Props) => {
         <div
           ref={cardRef}
           className="aspect-[3/4] rounded overflow-hidden relative mb-4 flex items-center justify-center transition-all duration-500 group-hover:scale-[1.03]"
-          style={{ background: `linear-gradient(135deg, hsl(0 0% 8%), hsl(0 0% 12%))` }}
+          style={{ background: `linear-gradient(135deg, var(--c-bg8), var(--c-bg12))` }}
           onMouseEnter={() => { handleMouseEnter(); setIsHovered(true); }}
           onMouseLeave={() => setIsHovered(false)}
           onMouseMove={(e) => {
@@ -211,7 +211,7 @@ const ProductCard = ({ product, index = 0 }: Props) => {
           >
             <Heart
               className="w-3.5 h-3.5 transition-all duration-300"
-              style={{ color: liked ? '#ef4444' : 'rgba(255,255,255,0.4)', fill: liked ? '#ef4444' : 'none' }}
+              style={{ color: liked ? '#ef4444' : 'var(--c-w40)', fill: liked ? '#ef4444' : 'none' }}
             />
           </button>
 
@@ -251,7 +251,7 @@ const ProductCard = ({ product, index = 0 }: Props) => {
               style={
                 (product as any).type === 'creation'
                   ? { backgroundColor: collection?.colors.accent + '25', color: collection?.colors.accent, border: `1px solid ${collection?.colors.accent}50` }
-                  : { backgroundColor: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.4)', border: '1px solid rgba(255,255,255,0.1)' }
+                  : { backgroundColor: 'var(--c-w05)', color: 'var(--c-w40)', border: '1px solid var(--c-w10)' }
               }
             >
               {(product as any).type === 'creation' ? 'Création' : 'Inspiration'}

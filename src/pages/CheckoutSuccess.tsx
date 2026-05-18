@@ -87,7 +87,7 @@ const CheckoutSuccess = () => {
             to="/account"
             state={{ tab: 'commandes' }}
             className="inline-block px-8 py-3 font-body text-xs uppercase tracking-[0.3em] rounded transition-all duration-300"
-            style={{ border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.4)' }}
+            style={{ border: '1px solid var(--c-w10)', color: 'var(--c-w40)' }}
           >
             Voir mes commandes
           </Link>

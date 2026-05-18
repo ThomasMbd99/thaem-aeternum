@@ -96,7 +96,7 @@ const LoginPage = () => {
                 className="flex-1 py-2 font-body text-xs uppercase tracking-widest transition-all duration-300 rounded"
                 style={{
                   background: mode === m ? 'rgba(196,149,106,0.15)' : 'transparent',
-                  color: mode === m ? '#C4956A' : 'rgba(255,255,255,0.4)',
+                  color: mode === m ? '#C4956A' : 'var(--c-w40)',
                 }}
               >
                 {m === 'login' ? 'Connexion' : 'Créer un compte'}

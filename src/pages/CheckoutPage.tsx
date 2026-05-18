@@ -37,18 +37,18 @@ const Steps = ({ current }: { current: number }) => (
             <div
               className="w-6 h-6 rounded-full flex items-center justify-center font-body text-[10px] transition-all"
               style={{
-                background: done ? 'rgba(196,149,106,0.3)' : active ? '#C4956A' : 'rgba(255,255,255,0.05)',
-                color: active ? '#000' : done ? '#C4956A' : 'rgba(255,255,255,0.3)',
-                border: done ? '1px solid rgba(196,149,106,0.4)' : active ? 'none' : '1px solid rgba(255,255,255,0.08)',
+                background: done ? 'rgba(196,149,106,0.3)' : active ? '#C4956A' : 'var(--c-w05)',
+                color: active ? '#000' : done ? '#C4956A' : 'var(--c-w30)',
+                border: done ? '1px solid rgba(196,149,106,0.4)' : active ? 'none' : '1px solid var(--c-w08)',
               }}
             >
               {done ? '✓' : step}
             </div>
-            <span className="font-body text-xs uppercase tracking-widest" style={{ color: active ? '#C4956A' : 'rgba(255,255,255,0.3)' }}>
+            <span className="font-body text-xs uppercase tracking-widest" style={{ color: active ? '#C4956A' : 'var(--c-w30)' }}>
               {label}
             </span>
           </div>
-          {i < 2 && <div className="w-8 h-px" style={{ background: 'rgba(255,255,255,0.08)' }} />}
+          {i < 2 && <div className="w-8 h-px" style={{ background: 'var(--c-w08)' }} />}
         </div>
       );
     })}
@@ -79,7 +79,7 @@ const LoginGate = ({ onContinueAsGuest }: { onContinueAsGuest: () => void }) => 
         <button
           onClick={() => navigate('/login', { state: { from: '/checkout', mode: 'register' } })}
           className="w-full flex items-center justify-center gap-3 py-4 font-body text-xs uppercase tracking-widest rounded transition-all duration-300"
-          style={{ border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.5)' }}
+          style={{ border: '1px solid var(--c-w08)', color: 'var(--c-w50)' }}
         >
           <UserPlus className="w-4 h-4" />
           Créer un compte
@@ -246,13 +246,13 @@ const CheckoutPage = () => {
                         onClick={() => setDeliveryMode(mode)}
                         className="flex items-center gap-3 p-4 rounded border transition-all duration-300 text-left"
                         style={{
-                          background: deliveryMode === mode ? 'rgba(196,149,106,0.08)' : 'rgba(255,255,255,0.02)',
-                          borderColor: deliveryMode === mode ? 'rgba(196,149,106,0.4)' : 'rgba(255,255,255,0.08)',
+                          background: deliveryMode === mode ? 'rgba(196,149,106,0.08)' : 'var(--c-w02)',
+                          borderColor: deliveryMode === mode ? 'rgba(196,149,106,0.4)' : 'var(--c-w08)',
                         }}
                       >
-                        <Icon className="w-4 h-4 shrink-0" style={{ color: deliveryMode === mode ? '#C4956A' : 'rgba(255,255,255,0.3)' }} />
+                        <Icon className="w-4 h-4 shrink-0" style={{ color: deliveryMode === mode ? '#C4956A' : 'var(--c-w30)' }} />
                         <div>
-                          <p className="font-body text-xs uppercase tracking-widest" style={{ color: deliveryMode === mode ? '#C4956A' : 'rgba(255,255,255,0.5)' }}>{label}</p>
+                          <p className="font-body text-xs uppercase tracking-widest" style={{ color: deliveryMode === mode ? '#C4956A' : 'var(--c-w50)' }}>{label}</p>
                           <p className="font-body text-[10px] text-foreground/30 mt-0.5">{sub}</p>
                         </div>
                       </button>
@@ -364,7 +364,7 @@ const CheckoutPage = () => {
                   <div
                     onClick={() => setCgvAccepted(!cgvAccepted)}
                     className="w-4 h-4 mt-0.5 rounded shrink-0 border flex items-center justify-center transition-all"
-                    style={{ background: cgvAccepted ? '#C4956A' : 'transparent', borderColor: cgvAccepted ? '#C4956A' : 'rgba(255,255,255,0.2)' }}
+                    style={{ background: cgvAccepted ? '#C4956A' : 'transparent', borderColor: cgvAccepted ? '#C4956A' : 'var(--c-w20)' }}
                   >
                     {cgvAccepted && <span className="text-black text-[10px] font-bold">✓</span>}
                   </div>

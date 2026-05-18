@@ -119,7 +119,7 @@ const OffresPage = () => {
                           initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: gi * 0.1 + idx * 0.07 }}
                           className="rounded-xl border border-white/8 overflow-hidden hover:border-white/16 transition-all duration-300 group flex flex-col"
-                          style={{ background: 'rgba(255,255,255,0.02)' }}
+                          style={{ background: 'var(--c-w02)' }}
                         >
                           {/* Image cliquable → page produit */}
                           <Link to={`/produit/${toSlug(p.nom)}`} className="block">
@@ -160,7 +160,7 @@ const OffresPage = () => {
                                 {hasPromo && (
                                   <span className="font-body text-sm text-foreground/30 line-through">{originalPrice50ml.toFixed(2)}€</span>
                                 )}
-                                <span className="font-display italic text-2xl" style={{ color: hasPromo ? accent : 'rgba(255,255,255,0.75)' }}>
+                                <span className="font-display italic text-2xl" style={{ color: hasPromo ? accent : 'var(--c-w75)' }}>
                                   {price.toFixed(2)}€
                                 </span>
                               </div>

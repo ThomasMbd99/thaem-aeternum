@@ -515,11 +515,11 @@ const DiscoveryBox = () => {
                       ? perfumeTheme?.selectedBg || collectionTheme.fallbackBg
                       : isHovered
                       ? perfumeTheme?.hoverBg || collectionTheme.hoverBg
-                      : 'hsl(0 0% 7%)';
+                      : 'var(--c-bg7)';
 
                     const borderColor = isSelected || isHovered
                       ? perfumeTheme?.borderColor || col.colors.accent
-                      : 'rgba(255,255,255,0.06)';
+                      : 'var(--c-w06)';
 
                     const textColor = isSelected
                       ? perfumeTheme?.textColor || collectionTheme.baseText
@@ -531,7 +531,7 @@ const DiscoveryBox = () => {
                       ? perfumeTheme?.subTextColor || collectionTheme.baseSubText
                       : isHovered
                       ? perfumeTheme?.hoverSubTextColor || collectionTheme.hoverSubText
-                      : 'rgba(255,255,255,0.35)';
+                      : 'var(--c-w35)';
 
                     return (
                       <motion.button

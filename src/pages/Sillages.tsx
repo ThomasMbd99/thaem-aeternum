@@ -60,8 +60,8 @@ const Sillages = () => {
                 className="px-4 py-1.5 font-body text-[10px] uppercase tracking-[0.25em] rounded transition-all duration-300"
                 style={{
                   border: '1px solid',
-                  borderColor: cat === c ? 'hsl(43,50%,54%)' : 'rgba(255,255,255,0.1)',
-                  color: cat === c ? 'hsl(43,50%,54%)' : 'rgba(255,255,255,0.35)',
+                  borderColor: cat === c ? 'hsl(43,50%,54%)' : 'var(--c-w10)',
+                  color: cat === c ? 'hsl(43,50%,54%)' : 'var(--c-w35)',
                   background: cat === c ? 'rgba(196,149,106,0.08)' : 'transparent',
                 }}
               >
@@ -98,8 +98,8 @@ const Sillages = () => {
                 const acc = categoryColor[hero.categorie] ?? '#C4956A';
                 return (
                   <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
-                    <Link to={`/journal/${hero.slug}`} className="group block rounded-xl overflow-hidden border border-white/8 hover:border-white/16 transition-all duration-300 relative" style={{ background: 'rgba(255,255,255,0.02)' }}>
-                      <div className="relative h-72 lg:h-96 overflow-hidden" style={{ background: 'hsl(0 0% 8%)' }}>
+                    <Link to={`/journal/${hero.slug}`} className="group block rounded-xl overflow-hidden border border-white/8 hover:border-white/16 transition-all duration-300 relative" style={{ background: 'var(--c-w02)' }}>
+                      <div className="relative h-72 lg:h-96 overflow-hidden" style={{ background: 'var(--c-bg8)' }}>
                         {hero.image_url
                           ? <img src={hero.image_url} alt={hero.titre} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                           : <div className="w-full h-full flex items-center justify-center"><span className="font-display text-8xl font-bold" style={{ color: `${acc}10` }}>Æ</span></div>
@@ -122,7 +122,7 @@ const Sillages = () => {
 
               {/* Séparateur */}
               {rest.length > 0 && (
-                <div className="h-px mb-12" style={{ background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.06), transparent)' }} />
+                <div className="h-px mb-12" style={{ background: 'linear-gradient(to right, transparent, var(--c-w06), transparent)' }} />
               )}
 
               {/* Articles suivants — alternance gauche/droite */}
@@ -142,7 +142,7 @@ const Sillages = () => {
                         className={`group flex flex-col md:flex-row gap-6 items-center ${imageRight ? 'md:flex-row-reverse' : ''}`}
                       >
                         {/* Image */}
-                        <div className="w-full md:w-2/5 rounded-xl overflow-hidden shrink-0 border border-white/8 group-hover:border-white/16 transition-all duration-300" style={{ aspectRatio: '4/3', background: 'hsl(0 0% 8%)' }}>
+                        <div className="w-full md:w-2/5 rounded-xl overflow-hidden shrink-0 border border-white/8 group-hover:border-white/16 transition-all duration-300" style={{ aspectRatio: '4/3', background: 'var(--c-bg8)' }}>
                           {article.image_url
                             ? <img src={article.image_url} alt={article.titre} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                             : <div className="w-full h-full flex items-center justify-center"><span className="font-display text-5xl font-bold" style={{ color: `${acc}15` }}>Æ</span></div>

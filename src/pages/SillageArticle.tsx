@@ -94,7 +94,7 @@ const SillageArticle = () => {
             <Link
               to="/journal"
               className="font-body text-[10px] uppercase tracking-[0.3em] transition-colors hover:text-primary"
-              style={{ color: 'rgba(255,255,255,0.3)' }}
+              style={{ color: 'var(--c-w30)' }}
             >
               ← Le Journal Æ
             </Link>
@@ -165,12 +165,12 @@ const SillageArticle = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
             className="mt-16 pt-10 border-t flex items-center justify-between"
-            style={{ borderColor: 'rgba(255,255,255,0.06)' }}
+            style={{ borderColor: 'var(--c-w06)' }}
           >
             <Link
               to="/journal"
               className="font-body text-[10px] uppercase tracking-[0.3em] transition-colors hover:text-primary"
-              style={{ color: 'rgba(255,255,255,0.35)' }}
+              style={{ color: 'var(--c-w35)' }}
             >
               ← Tous les articles
             </Link>

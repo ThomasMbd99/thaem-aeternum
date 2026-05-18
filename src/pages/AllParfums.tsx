@@ -48,8 +48,8 @@ const AllParfums = () => {
               className="px-5 py-2 font-body text-[10px] uppercase tracking-[0.3em] rounded transition-all duration-300"
               style={{
                 border: '1px solid',
-                borderColor: filter === 'all' ? 'hsl(43,50%,54%)' : 'rgba(255,255,255,0.12)',
-                color: filter === 'all' ? 'hsl(43,50%,54%)' : 'rgba(255,255,255,0.4)',
+                borderColor: filter === 'all' ? 'hsl(43,50%,54%)' : 'var(--c-w12)',
+                color: filter === 'all' ? 'hsl(43,50%,54%)' : 'var(--c-w40)',
                 background: filter === 'all' ? 'rgba(196,149,106,0.08)' : 'transparent',
               }}
             >
@@ -65,8 +65,8 @@ const AllParfums = () => {
                   className="px-5 py-2 font-body text-[10px] uppercase tracking-[0.3em] rounded transition-all duration-300"
                   style={{
                     border: '1px solid',
-                    borderColor: active ? col.colors.accent : 'rgba(255,255,255,0.12)',
-                    color: active ? col.colors.accent : 'rgba(255,255,255,0.4)',
+                    borderColor: active ? col.colors.accent : 'var(--c-w12)',
+                    color: active ? col.colors.accent : 'var(--c-w40)',
                     background: active ? col.colors.accent + '14' : 'transparent',
                   }}
                 >
@@ -92,7 +92,7 @@ const AllParfums = () => {
           )}
 
           {/* Compteur */}
-          <p className="text-center font-body text-xs mt-12" style={{ color: 'rgba(255,255,255,0.2)' }}>
+          <p className="text-center font-body text-xs mt-12" style={{ color: 'var(--c-w20)' }}>
             {filtered.length} parfum{filtered.length > 1 ? 's' : ''}
           </p>
 

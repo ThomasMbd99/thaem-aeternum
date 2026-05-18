@@ -124,7 +124,7 @@ const Navbar = () => {
                   className="absolute top-full left-1/2 -translate-x-1/2 mt-4 py-2 rounded-xl border w-48"
                   style={{
                     background: 'hsl(var(--navbar-bg) / 0.98)',
-                    borderColor: 'rgba(255,255,255,0.08)',
+                    borderColor: 'var(--c-w08)',
                     backdropFilter: 'blur(20px)',
                     boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
                   }}
@@ -134,7 +134,7 @@ const Navbar = () => {
                       key={link.to}
                       to={link.to}
                       className="block px-4 py-2.5 font-body text-[9px] uppercase tracking-[0.2em] transition-colors hover:text-primary"
-                      style={{ color: location.pathname === link.to ? 'hsl(var(--primary))' : 'rgba(255,255,255,0.5)' }}
+                      style={{ color: location.pathname === link.to ? 'hsl(var(--primary))' : 'var(--c-w50)' }}
                     >
                       {link.label}
                     </Link>
@@ -252,13 +252,13 @@ const Navbar = () => {
                 to="/"
                 onClick={() => setMobileOpen(false)}
                 className={`font-body text-sm tracking-widest uppercase py-3 border-b transition-colors ${location.pathname === '/' ? 'text-primary' : 'text-muted-foreground'}`}
-                style={{ borderColor: 'rgba(255,255,255,0.05)' }}
+                style={{ borderColor: 'var(--c-w05)' }}
               >
                 Accueil
               </Link>
 
               {/* Boutique section */}
-              <p className="font-body text-[9px] uppercase tracking-[0.3em] py-2 mb-1" style={{ color: 'rgba(255,255,255,0.25)' }}>
+              <p className="font-body text-[9px] uppercase tracking-[0.3em] py-2 mb-1" style={{ color: 'var(--c-w25)' }}>
                 Boutique
               </p>
               {boutiqueLinks.map(link => (
@@ -269,7 +269,7 @@ const Navbar = () => {
                   className={`font-body text-sm tracking-widest uppercase py-3 border-b pl-3 transition-colors ${
                     location.pathname === link.to ? 'text-primary' : 'text-muted-foreground'
                   }`}
-                  style={{ borderColor: 'rgba(255,255,255,0.05)' }}
+                  style={{ borderColor: 'var(--c-w05)' }}
                 >
                   {link.label}
                 </Link>
@@ -287,7 +287,7 @@ const Navbar = () => {
                   className={`font-body text-sm tracking-widest uppercase py-3 border-b transition-colors ${
                     location.pathname === link.to ? 'text-primary' : 'text-muted-foreground'
                   }`}
-                  style={{ borderColor: 'rgba(255,255,255,0.05)' }}
+                  style={{ borderColor: 'var(--c-w05)' }}
                 >
                   {link.label}
                 </Link>

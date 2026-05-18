@@ -61,7 +61,7 @@ const UpsellCarousel = ({ products, acc, rgb }: { products: any[], acc: string, 
                       <div
                         className="aspect-[3/4] rounded-lg flex items-center justify-center relative overflow-hidden mb-5 transition-all duration-500"
                         style={{
-                          background: `linear-gradient(145deg, hsl(0 0% 7%), hsl(0 0% 11%))`,
+                          background: `linear-gradient(145deg, var(--c-bg7), var(--c-bg11))`,
                           boxShadow: `0 0 40px rgba(${rgb}, 0.10)`,
                         }}
                       >
@@ -255,7 +255,7 @@ const ProductPage = () => {
               <div
                 className="aspect-[3/4] lg:aspect-[3/4] rounded-lg relative overflow-hidden flex items-center justify-center max-h-[55vh] lg:max-h-none"
                 style={{
-                  background: `linear-gradient(145deg, hsl(0 0% 7%), hsl(0 0% 10%))`,
+                  background: `linear-gradient(145deg, var(--c-bg7), var(--c-bg10))`,
                   boxShadow: `0 0 80px rgba(${rgb}, 0.12), 0 40px 80px rgba(0,0,0,0.4)`,
                 }}
               >
@@ -354,9 +354,9 @@ const ProductPage = () => {
                       <span
                         className="font-body text-[10px] uppercase tracking-[0.3em] px-3 py-1.5 rounded"
                         style={{
-                          background: 'rgba(255,255,255,0.05)',
-                          border: '1px solid rgba(255,255,255,0.12)',
-                          color: 'rgba(255,255,255,0.45)',
+                          background: 'var(--c-w05)',
+                          border: '1px solid var(--c-w12)',
+                          color: 'var(--c-w45)',
                         }}
                       >
                         Inspiration
@@ -455,9 +455,9 @@ const ProductPage = () => {
                   disabled={added || outOfStock}
                   className="flex-1 py-4 font-body text-xs uppercase tracking-[0.3em] rounded transition-all duration-400 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{
-                    background: outOfStock ? 'rgba(255,255,255,0.03)' : added ? 'rgba(74,163,84,0.2)' : `rgba(${rgb}, 0.15)`,
-                    border: `1px solid ${outOfStock ? 'rgba(255,255,255,0.1)' : added ? 'rgba(74,163,84,0.5)' : acc}`,
-                    color: outOfStock ? 'rgba(255,255,255,0.3)' : added ? 'rgb(134,213,144)' : acc,
+                    background: outOfStock ? 'var(--c-w03)' : added ? 'rgba(74,163,84,0.2)' : `rgba(${rgb}, 0.15)`,
+                    border: `1px solid ${outOfStock ? 'var(--c-w10)' : added ? 'rgba(74,163,84,0.5)' : acc}`,
+                    color: outOfStock ? 'var(--c-w30)' : added ? 'rgb(134,213,144)' : acc,
                   }}
                 >
                   {outOfStock ? 'Rupture de stock' : added ? (
@@ -495,7 +495,7 @@ const ProductPage = () => {
             <h3 className="font-display text-xl tracking-wider mb-6 text-foreground">L'Histoire</h3>
             <div
               className="border-l-2 pl-6 lg:pl-8 py-4 rounded-r-sm space-y-4"
-              style={{ borderColor: acc, background: 'rgba(255,255,255,0.03)' }}
+              style={{ borderColor: acc, background: 'var(--c-w03)' }}
             >
               {product.texte_long.split('\n\n').map((p, i) => (
                 <motion.p

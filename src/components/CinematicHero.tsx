@@ -246,7 +246,7 @@ const CinematicHero = () => {
             </Link>
             <Link to="/coffret"
               className="px-8 py-3 font-body text-xs uppercase tracking-[0.3em] transition-all duration-300 hover:text-white"
-              style={{ border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.35)' }}
+              style={{ border: '1px solid var(--c-w10)', color: 'var(--c-w35)' }}
             >
               Coffret Découverte
             </Link>

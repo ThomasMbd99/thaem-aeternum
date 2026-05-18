@@ -314,7 +314,7 @@ const Index = () => {
               <Link
                 to="/histoire"
                 className="px-8 py-3 font-body text-xs uppercase tracking-[0.3em] transition-all duration-300 text-foreground/50 hover:text-foreground"
-                style={{ border: '1px solid rgba(255,255,255,0.1)' }}
+                style={{ border: '1px solid var(--c-w10)' }}
               >
                 Notre histoire
               </Link>
@@ -439,7 +439,7 @@ const Index = () => {
                       <Link to={`/collection/${col.id}`} className="block h-full">
                         <div
                           className="relative p-6 min-h-[220px] sm:min-h-[320px] flex flex-col items-center justify-center text-center overflow-hidden rounded transition-all duration-700"
-                          style={{ background: 'hsl(0 0% 7%)', border: '1px solid rgba(255,255,255,0.06)' }}
+                          style={{ background: 'var(--c-bg7)', border: '1px solid var(--c-w06)' }}
                         >
                           {/* Fond thème complet au hover */}
                           <div
@@ -450,7 +450,7 @@ const Index = () => {
                             const lightThemes = ['sacrae', 'nerolae', 'aera'];
                             const isLight = lightThemes.includes(col.id);
                             const textColor = isLight ? col.colors.text : 'hsl(var(--foreground))';
-                            const subColor = isLight ? col.colors.text + '99' : 'rgba(255,255,255,0.5)';
+                            const subColor = isLight ? col.colors.text + '99' : 'var(--c-w50)';
                             return (
                               <div className="relative z-10 flex flex-col items-center">
                                 <h3
@@ -670,7 +670,7 @@ const Index = () => {
                   <Link
                     to="/journal"
                     className="hidden md:flex font-body text-[10px] uppercase tracking-[0.25em] transition-colors hover:text-primary"
-                    style={{ color: 'rgba(255,255,255,0.3)' }}
+                    style={{ color: 'var(--c-w30)' }}
                   >
                     Tous les articles →
                   </Link>
@@ -679,7 +679,7 @@ const Index = () => {
                 <Link to={`/journal/${lastArticle.slug}`} className="group flex flex-col md:flex-row gap-8 items-center">
                   <div
                     className="w-full md:w-1/2 rounded-xl overflow-hidden border border-white/8 group-hover:border-white/16 transition-all duration-500 shrink-0"
-                    style={{ aspectRatio: '16/9', background: 'hsl(0 0% 8%)' }}
+                    style={{ aspectRatio: '16/9', background: 'var(--c-bg8)' }}
                   >
                     {lastArticle.image_url
                       ? <img src={lastArticle.image_url} alt={lastArticle.titre} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
