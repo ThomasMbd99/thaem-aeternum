@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { Sparkles, ShoppingBag, ArrowRight } from 'lucide-react';
+import { Sparkles, ShoppingBag } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { supabase, type ParfumDB } from '@/lib/supabase';
+import { useParfums, type ParfumFull } from '@/hooks/useParfums';
 import { useCart } from '@/context/CartContext';
 import { formats, type FormatId } from '@/data/products';
 import PageTransition from '@/components/PageTransition';
@@ -27,43 +27,33 @@ const familleAccents: Record<string, string> = {
   'ÆRA':    '#A8D4F0',
 };
 
+const familleFromCollection: Record<string, string> = {
+  sacrae: 'SACRÆ', vitae: 'VITÆA', umbrae: 'UMBRÆ', nerolae: 'NEROLÆ', aera: 'ÆRA',
+};
+
 const OffresPage = () => {
-  const [promos, setPromos] = useState<ParfumDB[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedFormats, setSelectedFormats] = useState<Record<number, FormatId>>({});
+  const { parfums, loading } = useParfums();
+  const promos = parfums.filter(p => p.en_promo);
+  const [selectedFormats, setSelectedFormats] = useState<Record<string, FormatId>>({});
   const { addItem } = useCart();
 
-  useEffect(() => {
-    const load = async () => {
-      const { data } = await supabase
-        .from('parfums')
-        .select('*')
-        .eq('en_promo', true)
-        .order('famille')
-        .order('nom');
-      if (data) setPromos(data as ParfumDB[]);
-      setLoading(false);
-    };
-    load();
-  }, []);
-
-  const grouped = promos.reduce((acc: Record<string, ParfumDB[]>, p) => {
-    const f = p.famille ?? 'Autres';
+  const grouped = promos.reduce((acc: Record<string, ParfumFull[]>, p) => {
+    const f = familleFromCollection[p.collection] ?? 'Autres';
     if (!acc[f]) acc[f] = [];
     acc[f].push(p);
     return acc;
   }, {});
 
-  const getFormat = (id: number): FormatId => selectedFormats[id] ?? '50ml';
+  const getFormat = (id: string): FormatId => selectedFormats[id] ?? '50ml';
 
-  const getPrice = (p: ParfumDB, fmt: FormatId): number => {
+  const getPrice = (p: ParfumFull, fmt: FormatId): number => {
     if (fmt === '50ml' && p.prix_promo) return p.prix_promo;
     return formats.find(f => f.id === fmt)?.price ?? 44.99;
   };
 
-  const handleAdd = (p: ParfumDB) => {
+  const handleAdd = (p: ParfumFull) => {
     const fmt = getFormat(p.id);
-    addItem({ productId: String(p.id), format: fmt, name: p.nom, price: getPrice(p, fmt) });
+    addItem({ productId: p.id, format: fmt, name: p.nom, price: getPrice(p, fmt) });
   };
 
   return (
@@ -129,6 +119,7 @@ const OffresPage = () => {
                     {items.map((p, idx) => {
                       const fmt = getFormat(p.id);
                       const price = getPrice(p, fmt);
+                      const famille = familleFromCollection[p.collection] ?? 'SACRÆ';
                       const originalPrice = formats.find(f => f.id === fmt)?.price ?? 44.99;
                       const hasPromo = fmt === '50ml' && !!p.prix_promo && p.prix_promo < originalPrice;
                       const discount = hasPromo ? Math.round((1 - p.prix_promo! / originalPrice) * 100) : 0;
@@ -145,7 +136,7 @@ const OffresPage = () => {
                           <Link to={`/produit/${toSlug(p.nom)}`} className="block">
                             <div
                               className="relative h-52 sm:h-72 overflow-hidden flex items-center justify-center"
-                              style={{ background: familleGradients[p.famille] ?? familleGradients['SACRÆ'] }}
+                              style={{ background: familleGradients[famille] ?? familleGradients['SACRÆ'] }}
                             >
                               {p.image_url ? (
                                 <img
@@ -178,7 +169,7 @@ const OffresPage = () => {
                               {formats.map(f => (
                                 <button
                                   key={f.id}
-                                  onClick={() => setSelectedFormats(prev => ({ ...prev, [p.id]: f.id }))}
+                                  onClick={() => setSelectedFormats(prev => ({ ...prev, [p.id as string]: f.id }))}
                                   className="flex-1 py-1.5 sm:py-2 font-body text-[9px] sm:text-[10px] uppercase tracking-widest rounded transition-all duration-200"
                                   style={{
                                     background: fmt === f.id ? `${accent}18` : 'transparent',

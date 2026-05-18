@@ -221,7 +221,7 @@ const Quiz = () => {
                         {gammeTexts[col].texte}
                       </p>
                       <Link
-                        to={`/product/${parfum.id}`}
+                        to={`/produit/${parfum.id}`}
                         className="block text-center py-2.5 font-body text-[10px] uppercase tracking-widest rounded transition-all duration-300"
                         style={rank === 0
                           ? { background: `${acc}20`, border: `1px solid ${acc}40`, color: acc }
