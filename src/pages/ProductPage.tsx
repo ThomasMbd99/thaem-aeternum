@@ -386,7 +386,7 @@ const ProductPage = () => {
                   Format
                 </p>
                 <div className="flex flex-wrap gap-3">
-                  {formats.map(f => (
+                  {formats.filter(f => product.en_promo ? f.id === '50ml' : true).map(f => (
                     <button
                       key={f.id}
                       onClick={() => setSelectedFormat(f.id)}
