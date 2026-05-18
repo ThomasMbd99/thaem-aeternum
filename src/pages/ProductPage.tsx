@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
-import { getCollection, formats, getCollectionProducts, type FormatId } from '@/data/products';
+import { getCollection, formats, type FormatId } from '@/data/products';
 import { useParfums } from '@/hooks/useParfums';
 import { getBottleImage } from '@/data/bottleImages';
 import OlfactoryPyramid from '@/components/OlfactoryPyramid';
