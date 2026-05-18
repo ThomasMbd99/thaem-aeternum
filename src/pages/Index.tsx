@@ -9,6 +9,7 @@ import PageTransition from '@/components/PageTransition';
 import almaePromo from '@/assets/bottles/almae-promo.png';
 import { useRef, useEffect, useCallback, useMemo } from 'react';
 import { useArticles } from '@/hooks/useArticles';
+import { useTheme } from '@/context/ThemeContext';
 
 // ── CANVAS : encre / fumée sombre + particules dorées
 const InkCanvas = () => {
@@ -191,6 +192,7 @@ const Index = () => {
   const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
   const { parfums: parfumsDB } = useParfums();
   const { articles } = useArticles();
+  const { lightMode } = useTheme();
   const lastArticle = articles[0] ?? null;
   const bestSellers = useMemo((): Product[] => {
     return parfumsDB.filter(p => p.flagship && !p.en_promo) as unknown as Product[];
@@ -210,8 +212,8 @@ const Index = () => {
         {/* ── HERO ── */}
         <section ref={heroRef} className="relative h-screen flex items-center justify-center overflow-hidden">
 
-          {/* Canvas animation */}
-          <InkCanvas />
+          {/* Canvas animation — masquée en mode clair */}
+          {!lightMode && <InkCanvas />}
 
           {/* Grand Æ en fond — subtil */}
           <div
@@ -223,7 +225,7 @@ const Index = () => {
               style={{
                 fontSize: 'clamp(280px, 55vw, 700px)',
                 color: 'transparent',
-                WebkitTextStroke: '1px rgba(196,149,106,0.07)',
+                WebkitTextStroke: lightMode ? '1px rgba(196,149,106,0.12)' : '1px rgba(196,149,106,0.07)',
                 lineHeight: 1,
                 userSelect: 'none',
                 opacity: 0.9,
@@ -233,9 +235,13 @@ const Index = () => {
             </span>
           </div>
 
-          {/* Overlay sombre en haut et bas */}
+          {/* Overlay haut/bas — adapté au mode */}
           <div className="absolute inset-0 pointer-events-none"
-            style={{ background: 'linear-gradient(to bottom, rgba(10,10,10,0.5) 0%, transparent 30%, transparent 70%, rgba(10,10,10,0.7) 100%)' }}
+            style={{
+              background: lightMode
+                ? 'linear-gradient(to bottom, rgba(245,240,230,0.6) 0%, transparent 30%, transparent 70%, rgba(245,240,230,0.8) 100%)'
+                : 'linear-gradient(to bottom, rgba(10,10,10,0.5) 0%, transparent 30%, transparent 70%, rgba(10,10,10,0.7) 100%)',
+            }}
           />
 
           {/* Contenu hero */}
@@ -283,7 +289,7 @@ const Index = () => {
               animate={{ opacity: 1 }}
               transition={{ delay: 1.4, duration: 1 }}
               className="font-display italic text-base lg:text-xl mt-10"
-              style={{ color: 'rgba(196,149,106,0.35)' }}
+              style={{ color: lightMode ? 'rgba(196,149,106,0.6)' : 'rgba(196,149,106,0.35)' }}
             >
               Le souffle de l’âme.
             </motion.p>
@@ -328,7 +334,7 @@ const Index = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 2.5 }}
           >
-            <span className="font-body text-[9px] tracking-[0.3em] uppercase" style={{ color: 'rgba(196,149,106,0.4)' }}>
+            <span className="font-body text-[9px] tracking-[0.3em] uppercase" style={{ color: lightMode ? 'rgba(196,149,106,0.65)' : 'rgba(196,149,106,0.4)' }}>
               Défiler
             </span>
             <motion.div
