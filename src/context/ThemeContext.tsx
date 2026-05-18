@@ -45,21 +45,25 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, []);
 
   const setTheme = useCallback((collection: ThemeCollection) => {
-    setPendingTheme(collection);
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setActiveTheme(collection);
-      if (collection) {
-        document.documentElement.setAttribute('data-theme', collection);
-        document.documentElement.removeAttribute('data-mode');
-      } else {
-        document.documentElement.removeAttribute('data-theme');
-        if (lightMode) document.documentElement.setAttribute('data-mode', 'light');
-      }
-    }, 500);
-    setTimeout(() => {
-      setIsTransitioning(false);
-    }, 1200);
+    setActiveTheme(prev => {
+      if (prev === collection) return prev;
+
+      setPendingTheme(collection);
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setActiveTheme(collection);
+        if (collection) {
+          document.documentElement.setAttribute('data-theme', collection);
+          document.documentElement.removeAttribute('data-mode');
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+          if (lightMode) document.documentElement.setAttribute('data-mode', 'light');
+        }
+      }, 500);
+      setTimeout(() => setIsTransitioning(false), 1200);
+
+      return prev;
+    });
   }, [lightMode]);
 
   return (
