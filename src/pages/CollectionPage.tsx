@@ -242,7 +242,7 @@ const CollectionPage = () => {
 
           {loading
             ? <ProductGridSkeleton count={6} />
-            : <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
+            : <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 max-w-6xl mx-auto">
                 {prods.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
               </div>
           }

@@ -296,17 +296,17 @@
 }
 
 [data-theme="koyaen"] {
-  --background: 160 55% 10%;
-  --foreground: 160 30% 92%;
-  --card: 160 48% 14%;
-  --card-foreground: 160 30% 92%;
-  --primary: 185 55% 62%;
-  --primary-foreground: 160 55% 8%;
-  --secondary: 160 40% 18%;
-  --secondary-foreground: 160 30% 92%;
-  --muted: 160 30% 20%;
-  --muted-foreground: 160 22% 58%;
-  --accent: 185 55% 62%;
+  --background: 160 50% 13%;
+  --foreground: 160 28% 93%;
+  --card: 160 44% 17%;
+  --card-foreground: 160 28% 93%;
+  --primary: 185 52% 65%;
+  --primary-foreground: 160 50% 8%;
+  --secondary: 160 36% 21%;
+  --secondary-foreground: 160 28% 93%;
+  --muted: 160 28% 23%;
+  --muted-foreground: 160 20% 60%;
+  --accent: 185 52% 65%;
   --accent-foreground: 160 65% 6%;
   --border: 160 40% 20%;
   --input: 160 40% 20%;
@@ -315,10 +315,10 @@
   --gold-glow: 185 62% 72%;
   --navbar-bg: 160 55% 8%;
   --navbar-border: 160 40% 20%;
-  --theme-bg: #0A2418;
+  --theme-bg: #0F3020;
 }
 [data-theme="koyaen"] body {
-  background: linear-gradient(160deg, #0A2418 0%, #163C28 35%, #2A7A4A33 70%, #0A2418 100%) !important;
+  background: linear-gradient(160deg, #0F3020 0%, #1C4A32 35%, #30884E33 70%, #0F3020 100%) !important;
   background-attachment: fixed !important;
 }
 
