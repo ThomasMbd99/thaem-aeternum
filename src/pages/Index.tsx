@@ -347,7 +347,7 @@ const Index = () => {
         </section>
 
         {/* ── MANIFESTE ── */}
-        <section className="relative py-16 lg:py-40 overflow-hidden">
+        <section className="relative py-10 lg:py-20 overflow-hidden">
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
             <span className="font-display text-[30vw] font-bold leading-none" style={{ color: 'rgba(196,149,106,0.03)' }}>Æ</span>
           </div>
@@ -357,7 +357,7 @@ const Index = () => {
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 1.2 }}
-              className="h-px mb-16 origin-center"
+              className="h-px mb-10 origin-center"
               style={{ background: 'linear-gradient(to right, transparent, hsl(43,50%,54%), transparent)' }}
             />
             <motion.p
@@ -383,7 +383,7 @@ const Index = () => {
         </section>
 
         {/* ── 4 COLLECTIONS ── */}
-        <section className="py-20 lg:py-28">
+        <section className="py-12 lg:py-16">
           <div className="container mx-auto px-4 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -490,13 +490,13 @@ const Index = () => {
         </section>
 
         {/* ── BEST SELLERS ── */}
-        <section className="py-20 lg:py-28">
+        <section className="py-12 lg:py-16">
           <div className="container mx-auto px-4 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-center mb-16"
+              className="text-center mb-10"
             >
               <div className="flex items-center gap-4 justify-center mb-4">
                 <div className="h-px w-16" style={{ background: 'rgba(196,149,106,0.3)' }} />
@@ -517,7 +517,7 @@ const Index = () => {
         </section>
 
         {/* ── EXTRAIT DE PARFUM ── */}
-        <section className="relative py-28 lg:py-36 overflow-hidden">
+        <section className="relative py-14 lg:py-20 overflow-hidden">
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
             <span className="font-display text-[25vw] font-bold leading-none" style={{ color: 'rgba(196,149,106,0.03)' }}>Æ</span>
           </div>
@@ -528,7 +528,7 @@ const Index = () => {
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 1.2 }}
-              className="h-px mb-16 origin-center"
+              className="h-px mb-10 origin-center"
               style={{ background: 'linear-gradient(to right, transparent, hsl(43,50%,54%), transparent)' }}
             />
 
@@ -598,7 +598,7 @@ const Index = () => {
         </section>
 
         {/* ── COFFRET ── */}
-        <section className="py-20 lg:py-28 relative overflow-hidden">
+        <section className="py-12 lg:py-16 relative overflow-hidden">
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
             <span className="font-display text-[25vw] font-bold leading-none" style={{ color: 'rgba(196,149,106,0.025)' }}>Æ</span>
           </div>
@@ -627,7 +627,7 @@ const Index = () => {
         </section>
 
         {/* ── QUIZ CTA ── */}
-        <section className="py-20 lg:py-28">
+        <section className="py-12 lg:py-16">
           <div className="container mx-auto px-4 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -660,7 +660,7 @@ const Index = () => {
 
         {/* ── JOURNAL ── */}
         {lastArticle && (
-          <section className="py-20 lg:py-28 border-t" style={{ borderColor: 'rgba(196,149,106,0.1)' }}>
+          <section className="py-12 lg:py-16 border-t" style={{ borderColor: 'rgba(196,149,106,0.1)' }}>
             <div className="container mx-auto px-4 lg:px-8 max-w-5xl">
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -717,7 +717,7 @@ const Index = () => {
         )}
 
         {/* ── ECO ── */}
-        <section className="py-20 lg:py-28 border-t" style={{ borderColor: 'rgba(196,149,106,0.1)' }}>
+        <section className="py-12 lg:py-16 border-t" style={{ borderColor: 'rgba(196,149,106,0.1)' }}>
           <div className="container mx-auto px-4 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}

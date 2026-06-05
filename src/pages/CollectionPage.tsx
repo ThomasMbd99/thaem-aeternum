@@ -169,7 +169,7 @@ const CollectionPage = () => {
 
         {/* ── HISTOIRE ── */}
         {story && (
-          <div className="relative py-24 lg:py-32 overflow-hidden">
+          <div className="relative py-12 lg:py-16 overflow-hidden">
             <div className="container mx-auto px-6 lg:px-16 relative z-10 max-w-3xl">
 
               <motion.div
@@ -177,7 +177,7 @@ const CollectionPage = () => {
                 whileInView={{ scaleX: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 1.2 }}
-                className="h-px mb-16 origin-left"
+                className="h-px mb-10 origin-left"
                 style={{ background: `linear-gradient(to right, rgba(${rgb}, 0.6), transparent)` }}
               />
 
@@ -186,7 +186,7 @@ const CollectionPage = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.9 }}
-                className="font-display text-3xl lg:text-4xl italic text-center mb-16"
+                className="font-display text-3xl lg:text-4xl italic text-center mb-10"
                 style={{ color: acc }}
               >
                 {story.title}
@@ -213,7 +213,7 @@ const CollectionPage = () => {
                 whileInView={{ scaleX: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 1.2 }}
-                className="h-px mt-16 origin-right"
+                className="h-px mt-10 origin-right"
                 style={{ background: `linear-gradient(to left, rgba(${rgb}, 0.6), transparent)` }}
               />
             </div>
@@ -221,13 +221,13 @@ const CollectionPage = () => {
         )}
 
         {/* ── GRILLE PRODUITS ── */}
-        <div className="container mx-auto px-4 lg:px-8 pb-28 relative z-10">
+        <div className="container mx-auto px-4 lg:px-8 pb-16 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="text-center mb-16"
+            className="text-center mb-10"
           >
             <p
               className="font-body text-xs uppercase tracking-[0.4em] mb-4"
