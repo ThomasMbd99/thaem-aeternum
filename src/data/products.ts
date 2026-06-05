@@ -16,6 +16,9 @@ export interface Product {
   stock?: number;
   status?: 'prochainement';
   statut?: string;
+  image_url?: string | null;
+  images?: string[];
+  type?: 'creation' | 'inspiration';
 }
 
 export interface CollectionInfo {
