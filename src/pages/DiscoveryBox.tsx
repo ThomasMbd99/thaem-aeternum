@@ -165,14 +165,14 @@ const perfumeThemes: Record<string, PerfumeTheme> = {
   },
   koyaen: {
     selectedBg:
-      'linear-gradient(145deg, #061A12 0%, #0E3020 40%, #1E8C3A 80%, #061A12 100%)',
+      'linear-gradient(145deg, #0A2418 0%, #163C28 40%, #2A7A4A 80%, #0A2418 100%)',
     hoverBg:
-      'linear-gradient(145deg, #081E14 0%, #123A25 55%, #24A044 100%)',
-    borderColor: '#4EB5BE',
-    textColor: '#A8E8D0',
-    subTextColor: 'rgba(168,232,208,0.72)',
-    hoverTextColor: '#C0F0E0',
-    hoverSubTextColor: 'rgba(192,240,224,0.72)',
+      'linear-gradient(145deg, #0D2C1E 0%, #1C4A34 55%, #348A58 100%)',
+    borderColor: '#5EC8B2',
+    textColor: '#B8F0D8',
+    subTextColor: 'rgba(184,240,216,0.72)',
+    hoverTextColor: '#C8F8E8',
+    hoverSubTextColor: 'rgba(200,248,232,0.72)',
   },
   ayaem: {
     selectedBg:
