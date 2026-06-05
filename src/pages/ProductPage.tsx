@@ -6,7 +6,6 @@ import { getCollection, formats, type FormatId } from '@/data/products';
 import { useParfums } from '@/hooks/useParfums';
 import { getBottleImage } from '@/data/bottleImages';
 import OlfactoryPyramid from '@/components/OlfactoryPyramid';
-import MarbleBackground from '@/components/MarbleBackground';
 import { getParfumTheme } from '@/data/parfumThemes';
 import ProductCard from '@/components/ProductCard';
 import { useCart } from '@/context/CartContext';
@@ -219,15 +218,6 @@ const ProductPage = () => {
 
       {/* ── HERO PRODUIT ── */}
       <div ref={heroRef} className="relative min-h-screen pt-20 lg:pt-20 flex items-start lg:items-center">
-
-        {/* Fond marbré par parfum */}
-        {parfumTheme && (
-          <MarbleBackground
-            colors={parfumTheme.marbleColors}
-            seed={parfumTheme.marbleSeed}
-            opacity={0.14}
-          />
-        )}
 
         {/* Glow fort hero */}
         <div

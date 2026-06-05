@@ -5,7 +5,6 @@ import { useParfums } from '@/hooks/useParfums';
 import { getCollection, type Collection } from '@/data/products';
 import { getBottleImage } from '@/data/bottleImages';
 import { getParfumTheme } from '@/data/parfumThemes';
-import MarbleBackground from '@/components/MarbleBackground';
 
 // ── Types ──
 interface Question {
@@ -209,16 +208,9 @@ const Quiz = () => {
                       </div>
                     )}
 
-                    {/* Bottle avec fond marbré si thème parfum */}
+                    {/* Bottle */}
                     <div className="h-52 flex items-center justify-center relative overflow-hidden"
-                      style={{ background: parfumTheme ? parfumTheme.bg : `linear-gradient(135deg, ${acc}08 0%, transparent 100%)` }}>
-                      {parfumTheme && (
-                        <MarbleBackground
-                          colors={parfumTheme.marbleColors}
-                          seed={parfumTheme.marbleSeed}
-                          opacity={0.22}
-                        />
-                      )}
+                      style={{ background: `linear-gradient(135deg, ${acc}12 0%, transparent 100%)` }}>
                       <img src={bottleImg} alt={parfum.nom} className="relative z-10 h-40 w-auto object-contain" />
                     </div>
 
