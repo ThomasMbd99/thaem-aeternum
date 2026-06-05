@@ -161,8 +161,13 @@ const ProductPage = () => {
       if (product.statut === 'prochainement') {
         navigate(`/collection/${product.collection}`, { replace: true });
       } else {
-        const theme = getParfumTheme(product.id) ? product.id : product.collection;
-      setTheme(theme);
+        setTheme(product.collection);
+        if (getParfumTheme(product.id)) {
+          const t = setTimeout(() => {
+            document.documentElement.setAttribute('data-theme', product.id);
+          }, 520);
+          return () => clearTimeout(t);
+        }
       }
     }
   }, [loading, product]);

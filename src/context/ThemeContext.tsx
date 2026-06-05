@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import type { Collection } from '@/data/products';
 
-export type ThemeCollection = Collection | string | null;
+export type ThemeCollection = Collection | null;
 
 interface ThemeContextType {
   activeTheme: ThemeCollection;
