@@ -287,7 +287,7 @@ const DiscoveryBox = () => {
     addItem({
       productId: 'coffret-aeternum',
       format: '10ml',
-      price: 50,
+      price: 39.99,
       name: 'Coffret ÆTERNUM',
       isDiscoveryBox: true,
       selectedPerfumes: selected,
@@ -304,9 +304,9 @@ const DiscoveryBox = () => {
     <PageTransition>
       <Helmet>
         <title>Coffret ÆTERNUM, 5 × 10ml, THÆM ÆTERNUM</title>
-        <meta name="description" content="Composez votre coffret découverte : choisissez 5 parfums parmi nos créations artisanales. 5 × 10ml pour 50€." />
+        <meta name="description" content="Composez votre coffret découverte : choisissez 5 parfums parmi nos créations artisanales. 5 × 10ml pour 39,99€." />
         <meta property="og:title" content="Coffret ÆTERNUM , Coffret Découverte | THÆM ÆTERNUM" />
-        <meta property="og:description" content="Choisissez 5 parfums parmi nos créations artisanales. 5 × 10ml pour 50€." />
+        <meta property="og:description" content="Choisissez 5 parfums parmi nos créations artisanales. 5 × 10ml pour 39,99€." />
       </Helmet>
       <div className="min-h-screen pt-24 lg:pt-28 pb-28 relative bg-background" style={{ backgroundColor: "hsl(var(--background))" }}>
         <div
@@ -346,7 +346,7 @@ const DiscoveryBox = () => {
               className="font-display text-4xl mt-4"
               style={{ color: 'hsl(43,50%,54%)' }}
             >
-              50€
+              39,99€
             </p>
 
             <motion.div

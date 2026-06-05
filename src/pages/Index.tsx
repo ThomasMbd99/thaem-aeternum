@@ -614,7 +614,7 @@ const Index = () => {
                 Coffret <span style={{ color: 'hsl(43,60%,65%)' }}>Æ</span>TERNUM
               </h2>
               <p className="font-body text-sm text-foreground/50 mb-2">5 parfums au choix · 5 × 10ml</p>
-              <p className="font-display text-4xl mt-6 mb-8" style={{ color: 'hsl(43,50%,54%)' }}>50€</p>
+              <p className="font-display text-4xl mt-6 mb-8" style={{ color: 'hsl(43,50%,54%)' }}>39,99€</p>
               <Link
                 to="/coffret"
                 className="inline-block px-8 py-3 font-body text-xs uppercase tracking-[0.3em] transition-all duration-300"

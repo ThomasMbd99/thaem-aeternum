@@ -77,8 +77,10 @@ const AdminPage = () => {
   const [isNewParfum, setIsNewParfum] = useState(false);
   const [savingForm, setSavingForm] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadingExtraImage, setUploadingExtraImage] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const extraImgRef = useRef<HTMLInputElement>(null);
   const articleImgRef = useRef<HTMLInputElement>(null);
 
   // Articles
@@ -219,6 +221,27 @@ const AdminPage = () => {
       setField('image_url', data.publicUrl);
     }
     setUploadingImage(false);
+  };
+
+  const uploadExtraImage = async (file: File) => {
+    setUploadingExtraImage(true);
+    setUploadError(null);
+    const ext = file.name.split('.').pop() ?? 'jpg';
+    const path = `${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from('parfums').upload(path, file, { upsert: true });
+    if (error) {
+      setUploadError(`Erreur upload : ${error.message}`);
+    } else {
+      const { data } = supabase.storage.from('parfums').getPublicUrl(path);
+      const current = editingParfum?.images ?? [];
+      setField('images', [...current, data.publicUrl]);
+    }
+    setUploadingExtraImage(false);
+  };
+
+  const removeExtraImage = (index: number) => {
+    const current = editingParfum?.images ?? [];
+    setField('images', current.filter((_, i) => i !== index));
   };
 
   const fetchArticles = async () => {
@@ -712,9 +735,9 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
                   <div><label className={labelCls}>Note (/5)</label><input type="number" min={0} max={5} step={0.1} className={inputCls} value={editingParfum.note ?? ''} onChange={e => setField('note', parseFloat(e.target.value) || null)} /></div>
                 </div>
 
-                {/* Image */}
+                {/* Image principale */}
                 <div>
-                  <label className={labelCls}>Photo du parfum</label>
+                  <label className={labelCls}>Photo principale</label>
                   <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={e => e.target.files?.[0] && uploadImage(e.target.files[0])} />
                   {editingParfum.image_url ? (
                     <div className="space-y-2">
@@ -755,6 +778,36 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
                       value={editingParfum.image_url ?? ''}
                       onChange={e => setField('image_url', e.target.value || null)}
                     />
+                  </div>
+                </div>
+
+                {/* Photos supplémentaires */}
+                <div>
+                  <label className={labelCls}>Photos supplémentaires (galerie)</label>
+                  <input ref={extraImgRef} type="file" accept="image/*" className="hidden" onChange={e => e.target.files?.[0] && uploadExtraImage(e.target.files[0])} />
+                  <div className="grid grid-cols-3 gap-2 mb-2">
+                    {(editingParfum.images ?? []).map((url, i) => (
+                      <div key={i} className="relative rounded overflow-hidden border border-white/10" style={{ height: 90 }}>
+                        <img src={url} alt="" className="w-full h-full object-cover" />
+                        <button
+                          onClick={() => removeExtraImage(i)}
+                          className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/60 flex items-center justify-center text-white/60 hover:text-white transition-colors"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))}
+                    {(editingParfum.images ?? []).length < 5 && (
+                      <button
+                        onClick={() => extraImgRef.current?.click()}
+                        disabled={uploadingExtraImage}
+                        className="flex flex-col items-center justify-center gap-1 rounded border border-dashed border-white/15 text-foreground/30 hover:text-foreground/50 hover:border-white/25 transition-all disabled:opacity-50"
+                        style={{ height: 90 }}
+                      >
+                        {uploadingExtraImage ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+                        <span className="font-body text-[10px]">{uploadingExtraImage ? 'Envoi...' : 'Ajouter'}</span>
+                      </button>
+                    )}
                   </div>
                 </div>
 
