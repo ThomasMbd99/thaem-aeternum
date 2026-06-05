@@ -267,6 +267,115 @@
   background-attachment: fixed !important;
 }
 
+/* ── Thèmes par parfum VITÆ ── */
+[data-theme="naeva"] {
+  --background: 235 55% 8%;
+  --foreground: 235 40% 90%;
+  --card: 235 50% 12%;
+  --card-foreground: 235 40% 90%;
+  --primary: 235 60% 68%;
+  --primary-foreground: 235 55% 8%;
+  --secondary: 235 45% 16%;
+  --secondary-foreground: 235 40% 90%;
+  --muted: 235 35% 18%;
+  --muted-foreground: 235 30% 58%;
+  --accent: 235 60% 68%;
+  --accent-foreground: 235 55% 8%;
+  --border: 235 40% 24%;
+  --input: 235 40% 24%;
+  --ring: 235 60% 68%;
+  --gold: 235 60% 68%;
+  --gold-glow: 235 65% 76%;
+  --navbar-bg: 235 55% 6%;
+  --navbar-border: 235 40% 20%;
+  --theme-bg: #0D0F2E;
+}
+[data-theme="naeva"] body {
+  background: linear-gradient(160deg, #0D0F2E 0%, #1A2060 35%, #2A38CC44 70%, #0D0F2E 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="koyaen"] {
+  --background: 160 65% 6%;
+  --foreground: 160 35% 88%;
+  --card: 160 55% 10%;
+  --card-foreground: 160 35% 88%;
+  --primary: 185 55% 55%;
+  --primary-foreground: 160 65% 6%;
+  --secondary: 160 45% 14%;
+  --secondary-foreground: 160 35% 88%;
+  --muted: 160 35% 16%;
+  --muted-foreground: 160 25% 52%;
+  --accent: 185 55% 55%;
+  --accent-foreground: 160 65% 6%;
+  --border: 160 40% 20%;
+  --input: 160 40% 20%;
+  --ring: 185 55% 55%;
+  --gold: 185 55% 55%;
+  --gold-glow: 185 62% 65%;
+  --navbar-bg: 160 65% 5%;
+  --navbar-border: 160 40% 16%;
+  --theme-bg: #061A12;
+}
+[data-theme="koyaen"] body {
+  background: linear-gradient(160deg, #061A12 0%, #0E3020 35%, #1E8C3A22 70%, #061A12 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="ayaem"] {
+  --background: 5 80% 7%;
+  --foreground: 15 55% 88%;
+  --card: 5 70% 11%;
+  --card-foreground: 15 55% 88%;
+  --primary: 10 75% 60%;
+  --primary-foreground: 5 80% 7%;
+  --secondary: 5 60% 15%;
+  --secondary-foreground: 15 55% 88%;
+  --muted: 5 50% 17%;
+  --muted-foreground: 10 35% 55%;
+  --accent: 10 75% 60%;
+  --accent-foreground: 5 80% 7%;
+  --border: 5 50% 22%;
+  --input: 5 50% 22%;
+  --ring: 10 75% 60%;
+  --gold: 10 75% 60%;
+  --gold-glow: 10 80% 70%;
+  --navbar-bg: 5 80% 5%;
+  --navbar-border: 5 50% 18%;
+  --theme-bg: #200505;
+}
+[data-theme="ayaem"] body {
+  background: linear-gradient(160deg, #200505 0%, #400A0A 35%, #CC221033 70%, #200505 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="espae"] {
+  --background: 330 70% 6%;
+  --foreground: 330 40% 90%;
+  --card: 330 60% 10%;
+  --card-foreground: 330 40% 90%;
+  --primary: 340 75% 58%;
+  --primary-foreground: 330 70% 6%;
+  --secondary: 330 55% 14%;
+  --secondary-foreground: 330 40% 90%;
+  --muted: 330 45% 16%;
+  --muted-foreground: 330 28% 54%;
+  --accent: 340 75% 58%;
+  --accent-foreground: 330 70% 6%;
+  --border: 330 50% 20%;
+  --input: 330 50% 20%;
+  --ring: 340 75% 58%;
+  --gold: 340 75% 58%;
+  --gold-glow: 340 80% 68%;
+  --navbar-bg: 330 70% 4%;
+  --navbar-border: 330 50% 16%;
+  --theme-bg: #180310;
+}
+[data-theme="espae"] body {
+  background: linear-gradient(160deg, #180310 0%, #350828 35%, #8C005044 70%, #180310 100%) !important;
+  background-attachment: fixed !important;
+}
+
 [data-theme="umbrae"] body::after {
   content: '';
   position: fixed;
