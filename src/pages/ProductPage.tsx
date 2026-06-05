@@ -152,6 +152,8 @@ const ProductPage = () => {
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
   const imgY = useTransform(scrollYProgress, [0, 1], ['0%', '12%']);
+  const allImages = product ? [product.image_url, ...(product.images ?? [])].filter(Boolean) as string[] : [];
+  const [activeImg, setActiveImg] = useState(0);
 
   useEffect(() => {
     if (!loading && product) {
@@ -276,13 +278,41 @@ const ProductPage = () => {
                   }}
                 />
 
-                {/* Flacon */}
-                <motion.img
-                  style={{ y: imgY }}
-                  src={product.image_url ?? getBottleImage(product.collection)}
-                  alt={product.name}
-                  className={`relative z-10 object-contain drop-shadow-2xl ${product.image_url ? 'w-full h-full object-cover' : 'h-[65%] w-auto'}`}
-                />
+                {/* Flacon / Galerie */}
+                {allImages.length > 0 ? (
+                  <motion.div style={{ y: imgY }} className="relative z-10 w-full h-full flex flex-col">
+                    <img
+                      src={allImages[activeImg]}
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                    />
+                    {allImages.length > 1 && (
+                      <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-2 z-20">
+                        {allImages.map((url, i) => (
+                          <button
+                            key={i}
+                            onClick={() => setActiveImg(i)}
+                            className="rounded overflow-hidden border-2 transition-all duration-200"
+                            style={{
+                              width: 36, height: 36,
+                              borderColor: activeImg === i ? acc : 'transparent',
+                              opacity: activeImg === i ? 1 : 0.5,
+                            }}
+                          >
+                            <img src={url} alt="" className="w-full h-full object-cover" />
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </motion.div>
+                ) : (
+                  <motion.img
+                    style={{ y: imgY }}
+                    src={getBottleImage(product.collection)}
+                    alt={product.name}
+                    className="relative z-10 object-contain drop-shadow-2xl h-[65%] w-auto"
+                  />
+                )}
 
                 {/* Nom en filigrane */}
                 <div className="absolute bottom-0 left-0 right-0 text-center pb-6">

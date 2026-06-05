@@ -25,4 +25,5 @@ export interface ParfumDB {
   en_promo: boolean;
   prix_promo: number | null;
   image_url: string | null;
+  images: string[] | null;
 }
