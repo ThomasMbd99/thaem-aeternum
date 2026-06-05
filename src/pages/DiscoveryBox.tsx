@@ -151,7 +151,52 @@ const perfumeThemes: Record<string, PerfumeTheme> = {
     hoverSubTextColor: 'rgba(67,48,36,0.72)',
   },
 
-  // VITÆA
+  // VITÆ
+  naeva: {
+    selectedBg:
+      'linear-gradient(145deg, #0D0F2E 0%, #1A2060 40%, #2A38CC 80%, #0D0F2E 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #10143A 0%, #202870 55%, #3344DD 100%)',
+    borderColor: '#7B7FD9',
+    textColor: '#C8CCFF',
+    subTextColor: 'rgba(200,204,255,0.72)',
+    hoverTextColor: '#D8DCFF',
+    hoverSubTextColor: 'rgba(216,220,255,0.72)',
+  },
+  koyaen: {
+    selectedBg:
+      'linear-gradient(145deg, #061A12 0%, #0E3020 40%, #1E8C3A 80%, #061A12 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #081E14 0%, #123A25 55%, #24A044 100%)',
+    borderColor: '#4EB5BE',
+    textColor: '#A8E8D0',
+    subTextColor: 'rgba(168,232,208,0.72)',
+    hoverTextColor: '#C0F0E0',
+    hoverSubTextColor: 'rgba(192,240,224,0.72)',
+  },
+  ayaem: {
+    selectedBg:
+      'linear-gradient(145deg, #200505 0%, #400A0A 40%, #CC2210 80%, #200505 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #280606 0%, #4E0C0C 55%, #DD2A14 100%)',
+    borderColor: '#E04830',
+    textColor: '#FFB8A8',
+    subTextColor: 'rgba(255,184,168,0.72)',
+    hoverTextColor: '#FFC8B8',
+    hoverSubTextColor: 'rgba(255,200,184,0.72)',
+  },
+  espae: {
+    selectedBg:
+      'linear-gradient(145deg, #180310 0%, #350828 40%, #8C0050 80%, #180310 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #200415 0%, #420A30 55%, #A0005C 100%)',
+    borderColor: '#C4185A',
+    textColor: '#FFAACC',
+    subTextColor: 'rgba(255,170,204,0.72)',
+    hoverTextColor: '#FFBBD9',
+    hoverSubTextColor: 'rgba(255,187,217,0.72)',
+  },
+  // anciens IDs de secours
   syrae: {
     selectedBg:
       'linear-gradient(145deg, #FFE5B8 0%, #FFB36B 30%, #FF7A59 65%, #FFD27D 100%)',
