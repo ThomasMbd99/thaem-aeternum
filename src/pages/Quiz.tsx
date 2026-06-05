@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { useParfums } from '@/hooks/useParfums';
 import { getCollection, type Collection } from '@/data/products';
 import { getBottleImage } from '@/data/bottleImages';
+import { getParfumTheme } from '@/data/parfumThemes';
+import MarbleBackground from '@/components/MarbleBackground';
 
 // ── Types ──
 interface Question {
@@ -176,7 +178,8 @@ const Quiz = () => {
                 const collection = getCollection(col);
                 if (!parfum || !collection) return null;
                 const bottleImg = getBottleImage(col);
-                const acc = collection.colors.accent;
+                const parfumTheme = getParfumTheme(parfum.id);
+                const acc = parfumTheme?.accent ?? collection.colors.accent;
 
                 return (
                   <motion.div
@@ -206,10 +209,17 @@ const Quiz = () => {
                       </div>
                     )}
 
-                    {/* Bottle */}
-                    <div className="h-52 flex items-center justify-center"
-                      style={{ background: `linear-gradient(135deg, ${acc}08 0%, transparent 100%)` }}>
-                      <img src={bottleImg} alt={parfum.nom} className="h-40 w-auto object-contain" />
+                    {/* Bottle avec fond marbré si thème parfum */}
+                    <div className="h-52 flex items-center justify-center relative overflow-hidden"
+                      style={{ background: parfumTheme ? parfumTheme.bg : `linear-gradient(135deg, ${acc}08 0%, transparent 100%)` }}>
+                      {parfumTheme && (
+                        <MarbleBackground
+                          colors={parfumTheme.marbleColors}
+                          seed={parfumTheme.marbleSeed}
+                          opacity={0.22}
+                        />
+                      )}
+                      <img src={bottleImg} alt={parfum.nom} className="relative z-10 h-40 w-auto object-contain" />
                     </div>
 
                     <div className="p-5">

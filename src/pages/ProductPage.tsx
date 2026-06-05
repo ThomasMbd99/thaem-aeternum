@@ -6,6 +6,8 @@ import { getCollection, formats, type FormatId } from '@/data/products';
 import { useParfums } from '@/hooks/useParfums';
 import { getBottleImage } from '@/data/bottleImages';
 import OlfactoryPyramid from '@/components/OlfactoryPyramid';
+import MarbleBackground from '@/components/MarbleBackground';
+import { getParfumTheme } from '@/data/parfumThemes';
 import ProductCard from '@/components/ProductCard';
 import { useCart } from '@/context/CartContext';
 import { useTheme } from '@/context/ThemeContext';
@@ -178,7 +180,8 @@ const ProductPage = () => {
   const currentPrice = (selectedFormat === '50ml' && product.prix_promo) ? product.prix_promo : currentFormat.price;
   const relatedProducts = getByCollection(product.collection).filter(p => p.id !== product.id && p.statut !== 'prochainement').slice(0, 3);
 
-  const acc = collection.colors.accent;
+  const parfumTheme = getParfumTheme(product.id);
+  const acc = parfumTheme?.accent ?? collection.colors.accent;
   const hexToRgb = (hex: string) => {
     const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return r ? `${parseInt(r[1],16)}, ${parseInt(r[2],16)}, ${parseInt(r[3],16)}` : '196,149,106';
@@ -216,6 +219,15 @@ const ProductPage = () => {
 
       {/* ── HERO PRODUIT ── */}
       <div ref={heroRef} className="relative min-h-screen pt-20 lg:pt-20 flex items-start lg:items-center">
+
+        {/* Fond marbré par parfum */}
+        {parfumTheme && (
+          <MarbleBackground
+            colors={parfumTheme.marbleColors}
+            seed={parfumTheme.marbleSeed}
+            opacity={0.14}
+          />
+        )}
 
         {/* Glow fort hero */}
         <div
