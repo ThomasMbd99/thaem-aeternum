@@ -278,32 +278,14 @@ const ProductPage = () => {
                   }}
                 />
 
-                {/* Flacon / Galerie */}
+                {/* Flacon / Image principale */}
                 {allImages.length > 0 ? (
-                  <motion.div style={{ y: imgY }} className="relative z-10 w-full h-[115%] -top-[7.5%] flex flex-col">
+                  <motion.div style={{ y: imgY }} className="relative z-10 w-full h-[115%] -top-[7.5%]">
                     <img
                       src={allImages[activeImg]}
                       alt={product.name}
                       className="w-full h-full object-cover"
                     />
-                    {allImages.length > 1 && (
-                      <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-2 z-20">
-                        {allImages.map((url, i) => (
-                          <button
-                            key={i}
-                            onClick={() => setActiveImg(i)}
-                            className="rounded overflow-hidden border-2 transition-all duration-200"
-                            style={{
-                              width: 36, height: 36,
-                              borderColor: activeImg === i ? acc : 'transparent',
-                              opacity: activeImg === i ? 1 : 0.5,
-                            }}
-                          >
-                            <img src={url} alt="" className="w-full h-full object-cover" />
-                          </button>
-                        ))}
-                      </div>
-                    )}
                   </motion.div>
                 ) : (
                   <motion.img
@@ -332,6 +314,27 @@ const ProductPage = () => {
                   {collection.name}
                 </div>
               </div>
+
+              {/* Miniatures galerie — en dessous de l'image */}
+              {allImages.length > 1 && (
+                <div className="flex gap-2 mt-3 justify-center">
+                  {allImages.map((url, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setActiveImg(i)}
+                      className="rounded overflow-hidden transition-all duration-200"
+                      style={{
+                        width: 56, height: 56,
+                        border: `2px solid ${activeImg === i ? acc : 'transparent'}`,
+                        opacity: activeImg === i ? 1 : 0.45,
+                        outline: activeImg === i ? `1px solid rgba(${rgb},0.3)` : 'none',
+                      }}
+                    >
+                      <img src={url} alt="" className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+              )}
             </motion.div>
 
             {/* ── DÉTAILS ── */}
