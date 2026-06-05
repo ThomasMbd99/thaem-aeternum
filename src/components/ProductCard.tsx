@@ -197,19 +197,22 @@ const ProductCard = ({ product, index = 0 }: Props) => {
           )}
 
           {/* Bottle / Custom image */}
-          {product.image_url ? (
-            <img
-              src={product.image_url}
-              alt={product.name}
-              className="relative z-10 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-            />
-          ) : (
-            <img
-              src={bottleImg}
-              alt={product.name}
-              className="relative z-10 h-[70%] w-auto object-contain drop-shadow-lg transition-transform duration-700 group-hover:-translate-y-3 group-hover:scale-105"
-            />
-          )}
+          {(() => {
+            const displayImg = product.image_url ?? product.images?.[0] ?? null;
+            return displayImg ? (
+              <img
+                src={displayImg}
+                alt={product.name}
+                className="relative z-10 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+            ) : (
+              <img
+                src={bottleImg}
+                alt={product.name}
+                className="relative z-10 h-[70%] w-auto object-contain drop-shadow-lg transition-transform duration-700 group-hover:-translate-y-3 group-hover:scale-105"
+              />
+            );
+          })()}
 
           {/* Bouton favori */}
           <button
