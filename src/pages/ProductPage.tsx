@@ -280,7 +280,7 @@ const ProductPage = () => {
 
                 {/* Flacon / Galerie */}
                 {allImages.length > 0 ? (
-                  <motion.div style={{ y: imgY }} className="relative z-10 w-full h-full flex flex-col">
+                  <motion.div style={{ y: imgY }} className="relative z-10 w-full h-[115%] -top-[7.5%] flex flex-col">
                     <img
                       src={allImages[activeImg]}
                       alt={product.name}
