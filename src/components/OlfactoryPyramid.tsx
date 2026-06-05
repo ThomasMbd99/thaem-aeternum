@@ -49,7 +49,8 @@ const NoteItem = ({ name, accentColor, index, sectionIndex }: NoteItemProps) => 
       <span
         className="font-body text-center leading-tight"
         style={{
-          color: `${accentColor}bb`,
+          color: 'var(--foreground)',
+          opacity: 0.85,
           fontSize: '8px',
           letterSpacing: '0.12em',
           textTransform: 'uppercase',
@@ -98,18 +99,19 @@ const OlfactoryPyramid = ({ notes, accentColor = 'hsl(var(--gold))' }: Props) =>
             className="flex flex-col items-center gap-4 rounded-sm py-4 px-3"
             style={{
               width: section.width,
-              background: `linear-gradient(135deg, ${accentColor}22, ${accentColor}0e)`,
-              borderLeft: `2px solid ${accentColor}88`,
-              borderTop: `1px solid ${accentColor}33`,
-              borderBottom: `1px solid ${accentColor}1a`,
-              boxShadow: `0 2px 20px ${accentColor}10`,
+              background: `linear-gradient(135deg, ${accentColor}28, ${accentColor}12)`,
+              borderLeft: `2px solid ${accentColor}cc`,
+              borderTop: `1px solid ${accentColor}55`,
+              borderBottom: `1px solid ${accentColor}33`,
+              boxShadow: `0 2px 20px ${accentColor}18`,
+              backdropFilter: 'blur(4px)',
             }}
           >
             <div className="text-center">
-              <p className="font-body uppercase" style={{ fontSize: '9px', letterSpacing: '0.3em', color: `${accentColor}88` }}>
+              <p className="font-body uppercase" style={{ fontSize: '9px', letterSpacing: '0.3em', color: accentColor, opacity: 0.7 }}>
                 {section.sublabel}
               </p>
-              <p className="font-display text-sm italic" style={{ color: `${accentColor}cc` }}>
+              <p className="font-display text-sm italic" style={{ color: accentColor }}>
                 {section.label}
               </p>
             </div>
