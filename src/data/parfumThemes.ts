@@ -83,6 +83,40 @@ const parfumThemes: Record<string, ParfumTheme> = {
     marbleSeed: 16,
     marbleColors: ['#8FB8CF', '#c1dcea', '#DCEBF3'],
   },
+
+  // ── UMBRÆ ──
+  aeonis: {
+    accent: '#C4B6B7',
+    secondary: '#9c8b8c',
+    bg: '#2E2729',
+    rgb: '196, 182, 183',
+    marbleSeed: 11,
+    marbleColors: ['#2E2729', '#9c8b8c', '#C4B6B7'],
+  },
+  valaena: {
+    accent: '#8FA0AE',
+    secondary: '#5c6976',
+    bg: '#2C333A',
+    rgb: '143, 160, 174',
+    marbleSeed: 19,
+    marbleColors: ['#2C333A', '#5c6976', '#8FA0AE'],
+  },
+  aelia: {
+    accent: '#5A7FD6',
+    secondary: '#83a8fb',
+    bg: '#DCE6FE',
+    rgb: '90, 127, 214',
+    marbleSeed: 6,
+    marbleColors: ['#5A7FD6', '#83a8fb', '#DCE6FE'],
+  },
+  azrae: {
+    accent: '#6F9685',
+    secondary: '#aec9c0',
+    bg: '#DCEAE4',
+    rgb: '111, 150, 133',
+    marbleSeed: 23,
+    marbleColors: ['#6F9685', '#aec9c0', '#DCEAE4'],
+  },
 };
 
 export function getParfumTheme(id: string): ParfumTheme | null {

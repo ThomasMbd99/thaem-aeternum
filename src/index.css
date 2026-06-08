@@ -511,6 +511,114 @@
   background-attachment: fixed !important;
 }
 
+[data-theme="aeonis"] {
+  --background: 356 14% 14%;
+  --foreground: 356 12% 90%;
+  --card: 356 14% 19%;
+  --card-foreground: 356 12% 90%;
+  --primary: 356 12% 64%;
+  --primary-foreground: 356 16% 10%;
+  --secondary: 356 12% 25%;
+  --secondary-foreground: 356 12% 90%;
+  --muted: 356 10% 27%;
+  --muted-foreground: 356 8% 60%;
+  --accent: 356 12% 64%;
+  --accent-foreground: 356 16% 10%;
+  --border: 356 12% 25%;
+  --input: 356 12% 25%;
+  --ring: 356 12% 64%;
+  --gold: 356 12% 64%;
+  --gold-glow: 356 16% 72%;
+  --navbar-bg: 356 16% 9%;
+  --navbar-border: 356 12% 22%;
+  --theme-bg: #9c8b8c;
+}
+[data-theme="aeonis"] body {
+  background: linear-gradient(160deg, #2E2729 0%, #9c8b8c 35%, #C4B6B733 70%, #2E2729 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="valaena"] {
+  --background: 210 16% 14%;
+  --foreground: 210 16% 90%;
+  --card: 210 16% 19%;
+  --card-foreground: 210 16% 90%;
+  --primary: 210 18% 62%;
+  --primary-foreground: 210 20% 10%;
+  --secondary: 210 14% 25%;
+  --secondary-foreground: 210 16% 90%;
+  --muted: 210 12% 27%;
+  --muted-foreground: 210 10% 60%;
+  --accent: 210 18% 62%;
+  --accent-foreground: 210 20% 10%;
+  --border: 210 14% 25%;
+  --input: 210 14% 25%;
+  --ring: 210 18% 62%;
+  --gold: 210 18% 62%;
+  --gold-glow: 210 22% 70%;
+  --navbar-bg: 210 20% 9%;
+  --navbar-border: 210 14% 22%;
+  --theme-bg: #5c6976;
+}
+[data-theme="valaena"] body {
+  background: linear-gradient(160deg, #2C333A 0%, #5c6976 35%, #8FA0AE33 70%, #2C333A 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="aelia"] {
+  --background: 222 70% 90%;
+  --foreground: 222 40% 20%;
+  --card: 222 65% 86%;
+  --card-foreground: 222 40% 20%;
+  --primary: 222 70% 55%;
+  --primary-foreground: 222 80% 97%;
+  --secondary: 222 50% 80%;
+  --secondary-foreground: 222 40% 20%;
+  --muted: 222 40% 78%;
+  --muted-foreground: 222 30% 42%;
+  --accent: 222 70% 55%;
+  --accent-foreground: 222 80% 97%;
+  --border: 222 40% 75%;
+  --input: 222 40% 75%;
+  --ring: 222 70% 55%;
+  --gold: 222 70% 55%;
+  --gold-glow: 222 75% 65%;
+  --navbar-bg: 222 60% 94%;
+  --navbar-border: 222 40% 78%;
+  --theme-bg: #83a8fb;
+}
+[data-theme="aelia"] body {
+  background: linear-gradient(160deg, #DCE6FE 0%, #83a8fb 35%, #5A7FD633 70%, #DCE6FE 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="azrae"] {
+  --background: 160 28% 90%;
+  --foreground: 160 25% 18%;
+  --card: 160 26% 86%;
+  --card-foreground: 160 25% 18%;
+  --primary: 160 22% 45%;
+  --primary-foreground: 160 30% 96%;
+  --secondary: 160 22% 80%;
+  --secondary-foreground: 160 25% 18%;
+  --muted: 160 18% 78%;
+  --muted-foreground: 160 16% 40%;
+  --accent: 160 22% 45%;
+  --accent-foreground: 160 30% 96%;
+  --border: 160 18% 75%;
+  --input: 160 18% 75%;
+  --ring: 160 22% 45%;
+  --gold: 160 22% 45%;
+  --gold-glow: 160 26% 55%;
+  --navbar-bg: 160 32% 94%;
+  --navbar-border: 160 18% 78%;
+  --theme-bg: #aec9c0;
+}
+[data-theme="azrae"] body {
+  background: linear-gradient(160deg, #DCEAE4 0%, #aec9c0 35%, #82A29433 70%, #DCEAE4 100%) !important;
+  background-attachment: fixed !important;
+}
+
 [data-theme="umbrae"] body::after {
   content: '';
   position: fixed;
