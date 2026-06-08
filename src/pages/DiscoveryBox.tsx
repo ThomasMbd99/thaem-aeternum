@@ -108,47 +108,58 @@ const perfumeThemes: Record<string, PerfumeTheme> = {
   },
   lamae: {
     selectedBg:
-      'linear-gradient(145deg, #FFF3E3 0%, #E8C28D 35%, #B97A3D 75%, #F4DEC2 100%)',
+      'linear-gradient(145deg, #2E362A 0%, #4A5A41 40%, #5e6d57 80%, #2E362A 100%)',
     hoverBg:
-      'linear-gradient(145deg, #FFF1DD 0%, #E6C28D 55%, #B87839 100%)',
-    borderColor: '#B97A3D',
-    textColor: '#402615',
-    subTextColor: 'rgba(64,38,21,0.72)',
-    hoverTextColor: '#402615',
-    hoverSubTextColor: 'rgba(64,38,21,0.72)',
+      'linear-gradient(145deg, #34402E 0%, #526152 55%, #6B7C62 100%)',
+    borderColor: '#9FB492',
+    textColor: '#E4EBDF',
+    subTextColor: 'rgba(228,235,223,0.72)',
+    hoverTextColor: '#F0F5EC',
+    hoverSubTextColor: 'rgba(240,245,236,0.72)',
   },
   varkaem: {
     selectedBg:
-      'linear-gradient(145deg, #F8ECDD 0%, #D6B38A 35%, #8B5A3C 75%, #EEDBC8 100%)',
+      'linear-gradient(145deg, #38352E 0%, #5A564B 40%, #757063 80%, #38352E 100%)',
     hoverBg:
-      'linear-gradient(145deg, #F7E9D8 0%, #D2AF89 55%, #8A593B 100%)',
-    borderColor: '#9A6746',
-    textColor: '#362015',
-    subTextColor: 'rgba(54,32,21,0.72)',
-    hoverTextColor: '#362015',
-    hoverSubTextColor: 'rgba(54,32,21,0.72)',
+      'linear-gradient(145deg, #403D35 0%, #6A6558 55%, #847E6F 100%)',
+    borderColor: '#B5AEA0',
+    textColor: '#E6E2D9',
+    subTextColor: 'rgba(230,226,217,0.72)',
+    hoverTextColor: '#F0EDE6',
+    hoverSubTextColor: 'rgba(240,237,230,0.72)',
   },
   zaemyr: {
     selectedBg:
-      'linear-gradient(145deg, #FFF5EA 0%, #EFD8BE 35%, #C89B6E 75%, #F8EBDD 100%)',
+      'linear-gradient(145deg, #DCEBF3 0%, #ABCBDD 40%, #c1dcea 80%, #DCEBF3 100%)',
     hoverBg:
-      'linear-gradient(145deg, #FFF4E8 0%, #ECD5BB 55%, #C6986A 100%)',
-    borderColor: '#C6986A',
-    textColor: '#4B3120',
-    subTextColor: 'rgba(75,49,32,0.72)',
-    hoverTextColor: '#4B3120',
-    hoverSubTextColor: 'rgba(75,49,32,0.72)',
+      'linear-gradient(145deg, #E6F1F7 0%, #B7D5E5 55%, #CDE5F0 100%)',
+    borderColor: '#5A92AE',
+    textColor: '#1F3B49',
+    subTextColor: 'rgba(31,59,73,0.72)',
+    hoverTextColor: '#15303D',
+    hoverSubTextColor: 'rgba(21,48,61,0.72)',
   },
   almae: {
     selectedBg:
-      'linear-gradient(145deg, #FFFDF8 0%, #F3E8D6 35%, #D9C0A1 75%, #FCF4E9 100%)',
+      'linear-gradient(145deg, #EAE3D6 0%, #DDD0BB 40%, #d2c8b6 80%, #EAE3D6 100%)',
     hoverBg:
-      'linear-gradient(145deg, #FFFDF9 0%, #F1E6D6 55%, #D6BFA0 100%)',
-    borderColor: '#D1B089',
-    textColor: '#433024',
-    subTextColor: 'rgba(67,48,36,0.72)',
-    hoverTextColor: '#433024',
-    hoverSubTextColor: 'rgba(67,48,36,0.72)',
+      'linear-gradient(145deg, #F0EBE1 0%, #E2D6C2 55%, #D8CEBC 100%)',
+    borderColor: '#9C8259',
+    textColor: '#3A3022',
+    subTextColor: 'rgba(58,48,34,0.72)',
+    hoverTextColor: '#2E2619',
+    hoverSubTextColor: 'rgba(46,38,25,0.72)',
+  },
+  velae: {
+    selectedBg:
+      'linear-gradient(145deg, #352B21 0%, #523F2E 40%, #6f5a46 80%, #352B21 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #3D3226 0%, #5E4A37 55%, #80694F 100%)',
+    borderColor: '#C9AD8C',
+    textColor: '#EFE3D4',
+    subTextColor: 'rgba(239,227,212,0.72)',
+    hoverTextColor: '#F7EEE2',
+    hoverSubTextColor: 'rgba(247,238,226,0.72)',
   },
 
   // VITÆ
