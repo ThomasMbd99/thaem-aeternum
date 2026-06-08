@@ -552,16 +552,25 @@ const ProductPage = () => {
               ))}
             </div>
             {product.phrase_signature && (
-              <motion.p
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.4, duration: 0.8 }}
-                className="font-display italic text-center text-foreground/40 text-sm mt-8 tracking-widest"
-                style={{ color: `rgba(${rgb}, 0.5)` }}
+                className="mt-10 mx-auto max-w-xl text-center px-8 py-6 rounded-sm"
+                style={{
+                  border: `1px solid ${acc}55`,
+                  background: `linear-gradient(135deg, ${acc}1f, ${acc}0a)`,
+                  boxShadow: `0 4px 30px ${acc}22`,
+                }}
               >
-                {product.phrase_signature}
-              </motion.p>
+                <p
+                  className="font-display italic text-center text-lg lg:text-xl font-semibold tracking-wide leading-snug"
+                  style={{ color: acc }}
+                >
+                  « {product.phrase_signature} »
+                </p>
+              </motion.div>
             )}
           </motion.div>
         </div>
