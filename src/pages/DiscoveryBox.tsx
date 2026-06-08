@@ -300,18 +300,109 @@ const perfumeThemes: Record<string, PerfumeTheme> = {
   },
 
   // FLORÆ
+  // NEROLÆ
+  osae: {
+    selectedBg:
+      'linear-gradient(145deg, #FCE6D9 0%, #FBC9A9 40%, #fa9f73 80%, #FCE6D9 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #FFEFE4 0%, #FDD6BB 55%, #FCB387 100%)',
+    borderColor: '#E87946',
+    textColor: '#5A2F16',
+    subTextColor: 'rgba(90,47,22,0.72)',
+    hoverTextColor: '#491F0D',
+    hoverSubTextColor: 'rgba(73,31,13,0.72)',
+  },
+  saeny: {
+    selectedBg:
+      'linear-gradient(145deg, #FBEBEF 0%, #F4D2DA 40%, #eeb7c4 80%, #FBEBEF 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #FEF3F6 0%, #F8DCE2 55%, #F2C3CF 100%)',
+    borderColor: '#D6839A',
+    textColor: '#5A2A38',
+    subTextColor: 'rgba(90,42,56,0.72)',
+    hoverTextColor: '#481F2C',
+    hoverSubTextColor: 'rgba(72,31,44,0.72)',
+  },
+  laeya: {
+    selectedBg:
+      'linear-gradient(145deg, #0F2A30 0%, #2A5C68 40%, #53b9cb 80%, #0F2A30 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #15333A 0%, #336E7C 55%, #67CADC 100%)',
+    borderColor: '#8AD2DE',
+    textColor: '#D6F2F6',
+    subTextColor: 'rgba(214,242,246,0.72)',
+    hoverTextColor: '#E4F8FA',
+    hoverSubTextColor: 'rgba(228,248,250,0.72)',
+  },
+  naely: {
+    selectedBg:
+      'linear-gradient(145deg, #2A0E33 0%, #6A2580 40%, #a638c0 80%, #2A0E33 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #321040 0%, #7C2C96 55%, #BA48D6 100%)',
+    borderColor: '#D88AEE',
+    textColor: '#F2D8FA',
+    subTextColor: 'rgba(242,216,250,0.72)',
+    hoverTextColor: '#F8E8FC',
+    hoverSubTextColor: 'rgba(248,232,252,0.72)',
+  },
+  'noctae-rosa': {
+    selectedBg:
+      'linear-gradient(145deg, #F2E6EC 0%, #E3CCD8 40%, #ceacbc 80%, #F2E6EC 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #F7EEF2 0%, #EAD9E1 55%, #D9BECC 100%)',
+    borderColor: '#9C7488',
+    textColor: '#3E2630',
+    subTextColor: 'rgba(62,38,48,0.72)',
+    hoverTextColor: '#321D26',
+    hoverSubTextColor: 'rgba(50,29,38,0.72)',
+  },
+
+  // ÆRA
+  vaem: {
+    selectedBg:
+      'linear-gradient(145deg, #EAF2FF 0%, #D2E2FB 40%, #c7dfff 80%, #EAF2FF 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #F1F7FF 0%, #DCE9FC 55%, #B8D4FE 100%)',
+    borderColor: '#6F9FE0',
+    textColor: '#1E3358',
+    subTextColor: 'rgba(30,51,88,0.72)',
+    hoverTextColor: '#162848',
+    hoverSubTextColor: 'rgba(22,40,72,0.72)',
+  },
   lysae: {
     selectedBg:
-      'linear-gradient(145deg, #F6FFF8 0%, #E3F3E8 35%, #CFE7D7 72%, #FBFFFC 100%)',
+      'linear-gradient(145deg, #EEFCE8 0%, #C9F0BE 40%, #ddfad1 80%, #EEFCE8 100%)',
     hoverBg:
-      'linear-gradient(145deg, #F8FFFA 0%, #E8F6EC 50%, #D7ECDD 100%)',
-    borderColor: '#B7D8C0',
-    textColor: '#3F5A49',
-    subTextColor: 'rgba(63,90,73,0.72)',
-    hoverTextColor: '#3F5A49',
-    hoverSubTextColor: 'rgba(63,90,73,0.72)',
+      'linear-gradient(145deg, #F4FEF0 0%, #D6F5CD 55%, #B0E8A2 100%)',
+    borderColor: '#7CC468',
+    textColor: '#27431D',
+    subTextColor: 'rgba(39,67,29,0.72)',
+    hoverTextColor: '#1D3415',
+    hoverSubTextColor: 'rgba(29,52,21,0.72)',
   },
-  
+  taelya: {
+    selectedBg:
+      'linear-gradient(145deg, #FFF1DE 0%, #FFE2BB 40%, #ffd699 80%, #FFF1DE 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #FFF6E9 0%, #FFE8C9 55%, #FFCB80 100%)',
+    borderColor: '#E0A350',
+    textColor: '#553A14',
+    subTextColor: 'rgba(85,58,20,0.72)',
+    hoverTextColor: '#432D0E',
+    hoverSubTextColor: 'rgba(67,45,14,0.72)',
+  },
+  taely: {
+    selectedBg:
+      'linear-gradient(145deg, #FFF8DE 0%, #FFF0BB 40%, #ffeb99 80%, #FFF8DE 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #FFFBEA 0%, #FFF4CB 55%, #FFE680 100%)',
+    borderColor: '#E0C24E',
+    textColor: '#544B12',
+    subTextColor: 'rgba(84,75,18,0.72)',
+    hoverTextColor: '#423A0E',
+    hoverSubTextColor: 'rgba(66,58,14,0.72)',
+  },
+
   hibiscae: {
     selectedBg:
       'linear-gradient(145deg, #FFF4F7 0%, #F2D8E3 30%, #E7B8CB 70%, #FFF9FB 100%)',
