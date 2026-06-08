@@ -245,25 +245,47 @@ const perfumeThemes: Record<string, PerfumeTheme> = {
   // UMBRÆ
   aeonis: {
     selectedBg:
-      'linear-gradient(145deg, #1A0B0D 0%, #4A1626 35%, #7A1F2B 70%, #130709 100%)',
+      'linear-gradient(145deg, #2E2729 0%, #6E6062 40%, #9c8b8c 80%, #2E2729 100%)',
     hoverBg:
-      'linear-gradient(145deg, #231012 0%, #561C2C 50%, #842532 100%)',
-    borderColor: '#9B2C3C',
-    textColor: '#F4E6E1',
-    subTextColor: 'rgba(244,230,225,0.72)',
-    hoverTextColor: '#F4E6E1',
-    hoverSubTextColor: 'rgba(244,230,225,0.72)',
+      'linear-gradient(145deg, #362E30 0%, #7E7072 55%, #AC9D9E 100%)',
+    borderColor: '#C4B6B7',
+    textColor: '#EDE5E6',
+    subTextColor: 'rgba(237,229,230,0.72)',
+    hoverTextColor: '#F6F0F0',
+    hoverSubTextColor: 'rgba(246,240,240,0.72)',
+  },
+  valaena: {
+    selectedBg:
+      'linear-gradient(145deg, #2C333A 0%, #475260 40%, #5c6976 80%, #2C333A 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #333B43 0%, #57606E 55%, #6C7986 100%)',
+    borderColor: '#8FA0AE',
+    textColor: '#E2E8ED',
+    subTextColor: 'rgba(226,232,237,0.72)',
+    hoverTextColor: '#EDF1F4',
+    hoverSubTextColor: 'rgba(237,241,244,0.72)',
   },
   aelia: {
     selectedBg:
-      'linear-gradient(145deg, #1B1714 0%, #3B312B 35%, #6E5B4E 72%, #15110F 100%)',
+      'linear-gradient(145deg, #DCE6FE 0%, #AEC4FB 40%, #83a8fb 80%, #DCE6FE 100%)',
     hoverBg:
-      'linear-gradient(145deg, #221C18 0%, #473A33 50%, #776255 100%)',
-    borderColor: '#8A7462',
-    textColor: '#F2E7DB',
-    subTextColor: 'rgba(242,231,219,0.72)',
-    hoverTextColor: '#F2E7DB',
-    hoverSubTextColor: 'rgba(242,231,219,0.72)',
+      'linear-gradient(145deg, #E6EDFE 0%, #BACEFC 55%, #98B8FC 100%)',
+    borderColor: '#5A7FD6',
+    textColor: '#1C2C52',
+    subTextColor: 'rgba(28,44,82,0.72)',
+    hoverTextColor: '#152040',
+    hoverSubTextColor: 'rgba(21,32,64,0.72)',
+  },
+  azrae: {
+    selectedBg:
+      'linear-gradient(145deg, #DCEAE4 0%, #C0D9CD 40%, #aec9c0 80%, #DCEAE4 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #E6F1EC 0%, #CCE1D6 55%, #BCD7CB 100%)',
+    borderColor: '#6F9685',
+    textColor: '#1F362C',
+    subTextColor: 'rgba(31,54,44,0.72)',
+    hoverTextColor: '#162820',
+    hoverSubTextColor: 'rgba(22,40,32,0.72)',
   },
   maraeja: {
     selectedBg:
