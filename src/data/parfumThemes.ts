@@ -41,6 +41,16 @@ const parfumThemes: Record<string, ParfumTheme> = {
     marbleSeed: 18,
     marbleColors: ['#8C0050', '#C4185A', '#E07899'],
   },
+
+  // ── SACRÆ ──
+  lamae: {
+    accent: '#9FB492',
+    secondary: '#5e6d57',
+    bg: '#2E362A',
+    rgb: '159, 180, 146',
+    marbleSeed: 9,
+    marbleColors: ['#3E4A38', '#5e6d57', '#A8BC9C'],
+  },
 };
 
 export function getParfumTheme(id: string): ParfumTheme | null {

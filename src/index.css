@@ -376,6 +376,33 @@
   background-attachment: fixed !important;
 }
 
+[data-theme="lamae"] {
+  --background: 100 18% 14%;
+  --foreground: 90 22% 92%;
+  --card: 100 18% 19%;
+  --card-foreground: 90 22% 92%;
+  --primary: 95 22% 62%;
+  --primary-foreground: 100 30% 8%;
+  --secondary: 100 16% 24%;
+  --secondary-foreground: 90 22% 92%;
+  --muted: 100 14% 26%;
+  --muted-foreground: 95 12% 62%;
+  --accent: 95 22% 62%;
+  --accent-foreground: 100 30% 8%;
+  --border: 100 16% 24%;
+  --input: 100 16% 24%;
+  --ring: 95 22% 62%;
+  --gold: 95 22% 62%;
+  --gold-glow: 95 28% 70%;
+  --navbar-bg: 100 22% 10%;
+  --navbar-border: 100 16% 24%;
+  --theme-bg: #5e6d57;
+}
+[data-theme="lamae"] body {
+  background: linear-gradient(160deg, #2E362A 0%, #5e6d57 35%, #7A8A6F33 70%, #2E362A 100%) !important;
+  background-attachment: fixed !important;
+}
+
 [data-theme="umbrae"] body::after {
   content: '';
   position: fixed;

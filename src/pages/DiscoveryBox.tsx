@@ -108,14 +108,14 @@ const perfumeThemes: Record<string, PerfumeTheme> = {
   },
   lamae: {
     selectedBg:
-      'linear-gradient(145deg, #FFF3E3 0%, #E8C28D 35%, #B97A3D 75%, #F4DEC2 100%)',
+      'linear-gradient(145deg, #2E362A 0%, #4A5A41 40%, #5e6d57 80%, #2E362A 100%)',
     hoverBg:
-      'linear-gradient(145deg, #FFF1DD 0%, #E6C28D 55%, #B87839 100%)',
-    borderColor: '#B97A3D',
-    textColor: '#402615',
-    subTextColor: 'rgba(64,38,21,0.72)',
-    hoverTextColor: '#402615',
-    hoverSubTextColor: 'rgba(64,38,21,0.72)',
+      'linear-gradient(145deg, #34402E 0%, #526152 55%, #6B7C62 100%)',
+    borderColor: '#9FB492',
+    textColor: '#E4EBDF',
+    subTextColor: 'rgba(228,235,223,0.72)',
+    hoverTextColor: '#F0F5EC',
+    hoverSubTextColor: 'rgba(240,245,236,0.72)',
   },
   varkaem: {
     selectedBg:
