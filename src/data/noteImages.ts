@@ -109,6 +109,19 @@ const NOTE_MAP: Record<string, string> = {
   'aldéhydes': 'musc-blanc',
   'accord santal': 'santal',
   'mahonial': 'ambre',
+
+  // Nouveaux ajouts
+  'épices': 'epices', 'epices': 'epices',
+  'café': 'cafe', 'cafe': 'cafe',
+  'coriandre': 'coriandre',
+  'eau de mer': 'eau-de-mer', 'notes aquatiques': 'eau-de-mer',
+  'fruit du dragon': 'fruit-du-dragon', 'pitaya': 'fruit-du-dragon',
+  'muguet': 'muguet',
+  'notes de fleurs exotiques': 'notes-de-fleurs-exotiques',
+  'fleurs exotiques': 'notes-de-fleurs-exotiques',
+  'pois de senteur': 'pois-de-senteur',
+  'pomme granny smith': 'pomme-granny-smith', 'pomme verte': 'pomme-granny-smith', 'granny smith': 'pomme-granny-smith',
+  'œillet': 'oeillet', 'oeillet': 'oeillet',
 };
 
 export function getNoteImagePath(noteName: string): string {
