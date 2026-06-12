@@ -391,7 +391,7 @@ const perfumeThemes: Record<string, PerfumeTheme> = {
     hoverTextColor: '#432D0E',
     hoverSubTextColor: 'rgba(67,45,14,0.72)',
   },
-  taely: {
+  thaely: {
     selectedBg:
       'linear-gradient(145deg, #FFF8DE 0%, #FFF0BB 40%, #ffeb99 80%, #FFF8DE 100%)',
     hoverBg:

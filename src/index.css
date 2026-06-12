@@ -835,7 +835,7 @@
   background-attachment: fixed !important;
 }
 
-[data-theme="taely"] {
+[data-theme="thaely"] {
   --background: 48 75% 93%;
   --foreground: 42 40% 22%;
   --card: 48 68% 89%;
@@ -857,7 +857,7 @@
   --navbar-border: 48 36% 81%;
   --theme-bg: #ffeb99;
 }
-[data-theme="taely"] body {
+[data-theme="thaely"] body {
   background: linear-gradient(160deg, #FFF8DE 0%, #ffeb99 35%, #E0C24E33 70%, #FFF8DE 100%) !important;
   background-attachment: fixed !important;
 }

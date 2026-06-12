@@ -185,7 +185,7 @@ const parfumThemes: Record<string, ParfumTheme> = {
     marbleSeed: 10,
     marbleColors: ['#E0A350', '#ffd699', '#FFF1DE'],
   },
-  taely: {
+  thaely: {
     accent: '#E0C24E',
     secondary: '#ffeb99',
     bg: '#FFF8DE',
