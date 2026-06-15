@@ -399,7 +399,7 @@ const Index = () => {
                 <span className="text-foreground/40">Cinq sillages.</span>
               </h2>
               <p className="font-display text-base lg:text-lg italic font-light leading-relaxed max-w-2xl mx-auto mb-6" style={{ color: 'var(--c-w50)' }}>
-                THÆM ÆTERNUM façonne ses créations en cinq gammes, chacune une facette de son âme : une gourmande, sucrée et enveloppante ; une fruitée, lumineuse et solaire ; une ambrée, portée par l'oud, intense et profonde ; une florale, délicate et raffinée ; une dernière, pure et aérienne, comme un souffle propre.
+                THÆM ÆTERNUM façonne ses créations en cinq gammes, chacune une facette de son âme : une gourmande, sucrée et enveloppante ; une fruitée, lumineuse et solaire ; une boisée et ambrée, portée par l'oud, intense et mystérieuse ; une florale, délicate et raffinée ; une dernière, pure et aérienne, comme un souffle propre.
               </p>
               <p className="font-body text-xs text-muted-foreground/40 mb-10" style={{ letterSpacing: '0.08em' }}>
                 Cinq écritures olfactives. Une seule signature. À découvrir juste ci-dessous.
