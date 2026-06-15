@@ -504,9 +504,17 @@ const Index = () => {
                 <span className="text-foreground/40">de la maison.</span>
               </h2>
             </motion.div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-              {bestSellers.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
-            </div>
+            <Carousel opts={{ align: 'start', loop: bestSellers.length > 1 }} className="w-full">
+              <CarouselContent className="-ml-4">
+                {bestSellers.map((p, i) => (
+                  <CarouselItem key={p.id} className="pl-4 basis-[70%] sm:basis-1/2 md:basis-1/3 lg:basis-1/5">
+                    <ProductCard product={p} index={i} />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="hidden sm:flex -left-4 lg:-left-12" />
+              <CarouselNext className="hidden sm:flex -right-4 lg:-right-12" />
+            </Carousel>
           </div>
         </section>
 
@@ -536,9 +544,17 @@ const Index = () => {
                   Un avant-goût de ce qui s'apprête à éveiller vos sens.
                 </p>
               </motion.div>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-                {upcoming.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
-              </div>
+              <Carousel opts={{ align: 'start', loop: upcoming.length > 1 }} className="w-full">
+                <CarouselContent className="-ml-4">
+                  {upcoming.map((p, i) => (
+                    <CarouselItem key={p.id} className="pl-4 basis-[70%] sm:basis-1/2 md:basis-1/3 lg:basis-1/5">
+                      <ProductCard product={p} index={i} />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="hidden sm:flex -left-4 lg:-left-12" />
+                <CarouselNext className="hidden sm:flex -right-4 lg:-right-12" />
+              </Carousel>
             </div>
           </section>
         )}
