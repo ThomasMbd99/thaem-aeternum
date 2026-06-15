@@ -10,6 +10,7 @@ import almaePromo from '@/assets/bottles/almae-promo.png';
 import { useRef, useEffect, useCallback, useMemo } from 'react';
 import { useArticles } from '@/hooks/useArticles';
 import { useTheme } from '@/context/ThemeContext';
+import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from '@/components/ui/carousel';
 
 // ── CANVAS : encre / fumée sombre + particules dorées
 const InkCanvas = () => {
@@ -193,7 +194,6 @@ const Index = () => {
   const { parfums: parfumsDB } = useParfums();
   const { articles } = useArticles();
   const { lightMode } = useTheme();
-  const lastArticle = articles[0] ?? null;
   const bestSellers = useMemo((): Product[] => {
     return parfumsDB.filter(p => p.flagship && !p.en_promo) as unknown as Product[];
   }, [parfumsDB]);
@@ -644,7 +644,7 @@ const Index = () => {
         </section>
 
         {/* ── JOURNAL ── */}
-        {lastArticle && (
+        {articles.length > 0 && (
           <section className="py-12 lg:py-16 border-t" style={{ borderColor: 'rgba(196,149,106,0.1)' }}>
             <div className="container mx-auto px-4 lg:px-8 max-w-5xl">
               <motion.div
@@ -667,29 +667,35 @@ const Index = () => {
                   </Link>
                 </div>
 
-                <Link to={`/journal/${lastArticle.slug}`} className="group flex flex-col md:flex-row gap-8 items-center">
-                  <div
-                    className="w-full md:w-1/2 rounded-xl overflow-hidden border border-white/8 group-hover:border-white/16 transition-all duration-500 shrink-0"
-                    style={{ aspectRatio: '16/9', background: 'var(--c-bg8)' }}
-                  >
-                    {lastArticle.image_url
-                      ? <img src={lastArticle.image_url} alt={lastArticle.titre} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                      : <div className="w-full h-full flex items-center justify-center"><span className="font-display text-7xl font-bold" style={{ color: 'rgba(196,149,106,0.08)' }}>Æ</span></div>
-                    }
-                  </div>
-                  <div className="flex-1">
-                    <span className="inline-block font-body text-[9px] uppercase tracking-widest px-2.5 py-1 rounded mb-4" style={{ background: 'rgba(196,149,106,0.12)', color: '#C4956A', border: '1px solid rgba(196,149,106,0.25)' }}>
-                      {lastArticle.categorie}
-                    </span>
-                    <h3 className="font-display italic text-2xl lg:text-3xl font-light mb-3 group-hover:text-primary transition-colors leading-snug">
-                      {lastArticle.titre}
-                    </h3>
-                    {lastArticle.extrait && (
-                      <p className="font-body text-sm text-foreground/45 leading-relaxed mb-6 line-clamp-3">{lastArticle.extrait}</p>
-                    )}
-                    <p className="font-body text-[10px] uppercase tracking-widest" style={{ color: '#C4956A' }}>Lire l'article →</p>
-                  </div>
-                </Link>
+                <Carousel opts={{ align: 'start', loop: articles.length > 1 }} className="w-full">
+                  <CarouselContent className="-ml-4">
+                    {articles.slice(0, 6).map(article => (
+                      <CarouselItem key={article.id} className="pl-4 basis-[85%] sm:basis-1/2 lg:basis-1/3">
+                        <Link
+                          to={`/journal/${article.slug}`}
+                          className="group relative block rounded-xl overflow-hidden border border-white/8 hover:border-white/16 transition-all duration-500"
+                          style={{ aspectRatio: '4/5', background: 'var(--c-bg8)' }}
+                        >
+                          {article.image_url
+                            ? <img src={article.image_url} alt={article.titre} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                            : <div className="absolute inset-0 flex items-center justify-center"><span className="font-display text-7xl font-bold" style={{ color: 'rgba(196,149,106,0.08)' }}>Æ</span></div>
+                          }
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+                          <div className="absolute bottom-0 left-0 right-0 p-5">
+                            <span className="inline-block font-body text-[9px] uppercase tracking-widest px-2.5 py-1 rounded mb-3" style={{ background: 'rgba(196,149,106,0.18)', color: '#E8C28A', border: '1px solid rgba(196,149,106,0.3)' }}>
+                              {article.categorie}
+                            </span>
+                            <h3 className="font-display italic text-xl lg:text-2xl font-light text-white leading-snug group-hover:text-primary transition-colors">
+                              {article.titre}
+                            </h3>
+                          </div>
+                        </Link>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious className="hidden sm:flex -left-4 lg:-left-12" />
+                  <CarouselNext className="hidden sm:flex -right-4 lg:-right-12" />
+                </Carousel>
 
                 <div className="mt-8 text-center md:hidden">
                   <Link to="/journal" className="font-body text-[10px] uppercase tracking-[0.25em] text-foreground/35 hover:text-primary transition-colors">
