@@ -316,7 +316,12 @@ const ProductCard = ({ product, index = 0 }: Props) => {
           {product.name}
         </h3>
         {isComingSoon ? (
-          <p className="font-body text-xs text-muted-foreground mt-1 uppercase tracking-widest">Prochainement</p>
+          <>
+            <p className="font-body text-xs text-muted-foreground mt-1 uppercase tracking-widest">Prochainement</p>
+            {product.tagline && (
+              <p className="font-body text-xs text-muted-foreground/70 mt-1 line-clamp-2 italic">{product.tagline}</p>
+            )}
+          </>
         ) : (
           <>
             <p className="font-body text-xs text-muted-foreground mt-1 line-clamp-1">{product.tagline}</p>
