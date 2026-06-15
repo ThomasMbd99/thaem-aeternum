@@ -643,6 +643,24 @@ const Index = () => {
           </div>
         </section>
 
+        {/* ── ECO ── */}
+        <section className="py-12 lg:py-16 border-t" style={{ borderColor: 'rgba(196,149,106,0.1)' }}>
+          <div className="container mx-auto px-4 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="max-w-xl mx-auto text-center"
+            >
+              <Recycle className="w-8 h-8 mx-auto mb-8" style={{ color: 'hsl(43,50%,54%)' }} />
+              <h2 className="font-display text-3xl lg:text-4xl italic font-light mb-6">Rechargez votre flacon</h2>
+              <p className="font-body text-sm text-foreground/45 leading-relaxed">
+                Nos recharges 50ml à 35€ vous permettent de réutiliser votre flacon signature. Le luxe et la responsabilité vont de pair.
+              </p>
+            </motion.div>
+          </div>
+        </section>
+
         {/* ── JOURNAL ── */}
         {articles.length > 0 && (
           <section className="py-12 lg:py-16 border-t" style={{ borderColor: 'rgba(196,149,106,0.1)' }}>
@@ -706,24 +724,6 @@ const Index = () => {
             </div>
           </section>
         )}
-
-        {/* ── ECO ── */}
-        <section className="py-12 lg:py-16 border-t" style={{ borderColor: 'rgba(196,149,106,0.1)' }}>
-          <div className="container mx-auto px-4 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="max-w-xl mx-auto text-center"
-            >
-              <Recycle className="w-8 h-8 mx-auto mb-8" style={{ color: 'hsl(43,50%,54%)' }} />
-              <h2 className="font-display text-3xl lg:text-4xl italic font-light mb-6">Rechargez votre flacon</h2>
-              <p className="font-body text-sm text-foreground/45 leading-relaxed">
-                Nos recharges 50ml à 35€ vous permettent de réutiliser votre flacon signature. Le luxe et la responsabilité vont de pair.
-              </p>
-            </motion.div>
-          </div>
-        </section>
 
       </div>
     </PageTransition>
