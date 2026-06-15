@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Product, getCollection } from '@/data/products';
+import { Product, getCollection, getNoteName } from '@/data/products';
 import { getBottleImage } from '@/data/bottleImages';
 import { useState, useCallback, useRef } from 'react';
 import { Heart } from 'lucide-react';
@@ -320,6 +320,17 @@ const ProductCard = ({ product, index = 0 }: Props) => {
             <p className="font-body text-xs text-muted-foreground mt-1 uppercase tracking-widest">Prochainement</p>
             {product.tagline && (
               <p className="font-body text-xs text-muted-foreground/70 mt-1 line-clamp-2 italic">{product.tagline}</p>
+            )}
+            {product.notes.teaser && product.notes.teaser.length > 0 && (
+              <ul className="flex flex-wrap gap-1.5 mt-2">
+                {product.notes.teaser.slice(0, 3).map((n, i) => (
+                  <li key={i} className="font-body text-[10px] uppercase tracking-widest px-2 py-1 rounded-full"
+                    style={{ border: '1px solid rgba(196,149,106,0.3)', color: 'rgba(196,149,106,0.8)' }}
+                  >
+                    {getNoteName(n)}
+                  </li>
+                ))}
+              </ul>
             )}
           </>
         ) : (

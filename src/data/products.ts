@@ -9,6 +9,7 @@ export interface Note {
   heart: NoteEntry[];
   base: NoteEntry[];
   olfactive?: NoteEntry[];
+  teaser?: NoteEntry[];
 }
 
 export function getNoteName(entry: NoteEntry): string {
