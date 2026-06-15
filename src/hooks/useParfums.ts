@@ -23,6 +23,7 @@ export interface ParfumFull {
     top: NoteEntry[];
     heart: NoteEntry[];
     base: NoteEntry[];
+    olfactive: NoteEntry[];
   };
   texte_long: string | null;
   texte_court: string | null;
@@ -66,6 +67,7 @@ function mapParfum(p: ParfumDB): ParfumFull {
       top: parseNotes(p.notes_tete),
       heart: parseNotes(p.notes_coeur),
       base: parseNotes(p.notes_fond),
+      olfactive: parseNotes(p.notes_olfactives),
     },
     texte_long: p.texte_long,
     texte_court: p.texte_court,

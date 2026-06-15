@@ -871,6 +871,13 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
                     Astuce : ajoutez "*1.5" ou "*2" après une note (ex. "Vanille*2") pour l'afficher plus grande dans la pyramide, selon son importance.
                   </p>
                 </div>
+                <div>
+                  <label className={labelCls}>Notes olfactives (séparées par virgule, optionnel)</label>
+                  <input className={inputCls} value={editingParfum.notes_olfactives ?? ''} onChange={e => setField('notes_olfactives', e.target.value)} placeholder="Cuir, Fumée*1.5, Épices..." />
+                  <p className="font-body text-[10px] text-foreground/30 mt-1">
+                    4ème section affichée sous la pyramide, pour des notes au même niveau (sans hiérarchie tête/cœur/fond).
+                  </p>
+                </div>
 
                 {/* Actions */}
                 <div className="flex gap-3 pt-4 border-t border-white/8">

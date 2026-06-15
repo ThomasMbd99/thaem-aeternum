@@ -85,6 +85,10 @@ const OlfactoryPyramid = ({ notes, accentColor = 'hsl(var(--gold))' }: Props) =>
     { label: 'Notes de Fond', sublabel: 'Sillage', items: notes.base, width: '100%' },
   ];
 
+  if (notes.olfactive && notes.olfactive.length > 0) {
+    sections.push({ label: 'Notes Olfactives', sublabel: 'Caractère', items: notes.olfactive, width: '100%' });
+  }
+
   return (
     <div className="space-y-1">
       <motion.h4
