@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
 import { ShoppingBag, ArrowLeft, Loader2, MapPin, Truck, Tag, X, Home, LogIn, UserPlus, Store } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '@/context/CartContext';
@@ -200,6 +201,11 @@ const CheckoutPage = () => {
 
   if (items.length === 0) {
     return (
+      <>
+      <Helmet>
+        <title>Panier, THÆM ÆTERNUM</title>
+        <meta name="robots" content="noindex" />
+      </Helmet>
       <div className="min-h-screen pt-24 pb-20 flex flex-col items-center justify-center">
         <ShoppingBag className="w-12 h-12 text-muted-foreground opacity-30 mb-4" />
         <p className="font-body text-muted-foreground mb-6">Votre panier est vide.</p>
@@ -207,10 +213,16 @@ const CheckoutPage = () => {
           Découvrir les collections →
         </Link>
       </div>
+      </>
     );
   }
 
   return (
+    <>
+    <Helmet>
+      <title>Commande, THÆM ÆTERNUM</title>
+      <meta name="robots" content="noindex" />
+    </Helmet>
     <div className="min-h-screen pt-24 pb-20">
       <div className="container mx-auto px-4 lg:px-8 max-w-3xl">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
@@ -395,6 +407,7 @@ const CheckoutPage = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

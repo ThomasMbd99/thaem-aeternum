@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { supabase } from '@/lib/supabase';
 import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
 
@@ -64,6 +65,11 @@ const LoginPage = () => {
   };
 
   return (
+    <>
+    <Helmet>
+      <title>Connexion, THÆM ÆTERNUM</title>
+      <meta name="robots" content="noindex" />
+    </Helmet>
     <div className="min-h-screen flex items-center justify-center px-4 py-24 bg-background">
       {/* Glow ambiance */}
       <div
@@ -268,6 +274,7 @@ const LoginPage = () => {
         </div>
       </motion.div>
     </div>
+    </>
   );
 };
 

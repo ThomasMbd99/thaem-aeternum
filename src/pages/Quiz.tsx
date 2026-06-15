@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { useParfums } from '@/hooks/useParfums';
 import { getCollection, type Collection } from '@/data/products';
@@ -155,6 +156,11 @@ const Quiz = () => {
 
   if (result) {
     return (
+      <>
+      <Helmet>
+        <title>Votre résultat, Quiz THÆM ÆTERNUM</title>
+        <meta name="description" content="Découvrez les univers olfactifs THÆM ÆTERNUM qui correspondent le mieux à votre personnalité." />
+      </Helmet>
       <div className="min-h-screen pt-24 pb-20 bg-background">
         <div className="fixed inset-0 pointer-events-none"
           style={{ background: 'radial-gradient(ellipse 60% 40% at 50% 20%, rgba(196,149,106,0.06) 0%, transparent 70%)' }} />
@@ -249,10 +255,16 @@ const Quiz = () => {
           </motion.div>
         </div>
       </div>
+      </>
     );
   }
 
   return (
+    <>
+      <Helmet>
+        <title>Quiz Olfactif, THÆM ÆTERNUM</title>
+        <meta name="description" content="Répondez à quelques questions et découvrez les univers olfactifs THÆM ÆTERNUM faits pour vous." />
+      </Helmet>
     <div className="min-h-screen pt-24 pb-20 bg-background flex items-center">
       <div className="fixed inset-0 pointer-events-none"
         style={{ background: 'radial-gradient(ellipse 60% 40% at 50% 20%, rgba(196,149,106,0.05) 0%, transparent 70%)' }} />
@@ -324,6 +336,7 @@ const Quiz = () => {
         </AnimatePresence>
       </div>
     </div>
+    </>
   );
 };
 
