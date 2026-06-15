@@ -879,6 +879,14 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
                   </p>
                 </div>
 
+                <div>
+                  <label className={labelCls}>3 notes clés (séparées par virgule)</label>
+                  <input className={inputCls} value={editingParfum.notes_teaser ?? ''} onChange={e => setField('notes_teaser', e.target.value)} placeholder="Oud, Vanille, Cuir..." />
+                  <p className="font-body text-[10px] text-foreground/30 mt-1">
+                    Affichées sur la carte du parfum quand le statut est "Prochainement", pour donner un avant-goût.
+                  </p>
+                </div>
+
                 {/* Actions */}
                 <div className="flex gap-3 pt-4 border-t border-white/8">
                   {!isNewParfum && (

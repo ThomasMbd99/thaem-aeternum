@@ -18,6 +18,7 @@ export interface ParfumDB {
   notes_coeur: string | null;
   notes_fond: string | null;
   notes_olfactives: string | null;
+  notes_teaser: string | null;
   texte_long: string | null;
   texte_court: string | null;
   phrase_signature: string | null;
