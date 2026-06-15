@@ -1,15 +1,23 @@
-import { Note } from '@/data/products';
+import { Note, NoteEntry, getNoteName, getNoteWeight } from '@/data/products';
 import { motion } from 'framer-motion';
 import { getNoteImagePath } from '@/data/noteImages';
 
 interface NoteItemProps {
-  name: string;
+  note: NoteEntry;
   accentColor: string;
   index: number;
   sectionIndex: number;
 }
 
-const NoteItem = ({ name, accentColor, index, sectionIndex }: NoteItemProps) => {
+// Taille de base 48px, mise à l'échelle par le poids de la note (clampé pour rester lisible).
+const BASE_SIZE = 48;
+const MIN_SIZE = 36;
+const MAX_SIZE = 88;
+
+const NoteItem = ({ note, accentColor, index, sectionIndex }: NoteItemProps) => {
+  const name = getNoteName(note);
+  const weight = getNoteWeight(note);
+  const size = Math.round(Math.min(Math.max(BASE_SIZE * weight, MIN_SIZE), MAX_SIZE));
   const imagePath = getNoteImagePath(name);
 
   return (
@@ -23,8 +31,8 @@ const NoteItem = ({ name, accentColor, index, sectionIndex }: NoteItemProps) => 
     >
       {/* Photo circle */}
       <div
-        className="w-12 h-12 rounded-full overflow-hidden transition-all duration-300 group-hover:scale-110"
-        style={{ boxShadow: `0 0 0 1.5px ${accentColor}44` }}
+        className="rounded-full overflow-hidden transition-all duration-300 group-hover:scale-110"
+        style={{ width: `${size}px`, height: `${size}px`, boxShadow: `0 0 0 1.5px ${accentColor}44` }}
       >
         {imagePath ? (
           <img
@@ -118,7 +126,7 @@ const OlfactoryPyramid = ({ notes, accentColor = 'hsl(var(--gold))' }: Props) =>
 
             <div className="flex flex-wrap justify-center gap-3">
               {section.items.map((note, j) => (
-                <NoteItem key={note} name={note} accentColor={accentColor} index={j} sectionIndex={i} />
+                <NoteItem key={getNoteName(note)} note={note} accentColor={accentColor} index={j} sectionIndex={i} />
               ))}
             </div>
           </motion.div>
