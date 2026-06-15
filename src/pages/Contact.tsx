@@ -98,7 +98,6 @@ const Contact = () => {
           <p className="font-body text-sm text-muted-foreground">contact@thaem-aeternum.com</p>
           <div className="flex justify-center gap-6 mt-4">
             <a href="https://www.instagram.com/thaem_aeternum/" target="_blank" rel="noopener noreferrer" className="font-body text-sm text-muted-foreground hover:text-primary transition-colors">Instagram</a>
-            <a href="#" className="font-body text-sm text-muted-foreground hover:text-primary transition-colors">TikTok</a>
           </div>
         </div>
       </div>
