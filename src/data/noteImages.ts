@@ -123,6 +123,7 @@ const NOTE_MAP: Record<string, string> = {
   'pomme granny smith': 'pomme-granny-smith', 'pomme verte': 'pomme-granny-smith', 'granny smith': 'pomme-granny-smith',
   'œillet': 'oeillet', 'oeillet': 'oeillet',
   'fruit de la passion': 'fruit-de-la-passion', 'fruits de la passion': 'fruit-de-la-passion', 'passion': 'fruit-de-la-passion',
+  'fruits rouges': 'fruits-rouges', 'fruit rouge': 'fruits-rouges', 'baies rouges': 'fruits-rouges',
 };
 
 export function getNoteImagePath(noteName: string): string {
