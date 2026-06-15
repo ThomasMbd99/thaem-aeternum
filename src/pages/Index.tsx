@@ -197,6 +197,9 @@ const Index = () => {
   const bestSellers = useMemo((): Product[] => {
     return parfumsDB.filter(p => p.flagship && !p.en_promo) as unknown as Product[];
   }, [parfumsDB]);
+  const upcoming = useMemo((): Product[] => {
+    return parfumsDB.filter(p => p.statut === 'prochainement') as unknown as Product[];
+  }, [parfumsDB]);
 
   return (
     <PageTransition>
@@ -256,30 +259,36 @@ const Index = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
-              className="flex items-baseline justify-center gap-2 lg:gap-3 flex-wrap"
+              className="flex items-baseline justify-center flex-wrap"
+              style={{ columnGap: 'clamp(0.5rem, 2.5vw, 3rem)', rowGap: '0.2em' }}
             >
-              {['T','H','Æ','M','SPACE','Æ','T','E','R','N','U','M'].map((l, i) => (
-                <motion.span
-                  key={i}
-                  initial={{ opacity: 0, y: 60, filter: 'blur(10px)' }}
-                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                  transition={{ delay: 0.2 + i * 0.07, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                  className="font-display leading-none"
-                  style={{
-                    fontSize: l === 'SPACE' ? 'clamp(1rem, 3vw, 3rem)' : 'clamp(2.8rem, 7vw, 8rem)',
-                    letterSpacing: '0.05em',
-                    color: 'hsl(43, 50%, 62%)',
-                    textShadow: (i === 2 || i === 5)
-                      ? '0 0 30px hsl(43 60% 65% / 0.7), 0 0 60px hsl(43 60% 65% / 0.3)'
-                      : 'none',
-                    fontWeight: (i === 2 || i === 5) ? '500' : '300',
-                    display: 'inline-block',
-                    width: l === 'SPACE' ? '2rem' : 'auto',
-                    visibility: l === 'SPACE' ? 'hidden' : 'visible',
-                  }}
-                >
-                  {l === 'SPACE' ? '\u00A0' : l}
-                </motion.span>
+              {[['T','H','Æ','M'], ['Æ','T','E','R','N','U','M']].map((word, wi) => (
+                <div key={wi} className="flex items-baseline flex-nowrap gap-1.5 lg:gap-3">
+                  {word.map((l, li) => {
+                    const i = wi === 0 ? li : 4 + li;
+                    return (
+                      <motion.span
+                        key={i}
+                        initial={{ opacity: 0, y: 60, filter: 'blur(10px)' }}
+                        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                        transition={{ delay: 0.2 + i * 0.07, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                        className="font-display leading-none"
+                        style={{
+                          fontSize: 'clamp(2.2rem, 8vw, 8rem)',
+                          letterSpacing: '0.05em',
+                          color: 'hsl(43, 50%, 62%)',
+                          textShadow: l === 'Æ'
+                            ? '0 0 30px hsl(43 60% 65% / 0.7), 0 0 60px hsl(43 60% 65% / 0.3)'
+                            : 'none',
+                          fontWeight: l === 'Æ' ? '500' : '300',
+                          display: 'inline-block',
+                        }}
+                      >
+                        {l}
+                      </motion.span>
+                    );
+                  })}
+                </div>
               ))}
             </motion.div>
 
@@ -500,6 +509,35 @@ const Index = () => {
             </div>
           </div>
         </section>
+
+        {/* ── PROCHAINES CRÉATIONS ── */}
+        {upcoming.length > 0 && (
+          <section className="py-12 lg:py-16">
+            <div className="container mx-auto px-4 lg:px-8">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="text-center mb-10"
+              >
+                <div className="flex items-center gap-4 justify-center mb-4">
+                  <div className="h-px w-16" style={{ background: 'rgba(196,149,106,0.3)' }} />
+                  <p className="font-body text-[10px] tracking-[0.4em] uppercase" style={{ color: 'rgba(196,149,106,0.6)' }}>
+                    À venir
+                  </p>
+                  <div className="h-px w-16" style={{ background: 'rgba(196,149,106,0.3)' }} />
+                </div>
+                <h2 className="font-display text-3xl lg:text-5xl italic font-light">
+                  Nos prochaines<br />
+                  <span className="text-foreground/40">créations.</span>
+                </h2>
+              </motion.div>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                {upcoming.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* ── EXTRAIT DE PARFUM ── */}
         <section className="relative py-14 lg:py-20 overflow-hidden">
