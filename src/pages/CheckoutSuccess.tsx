@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
 import { CheckCircle, Instagram } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '@/context/CartContext';
@@ -40,6 +41,11 @@ const CheckoutSuccess = () => {
   }, [user]);
 
   return (
+    <>
+    <Helmet>
+      <title>Commande confirmée, THÆM ÆTERNUM</title>
+      <meta name="robots" content="noindex" />
+    </Helmet>
     <div className="min-h-screen pt-24 pb-20 flex flex-col items-center justify-center">
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
@@ -100,6 +106,7 @@ const CheckoutSuccess = () => {
         </div>
       </motion.div>
     </div>
+    </>
   );
 };
 

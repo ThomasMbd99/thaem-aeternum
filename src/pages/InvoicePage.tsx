@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { Printer, ArrowLeft } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/context/AuthContext';
@@ -48,6 +49,10 @@ const InvoicePage = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Facture {invoiceNumber}, THÆM ÆTERNUM</title>
+        <meta name="robots" content="noindex" />
+      </Helmet>
       {/* Barre d'actions (masquée à l'impression) */}
       <div className="no-print fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-4 bg-background border-b border-white/8">
         <Link to="/account" className="flex items-center gap-2 font-body text-xs uppercase tracking-widest text-foreground/40 hover:text-foreground transition-colors">

@@ -1,9 +1,15 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
 
 const NotFound = () => {
 
   return (
+    <>
+    <Helmet>
+      <title>Page introuvable, THÆM ÆTERNUM</title>
+      <meta name="robots" content="noindex" />
+    </Helmet>
     <div className="min-h-screen flex flex-col items-center justify-center bg-background px-4 relative overflow-hidden">
 
       {/* Æ géant en fond */}
@@ -76,6 +82,7 @@ const NotFound = () => {
         </motion.div>
       </motion.div>
     </div>
+    </>
   );
 };
 

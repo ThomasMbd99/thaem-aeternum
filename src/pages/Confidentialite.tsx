@@ -1,8 +1,13 @@
 import { motion } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
 
 const Confidentialite = () => {
   return (
     <div className="min-h-screen pt-24 pb-20 bg-background">
+      <Helmet>
+        <title>Politique de confidentialité, THÆM ÆTERNUM</title>
+        <meta name="description" content="Politique de confidentialité de THÆM ÆTERNUM : données collectées, utilisation et droits des utilisateurs." />
+      </Helmet>
       <div className="container mx-auto px-4 lg:px-8 max-w-3xl relative z-10">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
           <p className="font-body text-xs uppercase tracking-widest text-foreground/40 mb-2">Légal</p>

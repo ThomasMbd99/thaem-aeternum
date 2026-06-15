@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
 import { collections, type Product } from '@/data/products';
 import { useParfums } from '@/hooks/useParfums';
 import ProductCard from '@/components/ProductCard';
@@ -18,6 +19,12 @@ const AllParfums = () => {
 
   return (
     <PageTransition>
+      <Helmet>
+        <title>Tous les parfums, THÆM ÆTERNUM</title>
+        <meta name="description" content="Découvrez l'ensemble des créations THÆM ÆTERNUM, extraits de parfum artisanaux français répartis en 5 univers olfactifs : SACRÆ, VITÆ, UMBRÆ, NEROLÆ et ÆRA." />
+        <meta property="og:title" content="Tous les parfums, THÆM ÆTERNUM" />
+        <meta property="og:description" content="L'ensemble de nos créations, extraits de parfum artisanaux français." />
+      </Helmet>
       <div className="min-h-screen pt-28 pb-20">
         <div className="container mx-auto px-4 lg:px-8">
 

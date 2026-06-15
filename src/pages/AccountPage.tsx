@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { User, Package, Heart, LogOut, Save, ChevronRight, Trash2, ChevronDown, KeyRound, FileText, Truck } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
@@ -150,6 +151,11 @@ const AccountPage = () => {
   );
 
   return (
+    <>
+    <Helmet>
+      <title>Mon Compte, THÆM ÆTERNUM</title>
+      <meta name="robots" content="noindex" />
+    </Helmet>
     <div className="min-h-screen pt-24 pb-20 bg-background">
       <div
         className="fixed inset-0 pointer-events-none"
@@ -516,6 +522,7 @@ const AccountPage = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
 import { Package, TrendingUp, Clock, CheckCircle, Truck, XCircle, ChevronDown, RefreshCw, AlertTriangle, Droplets, Save, Plus, X, Trash2, Upload, Loader2, BookOpen, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { supabase, type ParfumDB } from '@/lib/supabase';
@@ -309,6 +310,11 @@ const AdminPage = () => {
   );
 
   return (
+    <>
+    <Helmet>
+      <title>Administration, THÆM ÆTERNUM</title>
+      <meta name="robots" content="noindex, nofollow" />
+    </Helmet>
     <div className="min-h-screen pt-24 pb-20 bg-background">
       <div className="fixed inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 30% at 50% 0%, rgba(196,149,106,0.05) 0%, transparent 70%)' }} />
 
@@ -1072,6 +1078,7 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
       </AnimatePresence>
 
     </div>
+    </>
   );
 };
 
