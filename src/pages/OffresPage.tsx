@@ -131,6 +131,7 @@ const OffresPage = () => {
                                 <img
                                   src={p.image_url} alt={p.nom}
                                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                  loading="lazy"
                                 />
                               ) : (
                                 <p className="font-display italic text-5xl font-light select-none" style={{ color: accent, opacity: 0.18 }}>{p.nom}</p>

@@ -144,7 +144,7 @@ const Sillages = () => {
                         {/* Image */}
                         <div className="w-full md:w-2/5 rounded-xl overflow-hidden shrink-0 border border-white/8 group-hover:border-white/16 transition-all duration-300" style={{ aspectRatio: '4/3', background: 'var(--c-bg8)' }}>
                           {article.image_url
-                            ? <img src={article.image_url} alt={article.titre} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                            ? <img src={article.image_url} alt={article.titre} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
                             : <div className="w-full h-full flex items-center justify-center"><span className="font-display text-5xl font-bold" style={{ color: `${acc}15` }}>Æ</span></div>
                           }
                         </div>

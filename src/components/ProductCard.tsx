@@ -204,12 +204,14 @@ const ProductCard = ({ product, index = 0 }: Props) => {
                 src={displayImg}
                 alt={product.name}
                 className="relative z-10 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy"
               />
             ) : (
               <img
                 src={bottleImg}
                 alt={product.name}
                 className="relative z-10 h-[70%] w-auto object-contain drop-shadow-lg transition-transform duration-700 group-hover:-translate-y-3 group-hover:scale-105"
+                loading="lazy"
               />
             );
           })()}
