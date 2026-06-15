@@ -695,7 +695,7 @@ const Index = () => {
                           style={{ aspectRatio: '4/5', background: 'var(--c-bg8)' }}
                         >
                           {article.image_url
-                            ? <img src={article.image_url} alt={article.titre} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                            ? <img src={article.image_url} alt={article.titre} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
                             : <div className="absolute inset-0 flex items-center justify-center"><span className="font-display text-7xl font-bold" style={{ color: 'rgba(196,149,106,0.08)' }}>Æ</span></div>
                           }
                           <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />

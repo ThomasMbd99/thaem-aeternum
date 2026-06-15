@@ -211,7 +211,7 @@ const Quiz = () => {
                     {/* Bottle */}
                     <div className="h-52 flex items-center justify-center relative overflow-hidden"
                       style={{ background: `linear-gradient(135deg, ${acc}12 0%, transparent 100%)` }}>
-                      <img src={bottleImg} alt={parfum.nom} className="relative z-10 h-40 w-auto object-contain" />
+                      <img src={bottleImg} alt={parfum.nom} className="relative z-10 h-40 w-auto object-contain" loading="lazy" />
                     </div>
 
                     <div className="p-5">

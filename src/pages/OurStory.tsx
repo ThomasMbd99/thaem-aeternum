@@ -88,6 +88,7 @@ const OurStory = () => (
                     src={section.image}
                     alt={section.title}
                     className="w-full h-full object-cover"
+                    loading="lazy"
                   />
                   <div
                     className="absolute inset-0"

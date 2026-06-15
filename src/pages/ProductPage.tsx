@@ -75,6 +75,7 @@ const UpsellCarousel = ({ products, acc, rgb }: { products: any[], acc: string, 
                           src={getBottleImage(col)}
                           alt={p.name}
                           className="h-[65%] w-auto object-contain drop-shadow-xl transition-transform duration-700 group-hover:-translate-y-3 group-hover:scale-105 relative z-10"
+                          loading="lazy"
                         />
                         {/* Ligne accent bas */}
                         <div
@@ -338,7 +339,7 @@ const ProductPage = () => {
                         outline: activeImg === i ? `1px solid rgba(${rgb},0.3)` : 'none',
                       }}
                     >
-                      <img src={url} alt="" className="w-full h-full object-cover" />
+                      <img src={url} alt="" className="w-full h-full object-cover" loading="lazy" />
                     </button>
                   ))}
                 </div>
