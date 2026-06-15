@@ -531,6 +531,10 @@ const Index = () => {
                   Nos prochaines<br />
                   <span className="text-foreground/40">créations.</span>
                 </h2>
+                <p className="font-body text-sm lg:text-base text-foreground/50 mt-4 max-w-xl mx-auto">
+                  De nouvelles compositions sont en cours d'élaboration dans nos ateliers.
+                  Un avant-goût de ce qui s'apprête à éveiller vos sens.
+                </p>
               </motion.div>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
                 {upcoming.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
