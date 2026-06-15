@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase, type ParfumDB } from '@/lib/supabase';
-import type { Collection } from '@/data/products';
+import type { Collection, NoteEntry } from '@/data/products';
 
 const familleToCollection: Record<string, Collection> = {
   'SACRÆ': 'sacrae',
@@ -20,9 +20,9 @@ export interface ParfumFull {
   marque: string | null;
   type: 'creation' | 'inspiration';
   notes: {
-    top: string[];
-    heart: string[];
-    base: string[];
+    top: NoteEntry[];
+    heart: NoteEntry[];
+    base: NoteEntry[];
   };
   texte_long: string | null;
   texte_court: string | null;
@@ -37,9 +37,15 @@ export interface ParfumFull {
   flagship: boolean;
 }
 
-function parseNotes(str: string | null): string[] {
+// Une note peut être suivie de "*<coefficient>" (ex: "Vanille*2") pour
+// l'afficher en plus grand dans la pyramide olfactive (coefficient 1 = taille normale).
+function parseNotes(str: string | null): NoteEntry[] {
   if (!str) return [];
-  return str.split(',').map(s => s.trim()).filter(Boolean);
+  return str.split(',').map(s => s.trim()).filter(Boolean).map((entry): NoteEntry => {
+    const match = entry.match(/^(.+?)\s*\*\s*(\d+(?:\.\d+)?)$/);
+    if (!match) return entry;
+    return { name: match[1].trim(), weight: parseFloat(match[2]) };
+  });
 }
 
 function mapParfum(p: ParfumDB): ParfumFull {

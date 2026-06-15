@@ -858,15 +858,18 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
                 {/* Notes olfactives */}
                 <div>
                   <label className={labelCls}>Notes de tête (séparées par virgule)</label>
-                  <input className={inputCls} value={editingParfum.notes_tete ?? ''} onChange={e => setField('notes_tete', e.target.value)} placeholder="Bergamote, Citron, Poivre..." />
+                  <input className={inputCls} value={editingParfum.notes_tete ?? ''} onChange={e => setField('notes_tete', e.target.value)} placeholder="Bergamote, Citron*1.5, Poivre..." />
                 </div>
                 <div>
                   <label className={labelCls}>Notes de cœur (séparées par virgule)</label>
-                  <input className={inputCls} value={editingParfum.notes_coeur ?? ''} onChange={e => setField('notes_coeur', e.target.value)} placeholder="Rose, Jasmin, Iris..." />
+                  <input className={inputCls} value={editingParfum.notes_coeur ?? ''} onChange={e => setField('notes_coeur', e.target.value)} placeholder="Rose, Jasmin*2, Iris..." />
                 </div>
                 <div>
                   <label className={labelCls}>Notes de fond (séparées par virgule)</label>
-                  <input className={inputCls} value={editingParfum.notes_fond ?? ''} onChange={e => setField('notes_fond', e.target.value)} placeholder="Santal, Musc, Ambre..." />
+                  <input className={inputCls} value={editingParfum.notes_fond ?? ''} onChange={e => setField('notes_fond', e.target.value)} placeholder="Santal, Musc, Ambre*1.5..." />
+                  <p className="font-body text-[10px] text-foreground/30 mt-1">
+                    Astuce : ajoutez "*1.5" ou "*2" après une note (ex. "Vanille*2") pour l'afficher plus grande dans la pyramide, selon son importance.
+                  </p>
                 </div>
 
                 {/* Actions */}
