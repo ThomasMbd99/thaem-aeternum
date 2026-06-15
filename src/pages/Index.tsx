@@ -395,30 +395,15 @@ const Index = () => {
                 Nos Univers
               </p>
               <h2 className="font-display text-3xl lg:text-5xl italic font-light mb-6">
-                Cinq gammes.<br />
-                <span className="text-foreground/40">Une maison.</span>
+                Une maison.<br />
+                <span className="text-foreground/40">Cinq sillages.</span>
               </h2>
-              <div className="space-y-3 mb-10">
-                <p className="font-body text-xs text-muted-foreground/40 mb-6" style={{ letterSpacing: '0.08em' }}>
-                  Cinq âmes. Cinq univers. Une seule maison.
-                </p>
-                {[
-                  { name: 'SACRÆ',  sub: 'gourmande et envoûtante',  color: '#C4956A', to: '/collection/sacrae' },
-                  { name: 'VITÆ',   sub: 'fruitée et solaire',        color: '#FF6B2B', to: '/collection/vitae' },
-                  { name: 'UMBRÆ',  sub: 'boisée et silencieuse',     color: '#8B6914', to: '/collection/umbrae' },
-                  { name: 'NEROLÆ', sub: 'florale et raffinée',       color: '#F0A0B8', to: '/collection/nerolae' },
-                  { name: 'ÆRA',    sub: 'propre et aérienne',        color: '#A8D4F0', to: '/collection/aera' },
-                ].map(col => (
-                  <Link key={col.name} to={col.to} className="group flex items-baseline justify-center gap-3 hover:opacity-100 transition-opacity duration-300" style={{ opacity: 0.75 }}>
-                    <span className="font-display italic text-2xl lg:text-3xl font-light" style={{ color: col.color }}>
-                      {col.name}
-                    </span>
-                    <span className="font-body text-[9px] uppercase tracking-[0.2em] text-foreground/30 group-hover:text-foreground/50 transition-colors">
-                      {col.sub}
-                    </span>
-                  </Link>
-                ))}
-              </div>
+              <p className="font-display text-base lg:text-lg italic font-light leading-relaxed max-w-2xl mx-auto mb-6" style={{ color: 'var(--c-w50)' }}>
+                THÆM ÆTERNUM façonne ses créations en cinq gammes, chacune une facette de son âme : une gourmande, sucrée et enveloppante ; une fruitée, lumineuse et solaire ; une ambrée, portée par l'oud, intense et profonde ; une florale, délicate et raffinée ; une dernière, pure et aérienne, comme un souffle propre.
+              </p>
+              <p className="font-body text-xs text-muted-foreground/40 mb-10" style={{ letterSpacing: '0.08em' }}>
+                Cinq écritures olfactives. Une seule signature. À découvrir juste ci-dessous.
+              </p>
 
               <div className="h-px w-16 mx-auto mb-10" style={{ background: 'linear-gradient(to right, transparent, rgba(196,149,106,0.4), transparent)' }} />
             </motion.div>
