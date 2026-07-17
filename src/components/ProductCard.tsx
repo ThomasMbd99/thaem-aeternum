@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Product, getCollection, getNoteName } from '@/data/products';
+import { Product, getCollection, getNoteName, formats } from '@/data/products';
 import { getBottleImage } from '@/data/bottleImages';
 import { useState, useCallback, useRef } from 'react';
 import { Heart } from 'lucide-react';
@@ -110,6 +110,8 @@ const spawnAera = (W: number, H: number): Particle[] =>
   }));
 
 const spawners = { sacrae: spawnSacrae, vitae: spawnVitaea, umbrae: spawnUmbrae, nerolae: spawnFlorae };
+
+const startingPrice = Math.min(...formats.filter(f => f.id !== 'recharge').map(f => f.price));
 
 const ProductCard = ({ product, index = 0 }: Props) => {
   const collection = getCollection(product.collection);
@@ -336,7 +338,7 @@ const ProductCard = ({ product, index = 0 }: Props) => {
         ) : (
           <>
             <p className="font-body text-xs text-muted-foreground mt-1 line-clamp-1">{product.tagline}</p>
-            <p className="font-body text-sm text-primary mt-2">À partir de 10€</p>
+            <p className="font-body text-sm text-primary mt-2">À partir de {startingPrice.toFixed(2).replace('.', ',')}€</p>
           </>
         )}
       </Link>
