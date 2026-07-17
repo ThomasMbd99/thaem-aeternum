@@ -1,11 +1,5 @@
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from '@/context/AuthContext';
-import LoginPage from './pages/LoginPage';
-import AccountPage from './pages/AccountPage';
-import MentionsLegales from './pages/MentionsLegales';
-import CGV from './pages/CGV';
-import Confidentialite from './pages/Confidentialite';
-import PolitiqueRetour from './pages/PolitiqueRetour';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -14,7 +8,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { CartProvider } from "@/context/CartContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
@@ -24,23 +18,29 @@ import ThemeTransition from "@/components/ThemeTransition";
 import CookieBanner from "@/components/CookieBanner";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { useTheme } from "@/context/ThemeContext";
-import Index from "./pages/Index";
-import Collections from "./pages/Collections";
-import CollectionPage from "./pages/CollectionPage";
-import ProductPage from "./pages/ProductPage";
-import DiscoveryBox from "./pages/DiscoveryBox";
-import OurStory from "./pages/OurStory";
-import Contact from "./pages/Contact";
-import Quiz from "./pages/Quiz";
-import CheckoutPage from "./pages/CheckoutPage";
-import CheckoutSuccess from "./pages/CheckoutSuccess";
-import NotFound from "./pages/NotFound";
-import AllParfums from "./pages/AllParfums";
-import InvoicePage from "./pages/InvoicePage";
-import AdminPage from "./pages/AdminPage";
-import OffresPage from "./pages/OffresPage";
-import Sillages from "./pages/Sillages";
-import SillageArticle from "./pages/SillageArticle";
+const Index = lazy(() => import("./pages/Index"));
+const Collections = lazy(() => import("./pages/Collections"));
+const CollectionPage = lazy(() => import("./pages/CollectionPage"));
+const ProductPage = lazy(() => import("./pages/ProductPage"));
+const DiscoveryBox = lazy(() => import("./pages/DiscoveryBox"));
+const OurStory = lazy(() => import("./pages/OurStory"));
+const Contact = lazy(() => import("./pages/Contact"));
+const Quiz = lazy(() => import("./pages/Quiz"));
+const CheckoutPage = lazy(() => import("./pages/CheckoutPage"));
+const CheckoutSuccess = lazy(() => import("./pages/CheckoutSuccess"));
+const LoginPage = lazy(() => import("./pages/LoginPage"));
+const AccountPage = lazy(() => import("./pages/AccountPage"));
+const MentionsLegales = lazy(() => import("./pages/MentionsLegales"));
+const CGV = lazy(() => import("./pages/CGV"));
+const Confidentialite = lazy(() => import("./pages/Confidentialite"));
+const PolitiqueRetour = lazy(() => import("./pages/PolitiqueRetour"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const AllParfums = lazy(() => import("./pages/AllParfums"));
+const InvoicePage = lazy(() => import("./pages/InvoicePage"));
+const AdminPage = lazy(() => import("./pages/AdminPage"));
+const OffresPage = lazy(() => import("./pages/OffresPage"));
+const Sillages = lazy(() => import("./pages/Sillages"));
+const SillageArticle = lazy(() => import("./pages/SillageArticle"));
 
 const queryClient = new QueryClient();
 
@@ -81,6 +81,7 @@ const AnimatedRoutes = () => {
   return (
     <AnimatePresence mode="wait">
       <motion.div key={location.pathname} variants={pageVariants} initial="initial" animate="animate" exit="exit" transition={pageTransition}>
+        <Suspense fallback={null}>
         <Routes location={location}>
           <Route path="/" element={<Index />} />
           <Route path="/collections" element={<Collections />} />
@@ -106,6 +107,7 @@ const AnimatedRoutes = () => {
             <Route path="/journal/:slug" element={<SillageArticle />} />
             <Route path="*" element={<NotFound />} />
         </Routes>
+        </Suspense>
       </motion.div>
     </AnimatePresence>
   );
