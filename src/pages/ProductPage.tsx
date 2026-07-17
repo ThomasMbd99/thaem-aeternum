@@ -15,6 +15,8 @@ import NotFound from './NotFound';
 
 
 
+const upsellStartingPrice = Math.min(...formats.filter(f => f.id !== 'recharge').map(f => f.price));
+
 const UpsellCarousel = ({ products, acc, rgb }: { products: any[], acc: string, rgb: string }) => {
   const [active, setActive] = useState(0);
   const total = products.length;
@@ -72,7 +74,7 @@ const UpsellCarousel = ({ products, acc, rgb }: { products: any[], acc: string, 
                           style={{ boxShadow: `0 0 50px rgba(${rgb}, 0.2) inset` }}
                         />
                         <img
-                          src={getBottleImage(col)}
+                          src={p.image_url ?? p.images?.[0] ?? getBottleImage(col)}
                           alt={p.name}
                           className="h-[65%] w-auto object-contain drop-shadow-xl transition-transform duration-700 group-hover:-translate-y-3 group-hover:scale-105 relative z-10"
                           loading="lazy"
@@ -85,7 +87,7 @@ const UpsellCarousel = ({ products, acc, rgb }: { products: any[], acc: string, 
                       </div>
                       <h3 className="font-display text-2xl tracking-wider mb-1 group-hover:text-primary transition-colors">{p.name}</h3>
                       <p className="font-body text-xs text-foreground/45 line-clamp-1 italic">{p.tagline}</p>
-                      <p className="font-body text-sm mt-2" style={{ color: acc }}>À partir de 10€</p>
+                      <p className="font-body text-sm mt-2" style={{ color: acc }}>À partir de {upsellStartingPrice.toFixed(2).replace('.', ',')}€</p>
                     </Link>
                   </div>
                 );
