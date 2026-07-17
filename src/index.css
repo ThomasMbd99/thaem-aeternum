@@ -11,6 +11,29 @@
   }
 
   :root {
+    /* Overlays adaptatifs */
+    --c-w02: rgba(255,255,255,0.02);
+    --c-w03: rgba(255,255,255,0.03);
+    --c-w05: rgba(255,255,255,0.05);
+    --c-w06: rgba(255,255,255,0.06);
+    --c-w08: rgba(255,255,255,0.08);
+    --c-w10: rgba(255,255,255,0.1);
+    --c-w12: rgba(255,255,255,0.12);
+    --c-w16: rgba(255,255,255,0.16);
+    --c-w20: rgba(255,255,255,0.2);
+    --c-w25: rgba(255,255,255,0.32);
+    --c-w30: rgba(255,255,255,0.42);
+    --c-w35: rgba(255,255,255,0.5);
+    --c-w40: rgba(255,255,255,0.58);
+    --c-w45: rgba(255,255,255,0.65);
+    --c-w50: rgba(255,255,255,0.72);
+    --c-w75: rgba(255,255,255,0.88);
+    --c-bg7: hsl(0,0%,7%);
+    --c-bg8: hsl(0,0%,8%);
+    --c-bg10: hsl(0,0%,10%);
+    --c-bg11: hsl(0,0%,11%);
+    --c-bg12: hsl(0,0%,12%);
+
     --background: 0 0% 4%;
     --foreground: 43 45% 85%;
     --card: 0 0% 7%;
@@ -22,7 +45,7 @@
     --secondary: 0 0% 12%;
     --secondary-foreground: 43 45% 85%;
     --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 55%;
+    --muted-foreground: 0 0% 68%;
     --accent: 43 50% 54%;
     --accent-foreground: 0 0% 4%;
     --destructive: 0 84.2% 60.2%;
@@ -165,6 +188,28 @@
 
   /* ── Mode Blanc & Or ── */
   [data-mode="light"] {
+    --c-w02: rgba(0,0,0,0.02);
+    --c-w03: rgba(0,0,0,0.03);
+    --c-w05: rgba(0,0,0,0.04);
+    --c-w06: rgba(0,0,0,0.05);
+    --c-w08: rgba(0,0,0,0.07);
+    --c-w10: rgba(0,0,0,0.09);
+    --c-w12: rgba(0,0,0,0.1);
+    --c-w16: rgba(0,0,0,0.12);
+    --c-w20: rgba(0,0,0,0.15);
+    --c-w25: rgba(0,0,0,0.32);
+    --c-w30: rgba(0,0,0,0.45);
+    --c-w35: rgba(0,0,0,0.52);
+    --c-w40: rgba(0,0,0,0.6);
+    --c-w45: rgba(0,0,0,0.68);
+    --c-w50: rgba(0,0,0,0.75);
+    --c-w75: rgba(0,0,0,0.88);
+    --c-bg7: hsl(0,0%,95%);
+    --c-bg8: hsl(0,0%,94%);
+    --c-bg10: hsl(0,0%,93%);
+    --c-bg11: hsl(0,0%,92%);
+    --c-bg12: hsl(0,0%,91%);
+
     --background: 45 35% 97%;
     --foreground: 30 25% 12%;
     --card: 43 28% 93%;
@@ -176,7 +221,7 @@
     --secondary: 43 22% 87%;
     --secondary-foreground: 30 25% 12%;
     --muted: 43 18% 84%;
-    --muted-foreground: 30 18% 42%;
+    --muted-foreground: 30 20% 28%;
     --accent: 43 55% 42%;
     --accent-foreground: 45 35% 97%;
     --border: 43 22% 80%;
@@ -219,6 +264,601 @@
 
 [data-theme="aera"] body {
   background: linear-gradient(135deg, #F5FAFF 0%, #D6EEFF 40%, #C0E4FF 70%, #F0F8FF 100%) !important;
+  background-attachment: fixed !important;
+}
+
+/* ── Thèmes par parfum VITÆ ── */
+[data-theme="naeva"] {
+  --background: 235 55% 8%;
+  --foreground: 235 40% 90%;
+  --card: 235 50% 12%;
+  --card-foreground: 235 40% 90%;
+  --primary: 235 60% 68%;
+  --primary-foreground: 235 55% 8%;
+  --secondary: 235 45% 16%;
+  --secondary-foreground: 235 40% 90%;
+  --muted: 235 35% 18%;
+  --muted-foreground: 235 30% 58%;
+  --accent: 235 60% 68%;
+  --accent-foreground: 235 55% 8%;
+  --border: 235 40% 24%;
+  --input: 235 40% 24%;
+  --ring: 235 60% 68%;
+  --gold: 235 60% 68%;
+  --gold-glow: 235 65% 76%;
+  --navbar-bg: 235 55% 6%;
+  --navbar-border: 235 40% 20%;
+  --theme-bg: #0D0F2E;
+}
+[data-theme="naeva"] body {
+  background: linear-gradient(160deg, #0D0F2E 0%, #1A2060 35%, #2A38CC44 70%, #0D0F2E 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="koyaen"] {
+  --background: 160 50% 13%;
+  --foreground: 160 28% 93%;
+  --card: 160 44% 17%;
+  --card-foreground: 160 28% 93%;
+  --primary: 185 52% 65%;
+  --primary-foreground: 160 50% 8%;
+  --secondary: 160 36% 21%;
+  --secondary-foreground: 160 28% 93%;
+  --muted: 160 28% 23%;
+  --muted-foreground: 160 20% 60%;
+  --accent: 185 52% 65%;
+  --accent-foreground: 160 65% 6%;
+  --border: 160 40% 20%;
+  --input: 160 40% 20%;
+  --ring: 185 55% 62%;
+  --gold: 185 55% 62%;
+  --gold-glow: 185 62% 72%;
+  --navbar-bg: 160 55% 8%;
+  --navbar-border: 160 40% 20%;
+  --theme-bg: #0F3020;
+}
+[data-theme="koyaen"] body {
+  background: linear-gradient(160deg, #0F3020 0%, #1C4A32 35%, #30884E33 70%, #0F3020 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="ayaem"] {
+  --background: 5 80% 7%;
+  --foreground: 15 55% 88%;
+  --card: 5 70% 11%;
+  --card-foreground: 15 55% 88%;
+  --primary: 10 75% 60%;
+  --primary-foreground: 5 80% 7%;
+  --secondary: 5 60% 15%;
+  --secondary-foreground: 15 55% 88%;
+  --muted: 5 50% 17%;
+  --muted-foreground: 10 35% 55%;
+  --accent: 10 75% 60%;
+  --accent-foreground: 5 80% 7%;
+  --border: 5 50% 22%;
+  --input: 5 50% 22%;
+  --ring: 10 75% 60%;
+  --gold: 10 75% 60%;
+  --gold-glow: 10 80% 70%;
+  --navbar-bg: 5 80% 5%;
+  --navbar-border: 5 50% 18%;
+  --theme-bg: #200505;
+}
+[data-theme="ayaem"] body {
+  background: linear-gradient(160deg, #200505 0%, #400A0A 35%, #CC221033 70%, #200505 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="espae"] {
+  --background: 330 70% 6%;
+  --foreground: 330 40% 90%;
+  --card: 330 60% 10%;
+  --card-foreground: 330 40% 90%;
+  --primary: 340 75% 58%;
+  --primary-foreground: 330 70% 6%;
+  --secondary: 330 55% 14%;
+  --secondary-foreground: 330 40% 90%;
+  --muted: 330 45% 16%;
+  --muted-foreground: 330 28% 54%;
+  --accent: 340 75% 58%;
+  --accent-foreground: 330 70% 6%;
+  --border: 330 50% 20%;
+  --input: 330 50% 20%;
+  --ring: 340 75% 58%;
+  --gold: 340 75% 58%;
+  --gold-glow: 340 80% 68%;
+  --navbar-bg: 330 70% 4%;
+  --navbar-border: 330 50% 16%;
+  --theme-bg: #180310;
+}
+[data-theme="espae"] body {
+  background: linear-gradient(160deg, #180310 0%, #350828 35%, #8C005044 70%, #180310 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="lamae"] {
+  --background: 100 18% 14%;
+  --foreground: 90 22% 92%;
+  --card: 100 18% 19%;
+  --card-foreground: 90 22% 92%;
+  --primary: 95 22% 62%;
+  --primary-foreground: 100 30% 8%;
+  --secondary: 100 16% 24%;
+  --secondary-foreground: 90 22% 92%;
+  --muted: 100 14% 26%;
+  --muted-foreground: 95 12% 62%;
+  --accent: 95 22% 62%;
+  --accent-foreground: 100 30% 8%;
+  --border: 100 16% 24%;
+  --input: 100 16% 24%;
+  --ring: 95 22% 62%;
+  --gold: 95 22% 62%;
+  --gold-glow: 95 28% 70%;
+  --navbar-bg: 100 22% 10%;
+  --navbar-border: 100 16% 24%;
+  --theme-bg: #5e6d57;
+}
+[data-theme="lamae"] body {
+  background: linear-gradient(160deg, #2E362A 0%, #5e6d57 35%, #7A8A6F33 70%, #2E362A 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="almae"] {
+  --background: 39 32% 90%;
+  --foreground: 30 28% 18%;
+  --card: 39 30% 86%;
+  --card-foreground: 30 28% 18%;
+  --primary: 32 30% 45%;
+  --primary-foreground: 39 32% 96%;
+  --secondary: 39 25% 80%;
+  --secondary-foreground: 30 28% 18%;
+  --muted: 39 20% 78%;
+  --muted-foreground: 32 18% 40%;
+  --accent: 32 30% 45%;
+  --accent-foreground: 39 32% 96%;
+  --border: 39 22% 75%;
+  --input: 39 22% 75%;
+  --ring: 32 30% 45%;
+  --gold: 32 30% 45%;
+  --gold-glow: 32 35% 55%;
+  --navbar-bg: 39 35% 94%;
+  --navbar-border: 39 22% 78%;
+  --theme-bg: #d2c8b6;
+}
+[data-theme="almae"] body {
+  background: linear-gradient(160deg, #EAE3D6 0%, #d2c8b6 35%, #B8A98C33 70%, #EAE3D6 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="varkaem"] {
+  --background: 43 12% 15%;
+  --foreground: 40 16% 90%;
+  --card: 43 12% 20%;
+  --card-foreground: 40 16% 90%;
+  --primary: 40 14% 62%;
+  --primary-foreground: 43 16% 10%;
+  --secondary: 43 10% 26%;
+  --secondary-foreground: 40 16% 90%;
+  --muted: 43 9% 28%;
+  --muted-foreground: 40 10% 62%;
+  --accent: 40 14% 62%;
+  --accent-foreground: 43 16% 10%;
+  --border: 43 10% 26%;
+  --input: 43 10% 26%;
+  --ring: 40 14% 62%;
+  --gold: 40 14% 62%;
+  --gold-glow: 40 18% 70%;
+  --navbar-bg: 43 15% 11%;
+  --navbar-border: 43 10% 24%;
+  --theme-bg: #757063;
+}
+[data-theme="varkaem"] body {
+  background: linear-gradient(160deg, #38352E 0%, #757063 35%, #9A938233 70%, #38352E 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="velae"] {
+  --background: 29 22% 13%;
+  --foreground: 30 26% 90%;
+  --card: 29 22% 18%;
+  --card-foreground: 30 26% 90%;
+  --primary: 30 28% 60%;
+  --primary-foreground: 29 25% 8%;
+  --secondary: 29 18% 24%;
+  --secondary-foreground: 30 26% 90%;
+  --muted: 29 16% 26%;
+  --muted-foreground: 30 14% 60%;
+  --accent: 30 28% 60%;
+  --accent-foreground: 29 25% 8%;
+  --border: 29 18% 24%;
+  --input: 29 18% 24%;
+  --ring: 30 28% 60%;
+  --gold: 30 28% 60%;
+  --gold-glow: 30 34% 68%;
+  --navbar-bg: 29 26% 9%;
+  --navbar-border: 29 18% 22%;
+  --theme-bg: #6f5a46;
+}
+[data-theme="velae"] body {
+  background: linear-gradient(160deg, #352B21 0%, #6f5a46 35%, #C9AD8C33 70%, #352B21 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="zaemyr"] {
+  --background: 200 50% 90%;
+  --foreground: 205 35% 20%;
+  --card: 200 48% 86%;
+  --card-foreground: 205 35% 20%;
+  --primary: 200 45% 48%;
+  --primary-foreground: 200 50% 97%;
+  --secondary: 200 40% 80%;
+  --secondary-foreground: 205 35% 20%;
+  --muted: 200 35% 78%;
+  --muted-foreground: 200 25% 42%;
+  --accent: 200 45% 48%;
+  --accent-foreground: 200 50% 97%;
+  --border: 200 35% 75%;
+  --input: 200 35% 75%;
+  --ring: 200 45% 48%;
+  --gold: 200 45% 48%;
+  --gold-glow: 200 50% 58%;
+  --navbar-bg: 200 55% 94%;
+  --navbar-border: 200 35% 78%;
+  --theme-bg: #c1dcea;
+}
+[data-theme="zaemyr"] body {
+  background: linear-gradient(160deg, #DCEBF3 0%, #c1dcea 35%, #8FB8CF33 70%, #DCEBF3 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="aeonis"] {
+  --background: 356 14% 14%;
+  --foreground: 356 12% 90%;
+  --card: 356 14% 19%;
+  --card-foreground: 356 12% 90%;
+  --primary: 356 12% 64%;
+  --primary-foreground: 356 16% 10%;
+  --secondary: 356 12% 25%;
+  --secondary-foreground: 356 12% 90%;
+  --muted: 356 10% 27%;
+  --muted-foreground: 356 8% 60%;
+  --accent: 356 12% 64%;
+  --accent-foreground: 356 16% 10%;
+  --border: 356 12% 25%;
+  --input: 356 12% 25%;
+  --ring: 356 12% 64%;
+  --gold: 356 12% 64%;
+  --gold-glow: 356 16% 72%;
+  --navbar-bg: 356 16% 9%;
+  --navbar-border: 356 12% 22%;
+  --theme-bg: #9c8b8c;
+}
+[data-theme="aeonis"] body {
+  background: linear-gradient(160deg, #2E2729 0%, #9c8b8c 35%, #C4B6B733 70%, #2E2729 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="valaena"] {
+  --background: 210 16% 14%;
+  --foreground: 210 16% 90%;
+  --card: 210 16% 19%;
+  --card-foreground: 210 16% 90%;
+  --primary: 210 18% 62%;
+  --primary-foreground: 210 20% 10%;
+  --secondary: 210 14% 25%;
+  --secondary-foreground: 210 16% 90%;
+  --muted: 210 12% 27%;
+  --muted-foreground: 210 10% 60%;
+  --accent: 210 18% 62%;
+  --accent-foreground: 210 20% 10%;
+  --border: 210 14% 25%;
+  --input: 210 14% 25%;
+  --ring: 210 18% 62%;
+  --gold: 210 18% 62%;
+  --gold-glow: 210 22% 70%;
+  --navbar-bg: 210 20% 9%;
+  --navbar-border: 210 14% 22%;
+  --theme-bg: #5c6976;
+}
+[data-theme="valaena"] body {
+  background: linear-gradient(160deg, #2C333A 0%, #5c6976 35%, #8FA0AE33 70%, #2C333A 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="aelia"] {
+  --background: 222 70% 90%;
+  --foreground: 222 40% 20%;
+  --card: 222 65% 86%;
+  --card-foreground: 222 40% 20%;
+  --primary: 222 70% 55%;
+  --primary-foreground: 222 80% 97%;
+  --secondary: 222 50% 80%;
+  --secondary-foreground: 222 40% 20%;
+  --muted: 222 40% 78%;
+  --muted-foreground: 222 30% 42%;
+  --accent: 222 70% 55%;
+  --accent-foreground: 222 80% 97%;
+  --border: 222 40% 75%;
+  --input: 222 40% 75%;
+  --ring: 222 70% 55%;
+  --gold: 222 70% 55%;
+  --gold-glow: 222 75% 65%;
+  --navbar-bg: 222 60% 94%;
+  --navbar-border: 222 40% 78%;
+  --theme-bg: #83a8fb;
+}
+[data-theme="aelia"] body {
+  background: linear-gradient(160deg, #DCE6FE 0%, #83a8fb 35%, #5A7FD633 70%, #DCE6FE 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="azrae"] {
+  --background: 160 28% 90%;
+  --foreground: 160 25% 18%;
+  --card: 160 26% 86%;
+  --card-foreground: 160 25% 18%;
+  --primary: 160 22% 45%;
+  --primary-foreground: 160 30% 96%;
+  --secondary: 160 22% 80%;
+  --secondary-foreground: 160 25% 18%;
+  --muted: 160 18% 78%;
+  --muted-foreground: 160 16% 40%;
+  --accent: 160 22% 45%;
+  --accent-foreground: 160 30% 96%;
+  --border: 160 18% 75%;
+  --input: 160 18% 75%;
+  --ring: 160 22% 45%;
+  --gold: 160 22% 45%;
+  --gold-glow: 160 26% 55%;
+  --navbar-bg: 160 32% 94%;
+  --navbar-border: 160 18% 78%;
+  --theme-bg: #aec9c0;
+}
+[data-theme="azrae"] body {
+  background: linear-gradient(160deg, #DCEAE4 0%, #aec9c0 35%, #82A29433 70%, #DCEAE4 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="osae"] {
+  --background: 20 70% 92%;
+  --foreground: 20 45% 22%;
+  --card: 20 65% 88%;
+  --card-foreground: 20 45% 22%;
+  --primary: 20 75% 58%;
+  --primary-foreground: 20 80% 97%;
+  --secondary: 20 50% 84%;
+  --secondary-foreground: 20 45% 22%;
+  --muted: 20 40% 82%;
+  --muted-foreground: 20 30% 44%;
+  --accent: 20 75% 58%;
+  --accent-foreground: 20 80% 97%;
+  --border: 20 40% 78%;
+  --input: 20 40% 78%;
+  --ring: 20 75% 58%;
+  --gold: 20 75% 58%;
+  --gold-glow: 20 80% 68%;
+  --navbar-bg: 20 65% 95%;
+  --navbar-border: 20 40% 80%;
+  --theme-bg: #fa9f73;
+}
+[data-theme="osae"] body {
+  background: linear-gradient(160deg, #FCE6D9 0%, #fa9f73 35%, #E8794633 70%, #FCE6D9 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="saeny"] {
+  --background: 346 55% 93%;
+  --foreground: 340 35% 24%;
+  --card: 346 50% 89%;
+  --card-foreground: 340 35% 24%;
+  --primary: 346 50% 65%;
+  --primary-foreground: 346 60% 97%;
+  --secondary: 346 36% 85%;
+  --secondary-foreground: 340 35% 24%;
+  --muted: 346 28% 83%;
+  --muted-foreground: 340 20% 46%;
+  --accent: 346 50% 65%;
+  --accent-foreground: 346 60% 97%;
+  --border: 346 28% 80%;
+  --input: 346 28% 80%;
+  --ring: 346 50% 65%;
+  --gold: 346 50% 65%;
+  --gold-glow: 346 56% 73%;
+  --navbar-bg: 346 60% 96%;
+  --navbar-border: 346 28% 82%;
+  --theme-bg: #eeb7c4;
+}
+[data-theme="saeny"] body {
+  background: linear-gradient(160deg, #FBEBEF 0%, #eeb7c4 35%, #D6839A33 70%, #FBEBEF 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="laeya"] {
+  --background: 189 45% 14%;
+  --foreground: 189 30% 90%;
+  --card: 189 42% 19%;
+  --card-foreground: 189 30% 90%;
+  --primary: 189 48% 56%;
+  --primary-foreground: 189 50% 8%;
+  --secondary: 189 36% 24%;
+  --secondary-foreground: 189 30% 90%;
+  --muted: 189 28% 26%;
+  --muted-foreground: 189 20% 60%;
+  --accent: 189 48% 56%;
+  --accent-foreground: 189 50% 8%;
+  --border: 189 36% 24%;
+  --input: 189 36% 24%;
+  --ring: 189 48% 56%;
+  --gold: 189 48% 56%;
+  --gold-glow: 189 54% 64%;
+  --navbar-bg: 189 50% 9%;
+  --navbar-border: 189 36% 22%;
+  --theme-bg: #53b9cb;
+}
+[data-theme="laeya"] body {
+  background: linear-gradient(160deg, #0F2A30 0%, #53b9cb 35%, #8AD2DE33 70%, #0F2A30 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="naely"] {
+  --background: 289 40% 12%;
+  --foreground: 289 30% 90%;
+  --card: 289 38% 17%;
+  --card-foreground: 289 30% 90%;
+  --primary: 289 55% 60%;
+  --primary-foreground: 289 50% 8%;
+  --secondary: 289 32% 22%;
+  --secondary-foreground: 289 30% 90%;
+  --muted: 289 24% 24%;
+  --muted-foreground: 289 18% 60%;
+  --accent: 289 55% 60%;
+  --accent-foreground: 289 50% 8%;
+  --border: 289 32% 22%;
+  --input: 289 32% 22%;
+  --ring: 289 55% 60%;
+  --gold: 289 55% 60%;
+  --gold-glow: 289 60% 68%;
+  --navbar-bg: 289 50% 8%;
+  --navbar-border: 289 32% 20%;
+  --theme-bg: #a638c0;
+}
+[data-theme="naely"] body {
+  background: linear-gradient(160deg, #2A0E33 0%, #a638c0 35%, #D88AEE33 70%, #2A0E33 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="noctae-rosa"] {
+  --background: 332 30% 92%;
+  --foreground: 330 25% 22%;
+  --card: 332 28% 88%;
+  --card-foreground: 330 25% 22%;
+  --primary: 332 30% 56%;
+  --primary-foreground: 332 35% 96%;
+  --secondary: 332 22% 84%;
+  --secondary-foreground: 330 25% 22%;
+  --muted: 332 18% 82%;
+  --muted-foreground: 330 15% 44%;
+  --accent: 332 30% 56%;
+  --accent-foreground: 332 35% 96%;
+  --border: 332 18% 78%;
+  --input: 332 18% 78%;
+  --ring: 332 30% 56%;
+  --gold: 332 30% 56%;
+  --gold-glow: 332 36% 64%;
+  --navbar-bg: 332 36% 95%;
+  --navbar-border: 332 18% 80%;
+  --theme-bg: #ceacbc;
+}
+[data-theme="noctae-rosa"] body {
+  background: linear-gradient(160deg, #F2E6EC 0%, #ceacbc 35%, #9C748833 70%, #F2E6EC 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="vaem"] {
+  --background: 214 70% 94%;
+  --foreground: 214 35% 22%;
+  --card: 214 65% 90%;
+  --card-foreground: 214 35% 22%;
+  --primary: 214 60% 60%;
+  --primary-foreground: 214 70% 97%;
+  --secondary: 214 48% 86%;
+  --secondary-foreground: 214 35% 22%;
+  --muted: 214 38% 84%;
+  --muted-foreground: 214 25% 44%;
+  --accent: 214 60% 60%;
+  --accent-foreground: 214 70% 97%;
+  --border: 214 38% 80%;
+  --input: 214 38% 80%;
+  --ring: 214 60% 60%;
+  --gold: 214 60% 60%;
+  --gold-glow: 214 64% 68%;
+  --navbar-bg: 214 70% 96%;
+  --navbar-border: 214 38% 82%;
+  --theme-bg: #c7dfff;
+}
+[data-theme="vaem"] body {
+  background: linear-gradient(160deg, #EAF2FF 0%, #c7dfff 35%, #6F9FE033 70%, #EAF2FF 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="lysae"] {
+  --background: 102 50% 93%;
+  --foreground: 110 30% 22%;
+  --card: 102 45% 89%;
+  --card-foreground: 110 30% 22%;
+  --primary: 102 40% 52%;
+  --primary-foreground: 102 50% 96%;
+  --secondary: 102 32% 85%;
+  --secondary-foreground: 110 30% 22%;
+  --muted: 102 25% 83%;
+  --muted-foreground: 105 20% 44%;
+  --accent: 102 40% 52%;
+  --accent-foreground: 102 50% 96%;
+  --border: 102 25% 79%;
+  --input: 102 25% 79%;
+  --ring: 102 40% 52%;
+  --gold: 102 40% 52%;
+  --gold-glow: 102 46% 62%;
+  --navbar-bg: 102 50% 95%;
+  --navbar-border: 102 25% 81%;
+  --theme-bg: #ddfad1;
+}
+[data-theme="lysae"] body {
+  background: linear-gradient(160deg, #EEFCE8 0%, #ddfad1 35%, #7CC46833 70%, #EEFCE8 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="taelya"] {
+  --background: 36 75% 93%;
+  --foreground: 30 40% 22%;
+  --card: 36 68% 89%;
+  --card-foreground: 30 40% 22%;
+  --primary: 36 65% 56%;
+  --primary-foreground: 36 75% 96%;
+  --secondary: 36 50% 85%;
+  --secondary-foreground: 30 40% 22%;
+  --muted: 36 38% 83%;
+  --muted-foreground: 32 28% 44%;
+  --accent: 36 65% 56%;
+  --accent-foreground: 36 75% 96%;
+  --border: 36 38% 79%;
+  --input: 36 38% 79%;
+  --ring: 36 65% 56%;
+  --gold: 36 65% 56%;
+  --gold-glow: 36 70% 64%;
+  --navbar-bg: 36 75% 95%;
+  --navbar-border: 36 38% 81%;
+  --theme-bg: #ffd699;
+}
+[data-theme="taelya"] body {
+  background: linear-gradient(160deg, #FFF1DE 0%, #ffd699 35%, #E0A35033 70%, #FFF1DE 100%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-theme="thaely"] {
+  --background: 48 75% 93%;
+  --foreground: 42 40% 22%;
+  --card: 48 68% 89%;
+  --card-foreground: 42 40% 22%;
+  --primary: 48 60% 54%;
+  --primary-foreground: 48 75% 96%;
+  --secondary: 48 48% 85%;
+  --secondary-foreground: 42 40% 22%;
+  --muted: 48 36% 83%;
+  --muted-foreground: 44 26% 44%;
+  --accent: 48 60% 54%;
+  --accent-foreground: 48 75% 96%;
+  --border: 48 36% 79%;
+  --input: 48 36% 79%;
+  --ring: 48 60% 54%;
+  --gold: 48 60% 54%;
+  --gold-glow: 48 66% 62%;
+  --navbar-bg: 48 75% 95%;
+  --navbar-border: 48 36% 81%;
+  --theme-bg: #ffeb99;
+}
+[data-theme="thaely"] body {
+  background: linear-gradient(160deg, #FFF8DE 0%, #ffeb99 35%, #E0C24E33 70%, #FFF8DE 100%) !important;
   background-attachment: fixed !important;
 }
 

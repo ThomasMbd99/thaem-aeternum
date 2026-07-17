@@ -2,12 +2,12 @@ import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { useEffect, useRef, useMemo } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { getCollection, getCollectionProducts, type Collection } from '@/data/products';
-import { buildDbMap, enrichProduct } from '@/lib/parfumUtils';
+import { getCollection, type Collection, type Product } from '@/data/products';
 import { useParfums } from '@/hooks/useParfums';
 import { collectionStories } from '@/data/collectionStories';
 import { useTheme } from '@/context/ThemeContext';
 import ProductCard from '@/components/ProductCard';
+import { ProductGridSkeleton } from '@/components/ProductSkeleton';
 import PageTransition from '@/components/PageTransition';
 import NotFound from './NotFound';
 import CollectionSplash from '@/components/CollectionSplash';
@@ -18,11 +18,9 @@ const CollectionPage = () => {
   const collection = id ? getCollection(id as Collection) : undefined;
   const { parfums: parfumsDB, loading } = useParfums();
 
-  // Données statiques enrichies avec statut/stock Supabase
   const prods = useMemo(() => {
-    if (!id) return [];
-    const dbMap = buildDbMap(parfumsDB);
-    return getCollectionProducts(id as Collection).map(p => enrichProduct(p, dbMap)).filter(p => !p.en_promo);
+    if (!id) return [] as Product[];
+    return parfumsDB.filter(p => p.collection === id && !p.en_promo) as unknown as Product[];
   }, [id, parfumsDB]);
   const story = id ? collectionStories[id as keyof typeof collectionStories] : undefined;
 
@@ -50,9 +48,9 @@ const CollectionPage = () => {
   return (
     <PageTransition>
       <Helmet>
-        <title>{collection ? `${collection.name} — THÆM ÆTERNUM` : 'Collection — THÆM ÆTERNUM'}</title>
+        <title>{collection ? `${collection.name}, THÆM ÆTERNUM` : 'Collection, THÆM ÆTERNUM'}</title>
         <meta name="description" content={collection ? `${collection.description} Découvrez la gamme ${collection.name} de THÆM ÆTERNUM.` : 'Découvrez nos gammes de parfums artisanaux.'} />
-        <meta property="og:title" content={collection ? `${collection.name} — THÆM ÆTERNUM` : 'Collection — THÆM ÆTERNUM'} />
+        <meta property="og:title" content={collection ? `${collection.name}, THÆM ÆTERNUM` : 'Collection, THÆM ÆTERNUM'} />
         <meta property="og:description" content={collection?.description ?? ''} />
       </Helmet>
       <CollectionSplash collection={collection} />
@@ -171,7 +169,7 @@ const CollectionPage = () => {
 
         {/* ── HISTOIRE ── */}
         {story && (
-          <div className="relative py-24 lg:py-32 overflow-hidden">
+          <div className="relative py-12 lg:py-16 overflow-hidden">
             <div className="container mx-auto px-6 lg:px-16 relative z-10 max-w-3xl">
 
               <motion.div
@@ -179,7 +177,7 @@ const CollectionPage = () => {
                 whileInView={{ scaleX: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 1.2 }}
-                className="h-px mb-16 origin-left"
+                className="h-px mb-10 origin-left"
                 style={{ background: `linear-gradient(to right, rgba(${rgb}, 0.6), transparent)` }}
               />
 
@@ -188,7 +186,7 @@ const CollectionPage = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.9 }}
-                className="font-display text-3xl lg:text-4xl italic text-center mb-16"
+                className="font-display text-3xl lg:text-4xl italic text-center mb-10"
                 style={{ color: acc }}
               >
                 {story.title}
@@ -215,7 +213,7 @@ const CollectionPage = () => {
                 whileInView={{ scaleX: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 1.2 }}
-                className="h-px mt-16 origin-right"
+                className="h-px mt-10 origin-right"
                 style={{ background: `linear-gradient(to left, rgba(${rgb}, 0.6), transparent)` }}
               />
             </div>
@@ -223,13 +221,13 @@ const CollectionPage = () => {
         )}
 
         {/* ── GRILLE PRODUITS ── */}
-        <div className="container mx-auto px-4 lg:px-8 pb-28 relative z-10">
+        <div className="container mx-auto px-4 lg:px-8 pb-16 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="text-center mb-16"
+            className="text-center mb-10"
           >
             <p
               className="font-body text-xs uppercase tracking-[0.4em] mb-4"
@@ -242,9 +240,12 @@ const CollectionPage = () => {
             </h3>
           </motion.div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
-            {prods.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
-          </div>
+          {loading
+            ? <ProductGridSkeleton count={6} />
+            : <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 max-w-6xl mx-auto">
+                {prods.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
+              </div>
+          }
         </div>
 
       </div>

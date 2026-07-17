@@ -1,14 +1,16 @@
 import { Helmet } from 'react-helmet-async';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { collections, products, type Product } from '@/data/products';
-import { buildDbMap, enrichProduct } from '@/lib/parfumUtils';
+import { collections, type Product } from '@/data/products';
 import { useParfums } from '@/hooks/useParfums';
 import ProductCard from '@/components/ProductCard';
 import { Recycle, Gift, Sparkles } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
 import almaePromo from '@/assets/bottles/almae-promo.png';
 import { useRef, useEffect, useCallback, useMemo } from 'react';
+import { useArticles } from '@/hooks/useArticles';
+import { useTheme } from '@/context/ThemeContext';
+import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from '@/components/ui/carousel';
 
 // ── CANVAS : encre / fumée sombre + particules dorées
 const InkCanvas = () => {
@@ -139,27 +141,33 @@ const FilmGrain = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    // Canvas offscreen à demi-résolution → CPU ÷ 4
+    const off = document.createElement('canvas');
+    const offCtx = off.getContext('2d')!;
+
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      off.width = Math.floor(window.innerWidth / 2);
+      off.height = Math.floor(window.innerHeight / 2);
     };
     resize();
     window.addEventListener('resize', resize);
 
     const draw = () => {
-      const W = canvas.width;
-      const H = canvas.height;
-      const imageData = ctx.createImageData(W, H);
+      const W = off.width;
+      const H = off.height;
+      const imageData = offCtx.createImageData(W, H);
       const data = imageData.data;
       for (let i = 0; i < data.length; i += 4) {
-        const v = Math.random() * 255;
-        data[i] = v;
-        data[i + 1] = v;
-        data[i + 2] = v;
-        data[i + 3] = Math.random() * 18;
+        const v = (Math.random() * 255) | 0;
+        data[i] = v; data[i + 1] = v; data[i + 2] = v;
+        data[i + 3] = (Math.random() * 18) | 0;
       }
-      ctx.putImageData(imageData, 0, 0);
-      animRef.current = requestAnimationFrame(draw);
+      offCtx.putImageData(imageData, 0, 0);
+      ctx.drawImage(off, 0, 0, canvas.width, canvas.height);
+      // Throttle à ~20fps
+      setTimeout(() => { animRef.current = requestAnimationFrame(draw); }, 50);
     };
 
     animRef.current = requestAnimationFrame(draw);
@@ -178,31 +186,28 @@ const FilmGrain = () => {
   );
 };
 
-const BEST_SELLER_IDS = ['zaemyr', 'velae', 'koyaen', 'aeonis', 'alnae'];
-
 const Index = () => {
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
   const heroOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
   const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
   const { parfums: parfumsDB } = useParfums();
+  const { articles } = useArticles();
+  const { lightMode } = useTheme();
   const bestSellers = useMemo((): Product[] => {
-    const dbMap = buildDbMap(parfumsDB);
-    return BEST_SELLER_IDS.reduce<Product[]>((acc, id) => {
-      const staticP = products.find(p => p.id === id);
-      if (!staticP) return acc;
-      acc.push(enrichProduct(staticP, dbMap));
-      return acc;
-    }, []);
+    return parfumsDB.filter(p => p.flagship && !p.en_promo) as unknown as Product[];
+  }, [parfumsDB]);
+  const upcoming = useMemo((): Product[] => {
+    return parfumsDB.filter(p => p.statut === 'prochainement') as unknown as Product[];
   }, [parfumsDB]);
 
   return (
     <PageTransition>
       <Helmet>
-        <title>THÆM ÆTERNUM — Parfumerie d'Exception</title>
-        <meta name="description" content="L'essence de l'éternel. Découvrez 15 créations parfumées artisanales à travers 5 univers olfactifs uniques. Extraits de parfum 100% français." />
-        <meta property="og:title" content="THÆM ÆTERNUM — Parfumerie d'Exception" />
-        <meta property="og:description" content="L'essence de l'éternel. 15 créations parfumées artisanales." />
+        <title>THÆM ÆTERNUM, Parfumerie d'Exception</title>
+        <meta name="description" content="Le souffle de l'âme. Découvrez nos créations parfumées artisanales à travers 5 univers olfactifs uniques. Extraits de parfum 100% français." />
+        <meta property="og:title" content="THÆM ÆTERNUM, Parfumerie d'Exception" />
+        <meta property="og:description" content="Le souffle de l'âme. Extraits de parfum artisanaux d'exception." />
         <meta property="og:type" content="website" />
       </Helmet>
       <div className="min-h-screen">
@@ -210,8 +215,8 @@ const Index = () => {
         {/* ── HERO ── */}
         <section ref={heroRef} className="relative h-screen flex items-center justify-center overflow-hidden">
 
-          {/* Canvas animation */}
-          <InkCanvas />
+          {/* Canvas animation — masquée en mode clair */}
+          {!lightMode && <InkCanvas />}
 
           {/* Grand Æ en fond — subtil */}
           <div
@@ -223,7 +228,7 @@ const Index = () => {
               style={{
                 fontSize: 'clamp(280px, 55vw, 700px)',
                 color: 'transparent',
-                WebkitTextStroke: '1px rgba(196,149,106,0.07)',
+                WebkitTextStroke: lightMode ? '1px rgba(196,149,106,0.12)' : '1px rgba(196,149,106,0.07)',
                 lineHeight: 1,
                 userSelect: 'none',
                 opacity: 0.9,
@@ -233,9 +238,13 @@ const Index = () => {
             </span>
           </div>
 
-          {/* Overlay sombre en haut et bas */}
+          {/* Overlay haut/bas — adapté au mode */}
           <div className="absolute inset-0 pointer-events-none"
-            style={{ background: 'linear-gradient(to bottom, rgba(10,10,10,0.5) 0%, transparent 30%, transparent 70%, rgba(10,10,10,0.7) 100%)' }}
+            style={{
+              background: lightMode
+                ? 'linear-gradient(to bottom, rgba(245,240,230,0.6) 0%, transparent 30%, transparent 70%, rgba(245,240,230,0.8) 100%)'
+                : 'linear-gradient(to bottom, rgba(10,10,10,0.5) 0%, transparent 30%, transparent 70%, rgba(10,10,10,0.7) 100%)',
+            }}
           />
 
           {/* Contenu hero */}
@@ -250,30 +259,36 @@ const Index = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
-              className="flex items-baseline justify-center gap-2 lg:gap-3 flex-wrap"
+              className="flex items-baseline justify-center flex-wrap"
+              style={{ columnGap: 'clamp(0.5rem, 2.5vw, 3rem)', rowGap: '0.2em' }}
             >
-              {['T','H','Æ','M','SPACE','Æ','T','E','R','N','U','M'].map((l, i) => (
-                <motion.span
-                  key={i}
-                  initial={{ opacity: 0, y: 60, filter: 'blur(10px)' }}
-                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                  transition={{ delay: 0.2 + i * 0.07, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                  className="font-display leading-none"
-                  style={{
-                    fontSize: l === 'SPACE' ? 'clamp(1rem, 3vw, 3rem)' : 'clamp(2.8rem, 7vw, 8rem)',
-                    letterSpacing: '0.05em',
-                    color: 'hsl(43, 50%, 62%)',
-                    textShadow: (i === 2 || i === 5)
-                      ? '0 0 30px hsl(43 60% 65% / 0.7), 0 0 60px hsl(43 60% 65% / 0.3)'
-                      : 'none',
-                    fontWeight: (i === 2 || i === 5) ? '500' : '300',
-                    display: 'inline-block',
-                    width: l === 'SPACE' ? '2rem' : 'auto',
-                    visibility: l === 'SPACE' ? 'hidden' : 'visible',
-                  }}
-                >
-                  {l === 'SPACE' ? '\u00A0' : l}
-                </motion.span>
+              {[['T','H','Æ','M'], ['Æ','T','E','R','N','U','M']].map((word, wi) => (
+                <div key={wi} className="flex items-baseline flex-nowrap gap-1.5 lg:gap-3">
+                  {word.map((l, li) => {
+                    const i = wi === 0 ? li : 4 + li;
+                    return (
+                      <motion.span
+                        key={i}
+                        initial={{ opacity: 0, y: 60, filter: 'blur(10px)' }}
+                        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                        transition={{ delay: 0.2 + i * 0.07, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                        className="font-display leading-none"
+                        style={{
+                          fontSize: 'clamp(2.2rem, 8vw, 8rem)',
+                          letterSpacing: '0.05em',
+                          color: 'hsl(43, 50%, 62%)',
+                          textShadow: l === 'Æ'
+                            ? '0 0 30px hsl(43 60% 65% / 0.7), 0 0 60px hsl(43 60% 65% / 0.3)'
+                            : 'none',
+                          fontWeight: l === 'Æ' ? '500' : '300',
+                          display: 'inline-block',
+                        }}
+                      >
+                        {l}
+                      </motion.span>
+                    );
+                  })}
+                </div>
               ))}
             </motion.div>
 
@@ -283,7 +298,7 @@ const Index = () => {
               animate={{ opacity: 1 }}
               transition={{ delay: 1.4, duration: 1 }}
               className="font-display italic text-base lg:text-xl mt-10"
-              style={{ color: 'rgba(196,149,106,0.35)' }}
+              style={{ color: lightMode ? 'rgba(196,149,106,0.6)' : 'rgba(196,149,106,0.35)' }}
             >
               Le souffle de l’âme.
             </motion.p>
@@ -314,7 +329,7 @@ const Index = () => {
               <Link
                 to="/histoire"
                 className="px-8 py-3 font-body text-xs uppercase tracking-[0.3em] transition-all duration-300 text-foreground/50 hover:text-foreground"
-                style={{ border: '1px solid rgba(255,255,255,0.1)' }}
+                style={{ border: '1px solid var(--c-w10)' }}
               >
                 Notre histoire
               </Link>
@@ -328,7 +343,7 @@ const Index = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 2.5 }}
           >
-            <span className="font-body text-[9px] tracking-[0.3em] uppercase" style={{ color: 'rgba(196,149,106,0.4)' }}>
+            <span className="font-body text-[9px] tracking-[0.3em] uppercase" style={{ color: lightMode ? 'rgba(196,149,106,0.65)' : 'rgba(196,149,106,0.4)' }}>
               Défiler
             </span>
             <motion.div
@@ -341,7 +356,7 @@ const Index = () => {
         </section>
 
         {/* ── MANIFESTE ── */}
-        <section className="relative py-16 lg:py-40 overflow-hidden">
+        <section className="relative py-10 lg:py-20 overflow-hidden">
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
             <span className="font-display text-[30vw] font-bold leading-none" style={{ color: 'rgba(196,149,106,0.03)' }}>Æ</span>
           </div>
@@ -351,7 +366,7 @@ const Index = () => {
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 1.2 }}
-              className="h-px mb-16 origin-center"
+              className="h-px mb-10 origin-center"
               style={{ background: 'linear-gradient(to right, transparent, hsl(43,50%,54%), transparent)' }}
             />
             <motion.p
@@ -377,7 +392,7 @@ const Index = () => {
         </section>
 
         {/* ── 4 COLLECTIONS ── */}
-        <section className="py-20 lg:py-28">
+        <section className="py-12 lg:py-16">
           <div className="container mx-auto px-4 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -389,20 +404,16 @@ const Index = () => {
                 Nos Univers
               </p>
               <h2 className="font-display text-3xl lg:text-5xl italic font-light mb-6">
-                Cinq gammes.<br />
-                <span className="text-foreground/40">Une maison.</span>
+                Une maison.<br />
+                <span className="text-foreground/40">Cinq sillages.</span>
               </h2>
-              <div className="font-body text-xs text-muted-foreground max-w-xl mx-auto mb-4 text-center" style={{ letterSpacing: '0.04em', lineHeight: '2.2' }}>
-                <p className="mb-4">THÆM ÆTERNUM a choisi de diviser sa maison en cinq gammes distinctes, chacune portant une âme propre.</p>
-                <p>La gamme gourmande, baumée et veloutée, est <span style={{ color: '#C4956A' }}>SACRÆ</span>.</p>
-                <p>La gamme fruitée, hespéridée et solaire, est <span style={{ color: '#FF6B2B' }}>VITÆ</span>.</p>
-                <p>La gamme oudiée, ambrée et résineuse, est <span style={{ color: '#8B6914' }}>UMBRÆ</span>.</p>
-                <p>La gamme florale, néroli et aldéhydée, est <span style={{ color: '#F0A0B8' }}>NEROLÆ</span>.</p>
-                <p>La gamme fraîche, aquatique et lumineuse, est <span style={{ color: '#A8D4F0' }}>ÆRA</span>.</p>
-              </div>
-              <p className="font-body text-xs text-muted-foreground/50 max-w-lg mx-auto mb-10 leading-relaxed text-center mt-6" style={{ letterSpacing: '0.06em' }}>
-                Chaque création naît d'un univers singulier. Cinq gammes olfactives, cinq façons de ressentir, choisissez celle qui vous ressemble.
+              <p className="font-display text-base lg:text-lg italic font-light leading-relaxed max-w-2xl mx-auto mb-6" style={{ color: 'var(--c-w50)' }}>
+                THÆM ÆTERNUM façonne ses créations en cinq gammes, chacune une facette de son âme : une gourmande, sucrée et enveloppante ; une fruitée, lumineuse et solaire ; une boisée et ambrée, portée par l'oud, intense et mystérieuse ; une florale, délicate et raffinée ; une dernière, pure et aérienne, comme un souffle propre.
               </p>
+              <p className="font-body text-xs text-muted-foreground/40 mb-10" style={{ letterSpacing: '0.08em' }}>
+                Cinq écritures olfactives. Une seule signature. À découvrir juste ci-dessous.
+              </p>
+
               <div className="h-px w-16 mx-auto mb-10" style={{ background: 'linear-gradient(to right, transparent, rgba(196,149,106,0.4), transparent)' }} />
             </motion.div>
 
@@ -412,7 +423,7 @@ const Index = () => {
                 vitae: 'linear-gradient(160deg, #7a1500 0%, #c03000 25%, #e05500 55%, #cc7700 80%, #a08800 100%)',
                 umbrae: 'radial-gradient(ellipse at 30% 60%, #3D1A00 0%, #1A0A00 45%, #0D0500 100%)',
                 nerolae: 'linear-gradient(135deg, #FFF0F5 0%, #FFD6E7 40%, #FFCCE0 70%, #FFF0F5 100%)',
-                aera:    'linear-gradient(135deg, #F5FAFF 0%, #D6EEFF 40%, #C0E4FF 70%, #F0F8FF 100%)',
+                aera:    'linear-gradient(135deg, #0D2A42 0%, #1A4A6E 35%, #1E5C8A 65%, #0D2A42 100%)',
               };
               return (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
@@ -428,7 +439,7 @@ const Index = () => {
                       <Link to={`/collection/${col.id}`} className="block h-full">
                         <div
                           className="relative p-6 min-h-[220px] sm:min-h-[320px] flex flex-col items-center justify-center text-center overflow-hidden rounded transition-all duration-700"
-                          style={{ background: 'hsl(0 0% 7%)', border: '1px solid rgba(255,255,255,0.06)' }}
+                          style={{ background: 'var(--c-bg7)', border: '1px solid var(--c-w06)' }}
                         >
                           {/* Fond thème complet au hover */}
                           <div
@@ -436,10 +447,10 @@ const Index = () => {
                             style={{ background: themeBgs[col.id] }}
                           />
                           {(() => {
-                            const lightThemes = ['sacrae', 'nerolae', 'aera'];
+                            const lightThemes = ['sacrae', 'nerolae'];
                             const isLight = lightThemes.includes(col.id);
                             const textColor = isLight ? col.colors.text : 'hsl(var(--foreground))';
-                            const subColor = isLight ? col.colors.text + '99' : 'rgba(255,255,255,0.5)';
+                            const subColor = isLight ? col.colors.text + '99' : 'var(--c-w50)';
                             return (
                               <div className="relative z-10 flex flex-col items-center">
                                 <h3
@@ -473,13 +484,13 @@ const Index = () => {
         </section>
 
         {/* ── BEST SELLERS ── */}
-        <section className="py-20 lg:py-28">
+        <section className="py-12 lg:py-16">
           <div className="container mx-auto px-4 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-center mb-16"
+              className="text-center mb-10"
             >
               <div className="flex items-center gap-4 justify-center mb-4">
                 <div className="h-px w-16" style={{ background: 'rgba(196,149,106,0.3)' }} />
@@ -493,14 +504,63 @@ const Index = () => {
                 <span className="text-foreground/40">de la maison.</span>
               </h2>
             </motion.div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-              {bestSellers.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
-            </div>
+            <Carousel opts={{ align: 'start', loop: bestSellers.length > 1 }} className="w-full">
+              <CarouselContent className="-ml-4">
+                {bestSellers.map((p, i) => (
+                  <CarouselItem key={p.id} className="pl-4 basis-[70%] sm:basis-1/2 md:basis-1/3 lg:basis-1/5">
+                    <ProductCard product={p} index={i} />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="hidden sm:flex -left-4 lg:-left-12" />
+              <CarouselNext className="hidden sm:flex -right-4 lg:-right-12" />
+            </Carousel>
           </div>
         </section>
 
+        {/* ── PROCHAINES CRÉATIONS ── */}
+        {upcoming.length > 0 && (
+          <section className="py-12 lg:py-16">
+            <div className="container mx-auto px-4 lg:px-8">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="text-center mb-10"
+              >
+                <div className="flex items-center gap-4 justify-center mb-4">
+                  <div className="h-px w-16" style={{ background: 'rgba(196,149,106,0.3)' }} />
+                  <p className="font-body text-[10px] tracking-[0.4em] uppercase" style={{ color: 'rgba(196,149,106,0.6)' }}>
+                    À venir
+                  </p>
+                  <div className="h-px w-16" style={{ background: 'rgba(196,149,106,0.3)' }} />
+                </div>
+                <h2 className="font-display text-3xl lg:text-5xl italic font-light">
+                  Nos prochaines<br />
+                  <span className="text-foreground/40">créations.</span>
+                </h2>
+                <p className="font-body text-sm lg:text-base text-foreground/50 mt-4 max-w-xl mx-auto">
+                  De nouvelles compositions sont en cours d'élaboration dans nos ateliers.
+                  Un avant-goût de ce qui s'apprête à éveiller vos sens.
+                </p>
+              </motion.div>
+              <Carousel opts={{ align: 'start', loop: upcoming.length > 1 }} className="w-full">
+                <CarouselContent className="-ml-4">
+                  {upcoming.map((p, i) => (
+                    <CarouselItem key={p.id} className="pl-4 basis-[70%] sm:basis-1/2 md:basis-1/3 lg:basis-1/5">
+                      <ProductCard product={p} index={i} />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="hidden sm:flex -left-4 lg:-left-12" />
+                <CarouselNext className="hidden sm:flex -right-4 lg:-right-12" />
+              </Carousel>
+            </div>
+          </section>
+        )}
+
         {/* ── EXTRAIT DE PARFUM ── */}
-        <section className="relative py-28 lg:py-36 overflow-hidden">
+        <section className="relative py-14 lg:py-20 overflow-hidden">
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
             <span className="font-display text-[25vw] font-bold leading-none" style={{ color: 'rgba(196,149,106,0.03)' }}>Æ</span>
           </div>
@@ -511,7 +571,7 @@ const Index = () => {
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 1.2 }}
-              className="h-px mb-16 origin-center"
+              className="h-px mb-10 origin-center"
               style={{ background: 'linear-gradient(to right, transparent, hsl(43,50%,54%), transparent)' }}
             />
 
@@ -581,7 +641,7 @@ const Index = () => {
         </section>
 
         {/* ── COFFRET ── */}
-        <section className="py-20 lg:py-28 relative overflow-hidden">
+        <section className="py-12 lg:py-16 relative overflow-hidden">
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
             <span className="font-display text-[25vw] font-bold leading-none" style={{ color: 'rgba(196,149,106,0.025)' }}>Æ</span>
           </div>
@@ -597,7 +657,7 @@ const Index = () => {
                 Coffret <span style={{ color: 'hsl(43,60%,65%)' }}>Æ</span>TERNUM
               </h2>
               <p className="font-body text-sm text-foreground/50 mb-2">5 parfums au choix · 5 × 10ml</p>
-              <p className="font-display text-4xl mt-6 mb-8" style={{ color: 'hsl(43,50%,54%)' }}>50€</p>
+              <p className="font-display text-4xl mt-6 mb-8" style={{ color: 'hsl(43,50%,54%)' }}>39,99€</p>
               <Link
                 to="/coffret"
                 className="inline-block px-8 py-3 font-body text-xs uppercase tracking-[0.3em] transition-all duration-300"
@@ -610,7 +670,7 @@ const Index = () => {
         </section>
 
         {/* ── QUIZ CTA ── */}
-        <section className="py-20 lg:py-28">
+        <section className="py-12 lg:py-16">
           <div className="container mx-auto px-4 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -642,7 +702,7 @@ const Index = () => {
         </section>
 
         {/* ── ECO ── */}
-        <section className="py-20 lg:py-28 border-t" style={{ borderColor: 'rgba(196,149,106,0.1)' }}>
+        <section className="py-12 lg:py-16 border-t" style={{ borderColor: 'rgba(196,149,106,0.1)' }}>
           <div className="container mx-auto px-4 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -658,6 +718,70 @@ const Index = () => {
             </motion.div>
           </div>
         </section>
+
+        {/* ── JOURNAL ── */}
+        {articles.length > 0 && (
+          <section className="py-12 lg:py-16 border-t" style={{ borderColor: 'rgba(196,149,106,0.1)' }}>
+            <div className="container mx-auto px-4 lg:px-8 max-w-5xl">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+              >
+                <div className="flex items-center justify-between mb-10">
+                  <div>
+                    <p className="font-body text-[10px] uppercase tracking-[0.4em] mb-2" style={{ color: 'rgba(196,149,106,0.6)' }}>La Maison</p>
+                    <h2 className="font-display text-3xl lg:text-4xl italic font-light">Le Journal <span style={{ color: 'hsl(43,50%,54%)' }}>Æ</span></h2>
+                  </div>
+                  <Link
+                    to="/journal"
+                    className="hidden md:flex font-body text-[10px] uppercase tracking-[0.25em] transition-colors hover:text-primary"
+                    style={{ color: 'var(--c-w30)' }}
+                  >
+                    Tous les articles →
+                  </Link>
+                </div>
+
+                <Carousel opts={{ align: 'start', loop: articles.length > 1 }} className="w-full">
+                  <CarouselContent className="-ml-4">
+                    {articles.slice(0, 6).map(article => (
+                      <CarouselItem key={article.id} className="pl-4 basis-[85%] sm:basis-1/2 lg:basis-1/3">
+                        <Link
+                          to={`/journal/${article.slug}`}
+                          className="group relative block rounded-xl overflow-hidden border border-white/8 hover:border-white/16 transition-all duration-500"
+                          style={{ aspectRatio: '4/5', background: 'var(--c-bg8)' }}
+                        >
+                          {article.image_url
+                            ? <img src={article.image_url} alt={article.titre} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
+                            : <div className="absolute inset-0 flex items-center justify-center"><span className="font-display text-7xl font-bold" style={{ color: 'rgba(196,149,106,0.08)' }}>Æ</span></div>
+                          }
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+                          <div className="absolute bottom-0 left-0 right-0 p-5">
+                            <span className="inline-block font-body text-[9px] uppercase tracking-widest px-2.5 py-1 rounded mb-3" style={{ background: 'rgba(196,149,106,0.18)', color: '#E8C28A', border: '1px solid rgba(196,149,106,0.3)' }}>
+                              {article.categorie}
+                            </span>
+                            <h3 className="font-display italic text-xl lg:text-2xl font-light text-white leading-snug group-hover:text-primary transition-colors">
+                              {article.titre}
+                            </h3>
+                          </div>
+                        </Link>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious className="hidden sm:flex -left-4 lg:-left-12" />
+                  <CarouselNext className="hidden sm:flex -right-4 lg:-right-12" />
+                </Carousel>
+
+                <div className="mt-8 text-center md:hidden">
+                  <Link to="/journal" className="font-body text-[10px] uppercase tracking-[0.25em] text-foreground/35 hover:text-primary transition-colors">
+                    Tous les articles →
+                  </Link>
+                </div>
+              </motion.div>
+            </div>
+          </section>
+        )}
 
       </div>
     </PageTransition>

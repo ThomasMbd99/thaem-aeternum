@@ -1,11 +1,10 @@
-import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { Sparkles, ShoppingBag, ArrowRight } from 'lucide-react';
+import { Sparkles, ShoppingBag } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { supabase, type ParfumDB } from '@/lib/supabase';
+import { useParfums, type ParfumFull } from '@/hooks/useParfums';
 import { useCart } from '@/context/CartContext';
-import { formats, type FormatId } from '@/data/products';
+import { formats } from '@/data/products';
 import PageTransition from '@/components/PageTransition';
 
 const toSlug = (nom: string) =>
@@ -27,49 +26,31 @@ const familleAccents: Record<string, string> = {
   'ÆRA':    '#A8D4F0',
 };
 
+const familleFromCollection: Record<string, string> = {
+  sacrae: 'SACRÆ', vitae: 'VITÆA', umbrae: 'UMBRÆ', nerolae: 'NEROLÆ', aera: 'ÆRA',
+};
+
 const OffresPage = () => {
-  const [promos, setPromos] = useState<ParfumDB[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedFormats, setSelectedFormats] = useState<Record<number, FormatId>>({});
+  const { parfums, loading } = useParfums();
+  const promos = parfums.filter(p => p.en_promo);
   const { addItem } = useCart();
+  const originalPrice50ml = formats.find(f => f.id === '50ml')?.price ?? 44.99;
 
-  useEffect(() => {
-    const load = async () => {
-      const { data } = await supabase
-        .from('parfums')
-        .select('*')
-        .eq('en_promo', true)
-        .order('famille')
-        .order('nom');
-      if (data) setPromos(data as ParfumDB[]);
-      setLoading(false);
-    };
-    load();
-  }, []);
-
-  const grouped = promos.reduce((acc: Record<string, ParfumDB[]>, p) => {
-    const f = p.famille ?? 'Autres';
+  const grouped = promos.reduce((acc: Record<string, ParfumFull[]>, p) => {
+    const f = familleFromCollection[p.collection] ?? 'Autres';
     if (!acc[f]) acc[f] = [];
     acc[f].push(p);
     return acc;
   }, {});
 
-  const getFormat = (id: number): FormatId => selectedFormats[id] ?? '50ml';
-
-  const getPrice = (p: ParfumDB, fmt: FormatId): number => {
-    if (fmt === '50ml' && p.prix_promo) return p.prix_promo;
-    return formats.find(f => f.id === fmt)?.price ?? 44.99;
-  };
-
-  const handleAdd = (p: ParfumDB) => {
-    const fmt = getFormat(p.id);
-    addItem({ productId: String(p.id), format: fmt, name: p.nom, price: getPrice(p, fmt) });
+  const handleAdd = (p: ParfumFull) => {
+    addItem({ productId: p.id, format: '50ml', name: p.nom, price: p.prix_promo ?? originalPrice50ml });
   };
 
   return (
     <PageTransition>
       <Helmet>
-        <title>Les Offres Æ — Thæm Æternum</title>
+        <title>Les Offres Æ, Thæm Æternum</title>
         <meta name="description" content="Créations sélectionnées à des tarifs privilégiés." />
       </Helmet>
 
@@ -127,11 +108,10 @@ const OffresPage = () => {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
                     {items.map((p, idx) => {
-                      const fmt = getFormat(p.id);
-                      const price = getPrice(p, fmt);
-                      const originalPrice = formats.find(f => f.id === fmt)?.price ?? 44.99;
-                      const hasPromo = fmt === '50ml' && !!p.prix_promo && p.prix_promo < originalPrice;
-                      const discount = hasPromo ? Math.round((1 - p.prix_promo! / originalPrice) * 100) : 0;
+                      const famille = familleFromCollection[p.collection] ?? 'SACRÆ';
+                      const hasPromo = !!p.prix_promo && p.prix_promo < originalPrice50ml;
+                      const price = hasPromo ? p.prix_promo! : originalPrice50ml;
+                      const discount = hasPromo ? Math.round((1 - p.prix_promo! / originalPrice50ml) * 100) : 0;
 
                       return (
                         <motion.div
@@ -139,18 +119,19 @@ const OffresPage = () => {
                           initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: gi * 0.1 + idx * 0.07 }}
                           className="rounded-xl border border-white/8 overflow-hidden hover:border-white/16 transition-all duration-300 group flex flex-col"
-                          style={{ background: 'rgba(255,255,255,0.02)' }}
+                          style={{ background: 'var(--c-w02)' }}
                         >
                           {/* Image cliquable → page produit */}
                           <Link to={`/produit/${toSlug(p.nom)}`} className="block">
                             <div
                               className="relative h-52 sm:h-72 overflow-hidden flex items-center justify-center"
-                              style={{ background: familleGradients[p.famille] ?? familleGradients['SACRÆ'] }}
+                              style={{ background: familleGradients[famille] ?? familleGradients['SACRÆ'] }}
                             >
                               {p.image_url ? (
                                 <img
                                   src={p.image_url} alt={p.nom}
                                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                  loading="lazy"
                                 />
                               ) : (
                                 <p className="font-display italic text-5xl font-light select-none" style={{ color: accent, opacity: 0.18 }}>{p.nom}</p>
@@ -173,31 +154,14 @@ const OffresPage = () => {
                               )}
                             </Link>
 
-                            {/* Sélecteur format */}
-                            <div className="flex gap-2 mb-4">
-                              {formats.map(f => (
-                                <button
-                                  key={f.id}
-                                  onClick={() => setSelectedFormats(prev => ({ ...prev, [p.id]: f.id }))}
-                                  className="flex-1 py-1.5 sm:py-2 font-body text-[9px] sm:text-[10px] uppercase tracking-widest rounded transition-all duration-200"
-                                  style={{
-                                    background: fmt === f.id ? `${accent}18` : 'transparent',
-                                    border: `1px solid ${fmt === f.id ? accent + '60' : 'rgba(255,255,255,0.08)'}`,
-                                    color: fmt === f.id ? accent : 'rgba(255,255,255,0.3)',
-                                  }}
-                                >
-                                  {f.id === 'recharge' ? 'Rech.' : f.label}
-                                </button>
-                              ))}
-                            </div>
-
                             {/* Prix */}
                             <div className="flex items-center justify-between mb-4">
                               <div className="flex items-baseline gap-2">
+                                <span className="font-body text-[10px] uppercase tracking-widest text-foreground/30 mr-1">50ml</span>
                                 {hasPromo && (
-                                  <span className="font-body text-sm text-foreground/30 line-through">{originalPrice.toFixed(2)}€</span>
+                                  <span className="font-body text-sm text-foreground/30 line-through">{originalPrice50ml.toFixed(2)}€</span>
                                 )}
-                                <span className="font-display italic text-2xl" style={{ color: hasPromo ? accent : 'rgba(255,255,255,0.75)' }}>
+                                <span className="font-display italic text-2xl" style={{ color: hasPromo ? accent : 'var(--c-w75)' }}>
                                   {price.toFixed(2)}€
                                 </span>
                               </div>

@@ -2,10 +2,11 @@ import { Helmet } from 'react-helmet-async';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
-import { getCollection, formats, getCollectionProducts, type FormatId } from '@/data/products';
+import { getCollection, formats, type FormatId } from '@/data/products';
 import { useParfums } from '@/hooks/useParfums';
 import { getBottleImage } from '@/data/bottleImages';
 import OlfactoryPyramid from '@/components/OlfactoryPyramid';
+import { getParfumTheme } from '@/data/parfumThemes';
 import ProductCard from '@/components/ProductCard';
 import { useCart } from '@/context/CartContext';
 import { useTheme } from '@/context/ThemeContext';
@@ -61,7 +62,7 @@ const UpsellCarousel = ({ products, acc, rgb }: { products: any[], acc: string, 
                       <div
                         className="aspect-[3/4] rounded-lg flex items-center justify-center relative overflow-hidden mb-5 transition-all duration-500"
                         style={{
-                          background: `linear-gradient(145deg, hsl(0 0% 7%), hsl(0 0% 11%))`,
+                          background: `linear-gradient(145deg, var(--c-bg7), var(--c-bg11))`,
                           boxShadow: `0 0 40px rgba(${rgb}, 0.10)`,
                         }}
                       >
@@ -74,6 +75,7 @@ const UpsellCarousel = ({ products, acc, rgb }: { products: any[], acc: string, 
                           src={getBottleImage(col)}
                           alt={p.name}
                           className="h-[65%] w-auto object-contain drop-shadow-xl transition-transform duration-700 group-hover:-translate-y-3 group-hover:scale-105 relative z-10"
+                          loading="lazy"
                         />
                         {/* Ligne accent bas */}
                         <div
@@ -152,6 +154,8 @@ const ProductPage = () => {
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
   const imgY = useTransform(scrollYProgress, [0, 1], ['0%', '12%']);
+  const allImages = product ? [product.image_url, ...(product.images ?? [])].filter(Boolean) as string[] : [];
+  const [activeImg, setActiveImg] = useState(0);
 
   useEffect(() => {
     if (!loading && product) {
@@ -159,6 +163,12 @@ const ProductPage = () => {
         navigate(`/collection/${product.collection}`, { replace: true });
       } else {
         setTheme(product.collection);
+        if (getParfumTheme(product.id)) {
+          const t = setTimeout(() => {
+            document.documentElement.setAttribute('data-theme', product.id);
+          }, 520);
+          return () => clearTimeout(t);
+        }
       }
     }
   }, [loading, product]);
@@ -176,7 +186,8 @@ const ProductPage = () => {
   const currentPrice = (selectedFormat === '50ml' && product.prix_promo) ? product.prix_promo : currentFormat.price;
   const relatedProducts = getByCollection(product.collection).filter(p => p.id !== product.id && p.statut !== 'prochainement').slice(0, 3);
 
-  const acc = collection.colors.accent;
+  const parfumTheme = getParfumTheme(product.id);
+  const acc = parfumTheme?.accent ?? collection.colors.accent;
   const hexToRgb = (hex: string) => {
     const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return r ? `${parseInt(r[1],16)}, ${parseInt(r[2],16)}, ${parseInt(r[3],16)}` : '196,149,106';
@@ -197,9 +208,9 @@ const ProductPage = () => {
   return (
     <div className="min-h-screen bg-background relative">
       <Helmet>
-        <title>{product ? `${product.nom} — THÆM ÆTERNUM` : 'Parfum — THÆM ÆTERNUM'}</title>
-        <meta name="description" content={product ? `${product.tagline} — Extrait de parfum artisanal THÆM ÆTERNUM.` : 'Extrait de parfum artisanal THÆM ÆTERNUM.'} />
-        <meta property="og:title" content={product ? `${product.nom} — THÆM ÆTERNUM` : 'Parfum — THÆM ÆTERNUM'} />
+        <title>{product ? `${product.nom}, THÆM ÆTERNUM` : 'Parfum, THÆM ÆTERNUM'}</title>
+        <meta name="description" content={product ? `${product.tagline} , Extrait de parfum artisanal THÆM ÆTERNUM.` : 'Extrait de parfum artisanal THÆM ÆTERNUM.'} />
+        <meta property="og:title" content={product ? `${product.nom}, THÆM ÆTERNUM` : 'Parfum, THÆM ÆTERNUM'} />
         <meta property="og:description" content={product?.tagline ?? ''} />
       </Helmet>
 
@@ -255,7 +266,7 @@ const ProductPage = () => {
               <div
                 className="aspect-[3/4] lg:aspect-[3/4] rounded-lg relative overflow-hidden flex items-center justify-center max-h-[55vh] lg:max-h-none"
                 style={{
-                  background: `linear-gradient(145deg, hsl(0 0% 7%), hsl(0 0% 10%))`,
+                  background: `linear-gradient(145deg, var(--c-bg7), var(--c-bg10))`,
                   boxShadow: `0 0 80px rgba(${rgb}, 0.12), 0 40px 80px rgba(0,0,0,0.4)`,
                 }}
               >
@@ -276,13 +287,23 @@ const ProductPage = () => {
                   }}
                 />
 
-                {/* Flacon */}
-                <motion.img
-                  style={{ y: imgY }}
-                  src={product.image_url ?? getBottleImage(product.collection)}
-                  alt={product.name}
-                  className={`relative z-10 object-contain drop-shadow-2xl ${product.image_url ? 'w-full h-full object-cover' : 'h-[65%] w-auto'}`}
-                />
+                {/* Flacon / Image principale */}
+                {allImages.length > 0 ? (
+                  <motion.div style={{ y: imgY }} className="relative z-10 w-full h-[115%] -top-[7.5%]">
+                    <img
+                      src={allImages[activeImg]}
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </motion.div>
+                ) : (
+                  <motion.img
+                    style={{ y: imgY }}
+                    src={getBottleImage(product.collection)}
+                    alt={product.name}
+                    className="relative z-10 object-contain drop-shadow-2xl h-[65%] w-auto"
+                  />
+                )}
 
                 {/* Nom en filigrane */}
                 <div className="absolute bottom-0 left-0 right-0 text-center pb-6">
@@ -302,6 +323,27 @@ const ProductPage = () => {
                   {collection.name}
                 </div>
               </div>
+
+              {/* Miniatures galerie — en dessous de l'image */}
+              {allImages.length > 1 && (
+                <div className="flex gap-2 mt-3 justify-center">
+                  {allImages.map((url, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setActiveImg(i)}
+                      className="rounded overflow-hidden transition-all duration-200"
+                      style={{
+                        width: 56, height: 56,
+                        border: `2px solid ${activeImg === i ? acc : 'transparent'}`,
+                        opacity: activeImg === i ? 1 : 0.45,
+                        outline: activeImg === i ? `1px solid rgba(${rgb},0.3)` : 'none',
+                      }}
+                    >
+                      <img src={url} alt="" className="w-full h-full object-cover" loading="lazy" />
+                    </button>
+                  ))}
+                </div>
+              )}
             </motion.div>
 
             {/* ── DÉTAILS ── */}
@@ -354,9 +396,9 @@ const ProductPage = () => {
                       <span
                         className="font-body text-[10px] uppercase tracking-[0.3em] px-3 py-1.5 rounded"
                         style={{
-                          background: 'rgba(255,255,255,0.05)',
-                          border: '1px solid rgba(255,255,255,0.12)',
-                          color: 'rgba(255,255,255,0.45)',
+                          background: 'var(--c-w05)',
+                          border: '1px solid var(--c-w12)',
+                          color: 'var(--c-w45)',
                         }}
                       >
                         Inspiration
@@ -386,7 +428,7 @@ const ProductPage = () => {
                   Format
                 </p>
                 <div className="flex flex-wrap gap-3">
-                  {formats.map(f => (
+                  {formats.filter(f => product.en_promo ? f.id === '50ml' : true).map(f => (
                     <button
                       key={f.id}
                       onClick={() => setSelectedFormat(f.id)}
@@ -455,9 +497,9 @@ const ProductPage = () => {
                   disabled={added || outOfStock}
                   className="flex-1 py-4 font-body text-xs uppercase tracking-[0.3em] rounded transition-all duration-400 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{
-                    background: outOfStock ? 'rgba(255,255,255,0.03)' : added ? 'rgba(74,163,84,0.2)' : `rgba(${rgb}, 0.15)`,
-                    border: `1px solid ${outOfStock ? 'rgba(255,255,255,0.1)' : added ? 'rgba(74,163,84,0.5)' : acc}`,
-                    color: outOfStock ? 'rgba(255,255,255,0.3)' : added ? 'rgb(134,213,144)' : acc,
+                    background: outOfStock ? 'var(--c-w03)' : added ? 'rgba(74,163,84,0.2)' : `rgba(${rgb}, 0.15)`,
+                    border: `1px solid ${outOfStock ? 'var(--c-w10)' : added ? 'rgba(74,163,84,0.5)' : acc}`,
+                    color: outOfStock ? 'var(--c-w30)' : added ? 'rgb(134,213,144)' : acc,
                   }}
                 >
                   {outOfStock ? 'Rupture de stock' : added ? (
@@ -495,7 +537,7 @@ const ProductPage = () => {
             <h3 className="font-display text-xl tracking-wider mb-6 text-foreground">L'Histoire</h3>
             <div
               className="border-l-2 pl-6 lg:pl-8 py-4 rounded-r-sm space-y-4"
-              style={{ borderColor: acc, background: 'rgba(255,255,255,0.03)' }}
+              style={{ borderColor: acc, background: 'var(--c-w03)' }}
             >
               {product.texte_long.split('\n\n').map((p, i) => (
                 <motion.p
@@ -511,16 +553,20 @@ const ProductPage = () => {
               ))}
             </div>
             {product.phrase_signature && (
-              <motion.p
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.4, duration: 0.8 }}
-                className="font-display italic text-center text-foreground/40 text-sm mt-8 tracking-widest"
-                style={{ color: `rgba(${rgb}, 0.5)` }}
+                className="mt-10 mx-auto max-w-xl text-center"
               >
-                {product.phrase_signature}
-              </motion.p>
+                <p
+                  className="font-display italic text-center text-2xl lg:text-3xl font-bold tracking-wide leading-snug"
+                  style={{ color: acc }}
+                >
+                  « {product.phrase_signature} »
+                </p>
+              </motion.div>
             )}
           </motion.div>
         </div>

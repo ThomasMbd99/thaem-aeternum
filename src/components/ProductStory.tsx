@@ -25,7 +25,7 @@ const ProductStory = ({ productId, accentColor }: Props) => {
         className="border-l-2 pl-6 lg:pl-8 py-4 rounded-r-sm space-y-4"
         style={{
           borderColor: accentColor,
-          background: 'rgba(255,255,255,0.03)',
+          background: 'var(--c-w03)',
         }}
       >
         {paragraphs.map((p, i) => (

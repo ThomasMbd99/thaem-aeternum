@@ -5,7 +5,7 @@ const PolitiqueRetour = () => {
   return (
     <div className="min-h-screen pt-24 pb-20 bg-background">
       <Helmet>
-        <title>Politique de Retour — THÆM ÆTERNUM</title>
+        <title>Politique de Retour, THÆM ÆTERNUM</title>
         <meta name="description" content="Politique de retour THÆM ÆTERNUM : droit de rétractation 14 jours, conditions de retour, procédure et remboursement." />
       </Helmet>
       <div className="container mx-auto px-4 lg:px-8 max-w-3xl relative z-10">

@@ -16,8 +16,8 @@ import AnimatedBackground from "@/components/AnimatedBackground";
 import SplashScreen from "@/components/SplashScreen";
 import ThemeTransition from "@/components/ThemeTransition";
 import CookieBanner from "@/components/CookieBanner";
+import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { useTheme } from "@/context/ThemeContext";
-
 const Index = lazy(() => import("./pages/Index"));
 const Collections = lazy(() => import("./pages/Collections"));
 const CollectionPage = lazy(() => import("./pages/CollectionPage"));
@@ -39,6 +39,8 @@ const AllParfums = lazy(() => import("./pages/AllParfums"));
 const InvoicePage = lazy(() => import("./pages/InvoicePage"));
 const AdminPage = lazy(() => import("./pages/AdminPage"));
 const OffresPage = lazy(() => import("./pages/OffresPage"));
+const Sillages = lazy(() => import("./pages/Sillages"));
+const SillageArticle = lazy(() => import("./pages/SillageArticle"));
 
 const queryClient = new QueryClient();
 
@@ -101,6 +103,8 @@ const AnimatedRoutes = () => {
             <Route path="/invoice/:id" element={<InvoicePage />} />
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/politique-retour" element={<PolitiqueRetour />} />
+            <Route path="/journal" element={<Sillages />} />
+            <Route path="/journal/:slug" element={<SillageArticle />} />
             <Route path="*" element={<NotFound />} />
         </Routes>
         </Suspense>
@@ -128,6 +132,7 @@ const App = () => (
               <CartDrawer />
               <main><AnimatedRoutes /></main>
               <Footer />
+              <ScrollToTopButton />
             </SplashScreen>
           </BrowserRouter>
         </CartProvider>

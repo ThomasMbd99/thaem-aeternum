@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { User, Package, Heart, LogOut, Save, ChevronRight, Trash2, ChevronDown, KeyRound, FileText, Truck } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
@@ -150,6 +151,11 @@ const AccountPage = () => {
   );
 
   return (
+    <>
+    <Helmet>
+      <title>Mon Compte, THÆM ÆTERNUM</title>
+      <meta name="robots" content="noindex" />
+    </Helmet>
     <div className="min-h-screen pt-24 pb-20 bg-background">
       <div
         className="fixed inset-0 pointer-events-none"
@@ -178,7 +184,7 @@ const AccountPage = () => {
                   className="w-full flex items-center justify-between px-5 py-4 font-body text-xs uppercase tracking-widest transition-all duration-300 border-b border-white/5 last:border-0"
                   style={{
                     background: tab === id ? 'rgba(196,149,106,0.08)' : 'transparent',
-                    color: tab === id ? '#C4956A' : 'rgba(255,255,255,0.45)',
+                    color: tab === id ? '#C4956A' : 'var(--c-w45)',
                   }}
                 >
                   <span className="flex items-center gap-3">
@@ -353,7 +359,7 @@ const AccountPage = () => {
                           <button
                             onClick={() => setConfirmDelete(false)}
                             className="px-5 py-2 font-body text-xs uppercase tracking-widest rounded text-foreground/40 hover:text-foreground transition-colors"
-                            style={{ border: '1px solid rgba(255,255,255,0.08)' }}
+                            style={{ border: '1px solid var(--c-w08)' }}
                           >
                             Annuler
                           </button>
@@ -516,6 +522,7 @@ const AccountPage = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

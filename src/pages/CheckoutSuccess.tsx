@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
 import { CheckCircle, Instagram } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '@/context/CartContext';
@@ -40,6 +41,11 @@ const CheckoutSuccess = () => {
   }, [user]);
 
   return (
+    <>
+    <Helmet>
+      <title>Commande confirmée, THÆM ÆTERNUM</title>
+      <meta name="robots" content="noindex" />
+    </Helmet>
     <div className="min-h-screen pt-24 pb-20 flex flex-col items-center justify-center">
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
@@ -87,7 +93,7 @@ const CheckoutSuccess = () => {
             to="/account"
             state={{ tab: 'commandes' }}
             className="inline-block px-8 py-3 font-body text-xs uppercase tracking-[0.3em] rounded transition-all duration-300"
-            style={{ border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.4)' }}
+            style={{ border: '1px solid var(--c-w10)', color: 'var(--c-w40)' }}
           >
             Voir mes commandes
           </Link>
@@ -100,6 +106,7 @@ const CheckoutSuccess = () => {
         </div>
       </motion.div>
     </div>
+    </>
   );
 };
 

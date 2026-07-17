@@ -1,9 +1,15 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
 
 const NotFound = () => {
 
   return (
+    <>
+    <Helmet>
+      <title>Page introuvable, THÆM ÆTERNUM</title>
+      <meta name="robots" content="noindex" />
+    </Helmet>
     <div className="min-h-screen flex flex-col items-center justify-center bg-background px-4 relative overflow-hidden">
 
       {/* Æ géant en fond */}
@@ -48,7 +54,7 @@ const NotFound = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
           className="font-body text-sm mb-10"
-          style={{ color: 'rgba(255,255,255,0.3)' }}
+          style={{ color: 'var(--c-w30)' }}
         >
           Comme un sillage, elle a disparu dans l'air.
         </motion.p>
@@ -69,13 +75,14 @@ const NotFound = () => {
           <Link
             to="/parfums"
             className="px-8 py-3 font-body text-xs uppercase tracking-[0.3em] transition-all duration-300 text-foreground/40 hover:text-foreground"
-            style={{ border: '1px solid rgba(255,255,255,0.1)' }}
+            style={{ border: '1px solid var(--c-w10)' }}
           >
             Voir les parfums
           </Link>
         </motion.div>
       </motion.div>
     </div>
+    </>
   );
 };
 

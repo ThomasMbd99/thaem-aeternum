@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Package, TrendingUp, Clock, CheckCircle, Truck, XCircle, ChevronDown, RefreshCw, AlertTriangle, Droplets, Save, Plus, X, Trash2, Upload, Loader2 } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
+import { Package, TrendingUp, Clock, CheckCircle, Truck, XCircle, ChevronDown, RefreshCw, AlertTriangle, Droplets, Save, Plus, X, Trash2, Upload, Loader2, BookOpen, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { supabase, type ParfumDB } from '@/lib/supabase';
 
@@ -24,7 +25,27 @@ const statusConfig: Record<OrderStatus, { label: string; color: string; bg: stri
 
 const allStatuses: OrderStatus[] = ['pending', 'paid', 'confirmed', 'shipped', 'delivered', 'cancelled'];
 
-type AdminTab = 'commandes' | 'parfums';
+type AdminTab = 'commandes' | 'parfums' | 'articles';
+
+interface ArticleDB {
+  id: string;
+  titre: string;
+  slug: string;
+  extrait: string | null;
+  contenu: string | null;
+  image_url: string | null;
+  categorie: string;
+  publie: boolean;
+  created_at: string;
+  published_at: string | null;
+}
+
+const ARTICLE_CATEGORIES = ['actualité', 'collection', 'événement', 'collaboration', 'conseil'];
+
+const emptyArticle = (): Partial<ArticleDB> => ({
+  titre: '', slug: '', extrait: null, contenu: null,
+  image_url: null, categorie: 'actualité', publie: false, published_at: null,
+});
 
 const statutParfumConfig: Record<string, { label: string; color: string }> = {
   disponible:    { label: 'Disponible',    color: '#22C55E' },
@@ -57,8 +78,20 @@ const AdminPage = () => {
   const [isNewParfum, setIsNewParfum] = useState(false);
   const [savingForm, setSavingForm] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadingExtraImage, setUploadingExtraImage] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const extraImgRef = useRef<HTMLInputElement>(null);
+  const articleImgRef = useRef<HTMLInputElement>(null);
+
+  // Articles
+  const [articles, setArticles] = useState<ArticleDB[]>([]);
+  const [fetchingArticles, setFetchingArticles] = useState(false);
+  const [editingArticle, setEditingArticle] = useState<Partial<ArticleDB> | null>(null);
+  const [isNewArticle, setIsNewArticle] = useState(false);
+  const [savingArticle, setSavingArticle] = useState(false);
+  const [uploadingArticleImg, setUploadingArticleImg] = useState(false);
+  const [uploadArticleError, setUploadArticleError] = useState<string | null>(null);
 
   useEffect(() => {
     if (loading) return;
@@ -69,6 +102,7 @@ const AdminPage = () => {
 
   useEffect(() => {
     if (activeTab === 'parfums' && parfums.length === 0) fetchParfums();
+    if (activeTab === 'articles' && articles.length === 0) fetchArticles();
   }, [activeTab]);
 
   const fetchOrders = async () => {
@@ -190,6 +224,80 @@ const AdminPage = () => {
     setUploadingImage(false);
   };
 
+  const uploadExtraImage = async (file: File) => {
+    setUploadingExtraImage(true);
+    setUploadError(null);
+    const ext = file.name.split('.').pop() ?? 'jpg';
+    const path = `${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from('parfums').upload(path, file, { upsert: true });
+    if (error) {
+      setUploadError(`Erreur upload : ${error.message}`);
+    } else {
+      const { data } = supabase.storage.from('parfums').getPublicUrl(path);
+      const current = editingParfum?.images ?? [];
+      setField('images', [...current, data.publicUrl]);
+    }
+    setUploadingExtraImage(false);
+  };
+
+  const removeExtraImage = (index: number) => {
+    const current = editingParfum?.images ?? [];
+    setField('images', current.filter((_, i) => i !== index));
+  };
+
+  const fetchArticles = async () => {
+    setFetchingArticles(true);
+    const { data } = await supabase.from('articles').select('*').order('created_at', { ascending: false });
+    if (data) setArticles(data as ArticleDB[]);
+    setFetchingArticles(false);
+  };
+
+  const setArticleField = (key: keyof ArticleDB, val: any) =>
+    setEditingArticle(prev => prev ? { ...prev, [key]: val } : prev);
+
+  const slugify = (s: string) =>
+    s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+  const saveArticle = async () => {
+    if (!editingArticle) return;
+    setSavingArticle(true);
+    const payload = { ...editingArticle };
+    if (payload.publie && !payload.published_at) payload.published_at = new Date().toISOString();
+    if (isNewArticle) {
+      const { data } = await supabase.from('articles').insert(payload).select().single();
+      if (data) setArticles(prev => [data as ArticleDB, ...prev]);
+    } else {
+      await supabase.from('articles').update(payload).eq('id', (editingArticle as ArticleDB).id);
+      setArticles(prev => prev.map(a => a.id === (editingArticle as ArticleDB).id ? { ...a, ...payload } as ArticleDB : a));
+    }
+    setSavingArticle(false);
+    setEditingArticle(null);
+    setIsNewArticle(false);
+  };
+
+  const deleteArticle = async () => {
+    if (!editingArticle || isNewArticle) return;
+    if (!confirm(`Supprimer "${editingArticle.titre}" ?`)) return;
+    await supabase.from('articles').delete().eq('id', (editingArticle as ArticleDB).id);
+    setArticles(prev => prev.filter(a => a.id !== (editingArticle as ArticleDB).id));
+    setEditingArticle(null);
+  };
+
+  const uploadArticleImage = async (file: File) => {
+    setUploadingArticleImg(true);
+    setUploadArticleError(null);
+    const ext = file.name.split('.').pop() ?? 'jpg';
+    const path = `art-${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from('parfums').upload(path, file, { upsert: true });
+    if (error) {
+      setUploadArticleError(`Erreur : ${error.message}`);
+    } else {
+      const { data } = supabase.storage.from('parfums').getPublicUrl(path);
+      setArticleField('image_url', data.publicUrl);
+    }
+    setUploadingArticleImg(false);
+  };
+
   const filtered = filter === 'all' ? orders : orders.filter(o => (o.statut ?? 'pending') === filter);
   const totalRevenue = orders.reduce((sum, o) => sum + (parseFloat(o.total) || 0), 0);
   const pendingCount = orders.filter(o => !o.statut || o.statut === 'pending').length;
@@ -202,6 +310,11 @@ const AdminPage = () => {
   );
 
   return (
+    <>
+    <Helmet>
+      <title>Administration, THÆM ÆTERNUM</title>
+      <meta name="robots" content="noindex, nofollow" />
+    </Helmet>
     <div className="min-h-screen pt-24 pb-20 bg-background">
       <div className="fixed inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 30% at 50% 0%, rgba(196,149,106,0.05) 0%, transparent 70%)' }} />
 
@@ -226,6 +339,7 @@ const AdminPage = () => {
           {([
             { id: 'commandes', label: 'Commandes', icon: Package },
             { id: 'parfums',   label: 'Parfums',   icon: Droplets },
+            { id: 'articles',  label: 'Sillages',  icon: BookOpen },
           ] as { id: AdminTab; label: string; icon: any }[]).map(({ id, label, icon: Icon }) => (
             <button
               key={id}
@@ -233,7 +347,7 @@ const AdminPage = () => {
               className="flex items-center gap-2 px-5 py-3 font-body text-xs uppercase tracking-widest transition-all duration-200 border-b-2 -mb-px"
               style={{
                 borderColor: activeTab === id ? '#C4956A' : 'transparent',
-                color: activeTab === id ? '#C4956A' : 'rgba(255,255,255,0.4)',
+                color: activeTab === id ? '#C4956A' : 'var(--c-w40)',
               }}
             >
               <Icon className="w-3.5 h-3.5" /> {label}
@@ -335,6 +449,57 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
           </motion.div>
         )}
 
+        {activeTab === 'articles' && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+            <div className="flex justify-end mb-6">
+              <button
+                onClick={() => { setIsNewArticle(true); setEditingArticle(emptyArticle()); }}
+                className="flex items-center gap-2 px-4 py-2.5 font-body text-xs uppercase tracking-widest rounded transition-all duration-200"
+                style={{ background: 'rgba(196,149,106,0.12)', border: '1px solid rgba(196,149,106,0.3)', color: '#C4956A' }}
+              >
+                <Plus className="w-3.5 h-3.5" /> Nouvel article
+              </button>
+            </div>
+
+            {fetchingArticles ? (
+              <p className="font-body text-sm text-foreground/40 text-center py-10">Chargement...</p>
+            ) : articles.length === 0 ? (
+              <div className="text-center py-16 border border-white/8 rounded-lg">
+                <BookOpen className="w-8 h-8 mx-auto mb-4 text-foreground/20" />
+                <p className="font-body text-sm text-foreground/40">Aucun article. Créez le premier sillage.</p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {articles.map(a => (
+                  <div key={a.id} className="flex items-center gap-4 p-4 border border-white/8 rounded-lg hover:border-white/15 transition-colors">
+                    {a.image_url && (
+                      <div className="w-14 h-14 rounded overflow-hidden shrink-0 border border-white/8">
+                        <img src={a.image_url} alt="" className="w-full h-full object-cover" />
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-display italic text-foreground/80">{a.titre}</p>
+                      <p className="font-body text-[10px] text-foreground/30 mt-0.5 uppercase tracking-widest">{a.categorie}</p>
+                    </div>
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded" style={{ background: a.publie ? 'rgba(34,197,94,0.1)' : 'var(--c-w05)' }}>
+                      {a.publie ? <Eye className="w-3 h-3" style={{ color: '#22C55E' }} /> : <EyeOff className="w-3 h-3 text-foreground/30" />}
+                      <span className="font-body text-[9px] uppercase tracking-widest" style={{ color: a.publie ? '#22C55E' : 'var(--c-w30)' }}>
+                        {a.publie ? 'Publié' : 'Brouillon'}
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => { setIsNewArticle(false); setEditingArticle({ ...a }); }}
+                      className="px-3 py-1.5 font-body text-[10px] uppercase tracking-widest rounded border border-white/10 text-foreground/40 hover:text-foreground hover:border-white/25 transition-all"
+                    >
+                      Modifier
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </motion.div>
+        )}
+
         {activeTab === 'commandes' && <>
         {updateError && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-6 p-4 rounded border border-red-500/20 bg-red-500/5 flex items-start gap-3">
@@ -372,8 +537,8 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
             className="px-4 py-2 font-body text-xs uppercase tracking-widest rounded transition-all duration-200"
             style={{
               background: filter === 'all' ? 'rgba(196,149,106,0.15)' : 'transparent',
-              border: `1px solid ${filter === 'all' ? 'rgba(196,149,106,0.4)' : 'rgba(255,255,255,0.08)'}`,
-              color: filter === 'all' ? '#C4956A' : 'rgba(255,255,255,0.4)',
+              border: `1px solid ${filter === 'all' ? 'rgba(196,149,106,0.4)' : 'var(--c-w08)'}`,
+              color: filter === 'all' ? '#C4956A' : 'var(--c-w40)',
             }}
           >
             Toutes ({orders.length})
@@ -388,8 +553,8 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
                 className="px-4 py-2 font-body text-xs uppercase tracking-widest rounded transition-all duration-200"
                 style={{
                   background: filter === s ? cfg.bg : 'transparent',
-                  border: `1px solid ${filter === s ? cfg.color + '60' : 'rgba(255,255,255,0.08)'}`,
-                  color: filter === s ? cfg.color : 'rgba(255,255,255,0.4)',
+                  border: `1px solid ${filter === s ? cfg.color + '60' : 'var(--c-w08)'}`,
+                  color: filter === s ? cfg.color : 'var(--c-w40)',
                 }}
               >
                 {cfg.label} ({count})
@@ -525,7 +690,7 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
               initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 300 }}
               className="fixed right-0 top-0 h-full w-full max-w-xl z-50 overflow-y-auto"
-              style={{ background: 'hsl(var(--background))', borderLeft: '1px solid rgba(255,255,255,0.08)' }}
+              style={{ background: 'hsl(var(--background))', borderLeft: '1px solid var(--c-w08)' }}
             >
               <div className="p-6 space-y-5">
                 {/* Header panneau */}
@@ -576,9 +741,9 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
                   <div><label className={labelCls}>Note (/5)</label><input type="number" min={0} max={5} step={0.1} className={inputCls} value={editingParfum.note ?? ''} onChange={e => setField('note', parseFloat(e.target.value) || null)} /></div>
                 </div>
 
-                {/* Image */}
+                {/* Image principale */}
                 <div>
-                  <label className={labelCls}>Photo du parfum</label>
+                  <label className={labelCls}>Photo principale</label>
                   <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={e => e.target.files?.[0] && uploadImage(e.target.files[0])} />
                   {editingParfum.image_url ? (
                     <div className="space-y-2">
@@ -622,13 +787,43 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
                   </div>
                 </div>
 
+                {/* Photos supplémentaires */}
+                <div>
+                  <label className={labelCls}>Photos supplémentaires (galerie)</label>
+                  <input ref={extraImgRef} type="file" accept="image/*" className="hidden" onChange={e => e.target.files?.[0] && uploadExtraImage(e.target.files[0])} />
+                  <div className="grid grid-cols-3 gap-2 mb-2">
+                    {(editingParfum.images ?? []).map((url, i) => (
+                      <div key={i} className="relative rounded overflow-hidden border border-white/10" style={{ height: 90 }}>
+                        <img src={url} alt="" className="w-full h-full object-cover" />
+                        <button
+                          onClick={() => removeExtraImage(i)}
+                          className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/60 flex items-center justify-center text-white/60 hover:text-white transition-colors"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))}
+                    {(editingParfum.images ?? []).length < 5 && (
+                      <button
+                        onClick={() => extraImgRef.current?.click()}
+                        disabled={uploadingExtraImage}
+                        className="flex flex-col items-center justify-center gap-1 rounded border border-dashed border-white/15 text-foreground/30 hover:text-foreground/50 hover:border-white/25 transition-all disabled:opacity-50"
+                        style={{ height: 90 }}
+                      >
+                        {uploadingExtraImage ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+                        <span className="font-body text-[10px]">{uploadingExtraImage ? 'Envoi...' : 'Ajouter'}</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+
                 {/* Promo */}
                 <div className="p-4 rounded border border-white/8 space-y-4" style={{ background: 'rgba(196,149,106,0.04)' }}>
                   <label className="flex items-center gap-3 cursor-pointer">
                     <div
                       onClick={() => setField('en_promo', !editingParfum.en_promo)}
                       className="w-4 h-4 rounded border flex items-center justify-center transition-all"
-                      style={{ background: editingParfum.en_promo ? '#C4956A' : 'transparent', borderColor: editingParfum.en_promo ? '#C4956A' : 'rgba(255,255,255,0.2)' }}
+                      style={{ background: editingParfum.en_promo ? '#C4956A' : 'transparent', borderColor: editingParfum.en_promo ? '#C4956A' : 'var(--c-w20)' }}
                     >
                       {editingParfum.en_promo && <span className="text-black text-[10px] font-bold">✓</span>}
                     </div>
@@ -644,11 +839,11 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
                   <div
                     onClick={() => setField('flagship', !editingParfum.flagship)}
                     className="w-4 h-4 rounded border flex items-center justify-center transition-all"
-                    style={{ background: editingParfum.flagship ? '#C4956A' : 'transparent', borderColor: editingParfum.flagship ? '#C4956A' : 'rgba(255,255,255,0.2)' }}
+                    style={{ background: editingParfum.flagship ? '#C4956A' : 'transparent', borderColor: editingParfum.flagship ? '#C4956A' : 'var(--c-w20)' }}
                   >
                     {editingParfum.flagship && <span className="text-black text-[10px] font-bold">✓</span>}
                   </div>
-                  <span className="font-body text-xs text-foreground/50">Parfum flagship (mis en avant)</span>
+                  <span className="font-body text-xs text-foreground/50">Best seller (affiché sur la page d'accueil)</span>
                 </label>
 
                 {/* Phrase signature */}
@@ -663,15 +858,33 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
                 {/* Notes olfactives */}
                 <div>
                   <label className={labelCls}>Notes de tête (séparées par virgule)</label>
-                  <input className={inputCls} value={editingParfum.notes_tete ?? ''} onChange={e => setField('notes_tete', e.target.value)} placeholder="Bergamote, Citron, Poivre..." />
+                  <input className={inputCls} value={editingParfum.notes_tete ?? ''} onChange={e => setField('notes_tete', e.target.value)} placeholder="Bergamote, Citron*1.5, Poivre..." />
                 </div>
                 <div>
                   <label className={labelCls}>Notes de cœur (séparées par virgule)</label>
-                  <input className={inputCls} value={editingParfum.notes_coeur ?? ''} onChange={e => setField('notes_coeur', e.target.value)} placeholder="Rose, Jasmin, Iris..." />
+                  <input className={inputCls} value={editingParfum.notes_coeur ?? ''} onChange={e => setField('notes_coeur', e.target.value)} placeholder="Rose, Jasmin*2, Iris..." />
                 </div>
                 <div>
                   <label className={labelCls}>Notes de fond (séparées par virgule)</label>
-                  <input className={inputCls} value={editingParfum.notes_fond ?? ''} onChange={e => setField('notes_fond', e.target.value)} placeholder="Santal, Musc, Ambre..." />
+                  <input className={inputCls} value={editingParfum.notes_fond ?? ''} onChange={e => setField('notes_fond', e.target.value)} placeholder="Santal, Musc, Ambre*1.5..." />
+                  <p className="font-body text-[10px] text-foreground/30 mt-1">
+                    Astuce : ajoutez "*1.5" ou "*2" après une note (ex. "Vanille*2") pour l'afficher plus grande dans la pyramide, selon son importance.
+                  </p>
+                </div>
+                <div>
+                  <label className={labelCls}>Notes olfactives (séparées par virgule, optionnel)</label>
+                  <input className={inputCls} value={editingParfum.notes_olfactives ?? ''} onChange={e => setField('notes_olfactives', e.target.value)} placeholder="Cuir, Fumée*1.5, Épices..." />
+                  <p className="font-body text-[10px] text-foreground/30 mt-1">
+                    4ème section affichée sous la pyramide, pour des notes au même niveau (sans hiérarchie tête/cœur/fond).
+                  </p>
+                </div>
+
+                <div>
+                  <label className={labelCls}>3 notes clés (séparées par virgule)</label>
+                  <input className={inputCls} value={editingParfum.notes_teaser ?? ''} onChange={e => setField('notes_teaser', e.target.value)} placeholder="Oud, Vanille, Cuir..." />
+                  <p className="font-body text-[10px] text-foreground/30 mt-1">
+                    Affichées sur la carte du parfum quand le statut est "Prochainement", pour donner un avant-goût.
+                  </p>
                 </div>
 
                 {/* Actions */}
@@ -689,6 +902,131 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
                   >
                     <Save className="w-3.5 h-3.5" />
                     {savingForm ? 'Sauvegarde...' : isNewParfum ? 'Créer le parfum' : 'Sauvegarder'}
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Panneau édition article */}
+      <AnimatePresence>
+        {editingArticle && (
+          <>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="fixed inset-0 z-40 bg-black/60" onClick={() => setEditingArticle(null)} />
+            <motion.div
+              initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+              className="fixed right-0 top-0 h-full w-full max-w-xl z-50 overflow-y-auto"
+              style={{ background: 'hsl(var(--background))', borderLeft: '1px solid var(--c-w08)' }}
+            >
+              <div className="p-6 space-y-5">
+                <div className="flex items-center justify-between mb-2">
+                  <h2 className="font-display italic text-2xl">{isNewArticle ? 'Nouvel article' : editingArticle.titre}</h2>
+                  <button onClick={() => setEditingArticle(null)} className="text-foreground/40 hover:text-foreground transition-colors">
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Titre */}
+                <div>
+                  <label className={labelCls}>Titre</label>
+                  <input className={inputCls} value={editingArticle.titre ?? ''} onChange={e => {
+                    const titre = e.target.value;
+                    setArticleField('titre', titre);
+                    if (isNewArticle) setArticleField('slug', slugify(titre));
+                  }} />
+                </div>
+
+                {/* Slug */}
+                <div>
+                  <label className={labelCls}>Slug (URL)</label>
+                  <input className={inputCls} value={editingArticle.slug ?? ''} onChange={e => setArticleField('slug', e.target.value)} placeholder="mon-premier-article" />
+                </div>
+
+                {/* Catégorie */}
+                <div>
+                  <label className={labelCls}>Catégorie</label>
+                  <select className={inputCls} value={editingArticle.categorie ?? 'actualité'} onChange={e => setArticleField('categorie', e.target.value)}>
+                    {ARTICLE_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                </div>
+
+                {/* Image */}
+                <div>
+                  <label className={labelCls}>Image de couverture</label>
+                  <input ref={articleImgRef} type="file" accept="image/*" className="hidden" onChange={e => e.target.files?.[0] && uploadArticleImage(e.target.files[0])} />
+                  {editingArticle.image_url ? (
+                    <div className="space-y-2">
+                      <div className="relative rounded overflow-hidden border border-white/10" style={{ height: 140 }}>
+                        <img src={editingArticle.image_url} alt="" className="w-full h-full object-cover" />
+                        <button onClick={() => setArticleField('image_url', null)} className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/60 flex items-center justify-center text-white/60 hover:text-white transition-colors">
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                      <button onClick={() => articleImgRef.current?.click()} disabled={uploadingArticleImg} className="w-full flex items-center justify-center gap-2 py-2 rounded border border-white/8 text-foreground/30 hover:text-foreground/50 transition-all text-xs font-body disabled:opacity-50">
+                        {uploadingArticleImg ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />} Changer
+                      </button>
+                    </div>
+                  ) : (
+                    <button onClick={() => articleImgRef.current?.click()} disabled={uploadingArticleImg} className="w-full flex items-center justify-center gap-2 py-4 rounded border border-dashed border-white/15 text-foreground/30 hover:text-foreground/50 hover:border-white/25 transition-all disabled:opacity-50">
+                      {uploadingArticleImg ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                      <span className="font-body text-xs">{uploadingArticleImg ? 'Envoi...' : 'Choisir une image'}</span>
+                    </button>
+                  )}
+                  {uploadArticleError && (
+                    <p className="font-body text-xs text-red-400 mt-2">{uploadArticleError}</p>
+                  )}
+                  <div className="mt-2">
+                    <p className="font-body text-[10px] text-foreground/30 mb-1">Ou colle une URL :</p>
+                    <input className={inputCls} placeholder="https://..." value={editingArticle.image_url ?? ''} onChange={e => setArticleField('image_url', e.target.value || null)} />
+                  </div>
+                </div>
+
+                {/* Extrait */}
+                <div>
+                  <label className={labelCls}>Extrait (accroche)</label>
+                  <textarea rows={2} className={inputCls + ' resize-none'} value={editingArticle.extrait ?? ''} onChange={e => setArticleField('extrait', e.target.value || null)} placeholder="Une phrase qui donne envie de lire..." />
+                </div>
+
+                {/* Contenu */}
+                <div>
+                  <label className={labelCls}>Contenu (double saut de ligne = nouveau paragraphe)</label>
+                  <textarea rows={12} className={inputCls + ' resize-none'} value={editingArticle.contenu ?? ''} onChange={e => setArticleField('contenu', e.target.value || null)} placeholder="Votre texte ici..." />
+                </div>
+
+                {/* Publier */}
+                <label className="flex items-center gap-3 cursor-pointer p-4 rounded border border-white/8" style={{ background: 'rgba(34,197,94,0.03)' }}>
+                  <div
+                    onClick={() => setArticleField('publie', !editingArticle.publie)}
+                    className="w-4 h-4 rounded border flex items-center justify-center transition-all"
+                    style={{ background: editingArticle.publie ? '#22C55E' : 'transparent', borderColor: editingArticle.publie ? '#22C55E' : 'var(--c-w20)' }}
+                  >
+                    {editingArticle.publie && <span className="text-black text-[10px] font-bold">✓</span>}
+                  </div>
+                  <div>
+                    <span className="font-body text-xs text-foreground/50">Publier l'article</span>
+                    <p className="font-body text-[10px] text-foreground/25 mt-0.5">La date de publication sera définie automatiquement</p>
+                  </div>
+                </label>
+
+                {/* Actions */}
+                <div className="flex gap-3 pt-4 border-t border-white/8">
+                  {!isNewArticle && (
+                    <button onClick={deleteArticle} className="flex items-center gap-2 px-4 py-3 font-body text-xs uppercase tracking-widest rounded border border-red-500/20 text-red-400 hover:bg-red-500/10 transition-all">
+                      <Trash2 className="w-3.5 h-3.5" /> Supprimer
+                    </button>
+                  )}
+                  <button
+                    onClick={saveArticle}
+                    disabled={savingArticle}
+                    className="flex-1 flex items-center justify-center gap-2 py-3 font-body text-xs uppercase tracking-widest rounded transition-all duration-200 disabled:opacity-50"
+                    style={{ background: 'rgba(196,149,106,0.15)', border: '1px solid rgba(196,149,106,0.4)', color: '#C4956A' }}
+                  >
+                    <Save className="w-3.5 h-3.5" />
+                    {savingArticle ? 'Sauvegarde...' : isNewArticle ? 'Créer l\'article' : 'Sauvegarder'}
                   </button>
                 </div>
               </div>
@@ -758,6 +1096,7 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
       </AnimatePresence>
 
     </div>
+    </>
   );
 };
 

@@ -1,25 +1,30 @@
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { products, collections } from '@/data/products';
+import { Helmet } from 'react-helmet-async';
+import { collections, type Product } from '@/data/products';
 import { useParfums } from '@/hooks/useParfums';
-import { buildDbMap, enrichProduct } from '@/lib/parfumUtils';
 import ProductCard from '@/components/ProductCard';
+import { ProductGridSkeleton } from '@/components/ProductSkeleton';
 import PageTransition from '@/components/PageTransition';
 
 const AllParfums = () => {
   const [filter, setFilter] = useState<string>('all');
-  const { parfums: parfumsDB } = useParfums();
+  const { parfums: parfumsDB, loading } = useParfums();
 
-  // Enrichit les données statiques avec statut/stock Supabase
   const enrichedProducts = useMemo(() => {
-    const dbMap = buildDbMap(parfumsDB);
-    return products.map(p => enrichProduct(p, dbMap)).filter(p => !p.en_promo);
+    return parfumsDB.filter(p => !p.en_promo) as unknown as Product[];
   }, [parfumsDB]);
 
   const filtered = filter === 'all' ? enrichedProducts : enrichedProducts.filter(p => p.collection === filter);
 
   return (
     <PageTransition>
+      <Helmet>
+        <title>Tous les parfums, THÆM ÆTERNUM</title>
+        <meta name="description" content="Découvrez l'ensemble des créations THÆM ÆTERNUM, extraits de parfum artisanaux français répartis en 5 univers olfactifs : SACRÆ, VITÆ, UMBRÆ, NEROLÆ et ÆRA." />
+        <meta property="og:title" content="Tous les parfums, THÆM ÆTERNUM" />
+        <meta property="og:description" content="L'ensemble de nos créations, extraits de parfum artisanaux français." />
+      </Helmet>
       <div className="min-h-screen pt-28 pb-20">
         <div className="container mx-auto px-4 lg:px-8">
 
@@ -50,8 +55,8 @@ const AllParfums = () => {
               className="px-5 py-2 font-body text-[10px] uppercase tracking-[0.3em] rounded transition-all duration-300"
               style={{
                 border: '1px solid',
-                borderColor: filter === 'all' ? 'hsl(43,50%,54%)' : 'rgba(255,255,255,0.12)',
-                color: filter === 'all' ? 'hsl(43,50%,54%)' : 'rgba(255,255,255,0.4)',
+                borderColor: filter === 'all' ? 'hsl(43,50%,54%)' : 'var(--c-w12)',
+                color: filter === 'all' ? 'hsl(43,50%,54%)' : 'var(--c-w40)',
                 background: filter === 'all' ? 'rgba(196,149,106,0.08)' : 'transparent',
               }}
             >
@@ -67,8 +72,8 @@ const AllParfums = () => {
                   className="px-5 py-2 font-body text-[10px] uppercase tracking-[0.3em] rounded transition-all duration-300"
                   style={{
                     border: '1px solid',
-                    borderColor: active ? col.colors.accent : 'rgba(255,255,255,0.12)',
-                    color: active ? col.colors.accent : 'rgba(255,255,255,0.4)',
+                    borderColor: active ? col.colors.accent : 'var(--c-w12)',
+                    color: active ? col.colors.accent : 'var(--c-w40)',
                     background: active ? col.colors.accent + '14' : 'transparent',
                   }}
                 >
@@ -79,20 +84,22 @@ const AllParfums = () => {
           </motion.div>
 
           {/* Grille */}
-          <motion.div
-            key={filter}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.4 }}
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-6"
-          >
-            {filtered.map((p, i) => (
-              <ProductCard key={p.id} product={p} index={i} />
-            ))}
-          </motion.div>
+          {loading ? <ProductGridSkeleton count={10} /> : (
+            <motion.div
+              key={filter}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4 }}
+              className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-6"
+            >
+              {filtered.map((p, i) => (
+                <ProductCard key={p.id} product={p} index={i} />
+              ))}
+            </motion.div>
+          )}
 
           {/* Compteur */}
-          <p className="text-center font-body text-xs mt-12" style={{ color: 'rgba(255,255,255,0.2)' }}>
+          <p className="text-center font-body text-xs mt-12" style={{ color: 'var(--c-w20)' }}>
             {filtered.length} parfum{filtered.length > 1 ? 's' : ''}
           </p>
 

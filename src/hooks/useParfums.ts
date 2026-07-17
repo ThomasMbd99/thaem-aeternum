@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { supabase, type ParfumDB } from '@/lib/supabase';
-import type { Collection } from '@/data/products';
+import type { Collection, NoteEntry } from '@/data/products';
 
 const familleToCollection: Record<string, Collection> = {
   'SACRÆ': 'sacrae',
@@ -20,9 +20,11 @@ export interface ParfumFull {
   marque: string | null;
   type: 'creation' | 'inspiration';
   notes: {
-    top: string[];
-    heart: string[];
-    base: string[];
+    top: NoteEntry[];
+    heart: NoteEntry[];
+    base: NoteEntry[];
+    olfactive: NoteEntry[];
+    teaser: NoteEntry[];
   };
   texte_long: string | null;
   texte_court: string | null;
@@ -33,11 +35,19 @@ export interface ParfumFull {
   en_promo: boolean;
   prix_promo: number | null;
   image_url: string | null;
+  images: string[];
+  flagship: boolean;
 }
 
-function parseNotes(str: string | null): string[] {
+// Une note peut être suivie de "*<coefficient>" (ex: "Vanille*2") pour
+// l'afficher en plus grand dans la pyramide olfactive (coefficient 1 = taille normale).
+function parseNotes(str: string | null): NoteEntry[] {
   if (!str) return [];
-  return str.split(',').map(s => s.trim()).filter(Boolean);
+  return str.split(',').map(s => s.trim()).filter(Boolean).map((entry): NoteEntry => {
+    const match = entry.match(/^(.+?)\s*\*\s*(\d+(?:\.\d+)?)$/);
+    if (!match) return entry;
+    return { name: match[1].trim(), weight: parseFloat(match[2]) };
+  });
 }
 
 function mapParfum(p: ParfumDB): ParfumFull {
@@ -58,6 +68,8 @@ function mapParfum(p: ParfumDB): ParfumFull {
       top: parseNotes(p.notes_tete),
       heart: parseNotes(p.notes_coeur),
       base: parseNotes(p.notes_fond),
+      olfactive: parseNotes(p.notes_olfactives),
+      teaser: parseNotes(p.notes_teaser),
     },
     texte_long: p.texte_long,
     texte_court: p.texte_court,
@@ -68,28 +80,27 @@ function mapParfum(p: ParfumDB): ParfumFull {
     en_promo: p.en_promo ?? false,
     prix_promo: p.prix_promo ?? null,
     image_url: p.image_url ?? null,
+    images: p.images ?? [],
+    flagship: p.flagship ?? false,
   };
 }
 
-export function useParfums() {
-  const [parfums, setParfums] = useState<ParfumFull[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+async function fetchParfums(): Promise<ParfumFull[]> {
+  const { data, error } = await supabase
+    .from('parfums')
+    .select('*')
+    .order('famille')
+    .order('nom');
+  if (error) throw new Error(error.message);
+  return (data as ParfumDB[]).map(mapParfum);
+}
 
-  useEffect(() => {
-    async function fetch() {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('parfums')
-        .select('*')
-        .order('famille')
-        .order('nom');
-      if (error) setError(error.message);
-      else setParfums((data as ParfumDB[]).map(mapParfum));
-      setLoading(false);
-    }
-    fetch();
-  }, []);
+export function useParfums() {
+  const { data: parfums = [], isLoading: loading, error } = useQuery({
+    queryKey: ['parfums'],
+    queryFn: fetchParfums,
+    staleTime: 5 * 60 * 1000,
+  });
 
   const getByCollection = (col: Collection) =>
     parfums.filter(p => p.collection === col);
@@ -97,5 +108,5 @@ export function useParfums() {
   const getById = (id: string) =>
     parfums.find(p => p.id === id);
 
-  return { parfums, loading, error, getByCollection, getById };
+  return { parfums, loading, error: error?.message ?? null, getByCollection, getById };
 }

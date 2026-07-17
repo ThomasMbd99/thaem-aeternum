@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Product, getCollection } from '@/data/products';
+import { Product, getCollection, getNoteName } from '@/data/products';
 import { getBottleImage } from '@/data/bottleImages';
 import { useState, useCallback, useRef } from 'react';
 import { Heart } from 'lucide-react';
@@ -119,6 +119,8 @@ const ProductCard = ({ product, index = 0 }: Props) => {
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const [liked, setLiked] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
   const isComingSoon = product.status === 'prochainement' || product.statut === 'prochainement';
@@ -171,21 +173,48 @@ const ProductCard = ({ product, index = 0 }: Props) => {
         <div
           ref={cardRef}
           className="aspect-[3/4] rounded overflow-hidden relative mb-4 flex items-center justify-center transition-all duration-500 group-hover:scale-[1.03]"
-          style={{ background: `linear-gradient(135deg, hsl(0 0% 8%), hsl(0 0% 12%))` }}
-          onMouseEnter={handleMouseEnter}
+          style={{ background: `linear-gradient(135deg, var(--c-bg8), var(--c-bg12))` }}
+          onMouseEnter={() => { handleMouseEnter(); setIsHovered(true); }}
+          onMouseLeave={() => setIsHovered(false)}
+          onMouseMove={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+          }}
         >
-          {/* Hover glow */}
+          {/* Hover glow ring */}
           <div
-            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded"
-            style={{ boxShadow: `0 0 40px ${collection?.colors.accent}44, 0 0 80px ${collection?.colors.accent}18` }}
+            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded pointer-events-none"
+            style={{ boxShadow: `inset 0 0 0 1px ${collection?.colors.accent}55, 0 0 40px ${collection?.colors.accent}33` }}
           />
+          {/* Shimmer curseur */}
+          {isHovered && (
+            <div
+              className="absolute inset-0 pointer-events-none z-[15] rounded"
+              style={{
+                background: `radial-gradient(circle 90px at ${mousePos.x}px ${mousePos.y}px, ${collection?.colors.accent}22 0%, transparent 65%)`,
+              }}
+            />
+          )}
 
-          {/* Bottle */}
-          <img
-            src={bottleImg}
-            alt={product.name}
-            className="relative z-10 h-[70%] w-auto object-contain drop-shadow-lg transition-transform duration-700 group-hover:-translate-y-3 group-hover:scale-105"
-          />
+          {/* Bottle / Custom image */}
+          {(() => {
+            const displayImg = product.image_url ?? product.images?.[0] ?? null;
+            return displayImg ? (
+              <img
+                src={displayImg}
+                alt={product.name}
+                className="relative z-10 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy"
+              />
+            ) : (
+              <img
+                src={bottleImg}
+                alt={product.name}
+                className="relative z-10 h-[70%] w-auto object-contain drop-shadow-lg transition-transform duration-700 group-hover:-translate-y-3 group-hover:scale-105"
+                loading="lazy"
+              />
+            );
+          })()}
 
           {/* Bouton favori */}
           <button
@@ -195,7 +224,7 @@ const ProductCard = ({ product, index = 0 }: Props) => {
           >
             <Heart
               className="w-3.5 h-3.5 transition-all duration-300"
-              style={{ color: liked ? '#ef4444' : 'rgba(255,255,255,0.4)', fill: liked ? '#ef4444' : 'none' }}
+              style={{ color: liked ? '#ef4444' : 'var(--c-w40)', fill: liked ? '#ef4444' : 'none' }}
             />
           </button>
 
@@ -235,7 +264,7 @@ const ProductCard = ({ product, index = 0 }: Props) => {
               style={
                 (product as any).type === 'creation'
                   ? { backgroundColor: collection?.colors.accent + '25', color: collection?.colors.accent, border: `1px solid ${collection?.colors.accent}50` }
-                  : { backgroundColor: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.4)', border: '1px solid rgba(255,255,255,0.1)' }
+                  : { backgroundColor: 'var(--c-w05)', color: 'var(--c-w40)', border: '1px solid var(--c-w10)' }
               }
             >
               {(product as any).type === 'creation' ? 'Création' : 'Inspiration'}
@@ -287,7 +316,23 @@ const ProductCard = ({ product, index = 0 }: Props) => {
           {product.name}
         </h3>
         {isComingSoon ? (
-          <p className="font-body text-xs text-muted-foreground mt-1 uppercase tracking-widest">Prochainement</p>
+          <>
+            <p className="font-body text-xs text-muted-foreground mt-1 uppercase tracking-widest">Prochainement</p>
+            {product.tagline && (
+              <p className="font-body text-xs text-muted-foreground/70 mt-1 line-clamp-2 italic">{product.tagline}</p>
+            )}
+            {product.notes.teaser && product.notes.teaser.length > 0 && (
+              <ul className="flex flex-wrap gap-1.5 mt-2">
+                {product.notes.teaser.slice(0, 3).map((n, i) => (
+                  <li key={i} className="font-body text-[10px] uppercase tracking-widest px-2 py-1 rounded-full"
+                    style={{ border: '1px solid rgba(196,149,106,0.3)', color: 'rgba(196,149,106,0.8)' }}
+                  >
+                    {getNoteName(n)}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
         ) : (
           <>
             <p className="font-body text-xs text-muted-foreground mt-1 line-clamp-1">{product.tagline}</p>

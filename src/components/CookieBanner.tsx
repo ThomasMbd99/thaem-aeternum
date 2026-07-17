@@ -30,7 +30,7 @@ const CookieBanner = () => {
           className="fixed bottom-6 left-4 right-4 lg:left-auto lg:right-6 lg:max-w-md z-50 rounded-lg p-5 border"
           style={{
             background: 'hsl(var(--background))',
-            borderColor: 'rgba(255,255,255,0.1)',
+            borderColor: 'var(--c-w10)',
             boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
           }}
         >

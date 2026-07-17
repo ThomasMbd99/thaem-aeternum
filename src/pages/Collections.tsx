@@ -35,10 +35,10 @@ const Collections = () => {
   return (
     <PageTransition>
       <Helmet>
-        <title>Nos Gammes — THÆM ÆTERNUM</title>
-        <meta name="description" content="Explorez les 5 univers olfactifs de THÆM ÆTERNUM : SACRÆ, VITÆA, UMBRÆ, NEROLÆ et ÆRA. 15 créations parfumées artisanales." />
-        <meta property="og:title" content="Nos Gammes — THÆM ÆTERNUM" />
-        <meta property="og:description" content="5 univers olfactifs, 15 créations artisanales." />
+        <title>Nos Gammes, THÆM ÆTERNUM</title>
+        <meta name="description" content="Explorez les 5 univers olfactifs de THÆM ÆTERNUM : SACRÆ, VITÆA, UMBRÆ, NEROLÆ et ÆRA. Des créations parfumées artisanales d'exception." />
+        <meta property="og:title" content="Nos Gammes, THÆM ÆTERNUM" />
+        <meta property="og:description" content="5 univers olfactifs, des créations artisanales d'exception." />
       </Helmet>
       <div className="min-h-screen pt-24 lg:pt-28 pb-28">
 
@@ -104,7 +104,7 @@ const Collections = () => {
                   <button onClick={() => handleCollectionClick(col.id)} className="w-full block text-left">
                     <div
                       className="relative p-6 min-h-[260px] sm:min-h-[340px] flex flex-col items-center justify-center text-center overflow-hidden rounded transition-all duration-700"
-                      style={{ background: 'hsl(0 0% 7%)', border: '1px solid rgba(255,255,255,0.06)' }}
+                      style={{ background: 'var(--c-bg7)', border: '1px solid var(--c-w06)' }}
                     >
                       <div
                         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none rounded"
@@ -186,8 +186,8 @@ const Collections = () => {
                 transition={{ delay: i * 0.1 }}
                 className="relative p-8 flex flex-col items-center text-center rounded overflow-hidden group transition-all duration-500"
                 style={{
-                  border: f.featured ? '1px solid hsl(43,50%,54%)' : '1px solid rgba(255,255,255,0.06)',
-                  background: f.featured ? 'rgba(196,149,106,0.06)' : 'hsl(0 0% 7%)',
+                  border: f.featured ? '1px solid hsl(43,50%,54%)' : '1px solid var(--c-w06)',
+                  background: f.featured ? 'rgba(196,149,106,0.06)' : 'var(--c-bg7)',
                   minHeight: '260px',
                 }}
               >

@@ -1,9 +1,23 @@
 export type Collection = 'sacrae' | 'vitae' | 'umbrae' | 'nerolae' | 'aera';
 
+// Une note peut être un simple nom, ou un objet { name, weight } pour lui donner
+// plus (ou moins) d'importance visuelle dans la pyramide olfactive (weight 1 = taille normale).
+export type NoteEntry = string | { name: string; weight: number };
+
 export interface Note {
-  top: string[];
-  heart: string[];
-  base: string[];
+  top: NoteEntry[];
+  heart: NoteEntry[];
+  base: NoteEntry[];
+  olfactive?: NoteEntry[];
+  teaser?: NoteEntry[];
+}
+
+export function getNoteName(entry: NoteEntry): string {
+  return typeof entry === 'string' ? entry : entry.name;
+}
+
+export function getNoteWeight(entry: NoteEntry): number {
+  return typeof entry === 'string' ? 1 : entry.weight;
 }
 
 export interface Product {
@@ -16,6 +30,9 @@ export interface Product {
   stock?: number;
   status?: 'prochainement';
   statut?: string;
+  image_url?: string | null;
+  images?: string[];
+  type?: 'creation' | 'inspiration';
 }
 
 export interface CollectionInfo {

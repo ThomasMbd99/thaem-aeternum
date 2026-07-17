@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { products, getCollection } from '@/data/products';
+import { getCollection } from '@/data/products';
 import { useCart } from '@/context/CartContext';
 import { useParfums } from '@/hooks/useParfums';
 import { normalizeNom } from '@/lib/parfumUtils';
@@ -108,50 +108,106 @@ const perfumeThemes: Record<string, PerfumeTheme> = {
   },
   lamae: {
     selectedBg:
-      'linear-gradient(145deg, #FFF3E3 0%, #E8C28D 35%, #B97A3D 75%, #F4DEC2 100%)',
+      'linear-gradient(145deg, #2E362A 0%, #4A5A41 40%, #5e6d57 80%, #2E362A 100%)',
     hoverBg:
-      'linear-gradient(145deg, #FFF1DD 0%, #E6C28D 55%, #B87839 100%)',
-    borderColor: '#B97A3D',
-    textColor: '#402615',
-    subTextColor: 'rgba(64,38,21,0.72)',
-    hoverTextColor: '#402615',
-    hoverSubTextColor: 'rgba(64,38,21,0.72)',
+      'linear-gradient(145deg, #34402E 0%, #526152 55%, #6B7C62 100%)',
+    borderColor: '#9FB492',
+    textColor: '#E4EBDF',
+    subTextColor: 'rgba(228,235,223,0.72)',
+    hoverTextColor: '#F0F5EC',
+    hoverSubTextColor: 'rgba(240,245,236,0.72)',
   },
   varkaem: {
     selectedBg:
-      'linear-gradient(145deg, #F8ECDD 0%, #D6B38A 35%, #8B5A3C 75%, #EEDBC8 100%)',
+      'linear-gradient(145deg, #38352E 0%, #5A564B 40%, #757063 80%, #38352E 100%)',
     hoverBg:
-      'linear-gradient(145deg, #F7E9D8 0%, #D2AF89 55%, #8A593B 100%)',
-    borderColor: '#9A6746',
-    textColor: '#362015',
-    subTextColor: 'rgba(54,32,21,0.72)',
-    hoverTextColor: '#362015',
-    hoverSubTextColor: 'rgba(54,32,21,0.72)',
+      'linear-gradient(145deg, #403D35 0%, #6A6558 55%, #847E6F 100%)',
+    borderColor: '#B5AEA0',
+    textColor: '#E6E2D9',
+    subTextColor: 'rgba(230,226,217,0.72)',
+    hoverTextColor: '#F0EDE6',
+    hoverSubTextColor: 'rgba(240,237,230,0.72)',
   },
   zaemyr: {
     selectedBg:
-      'linear-gradient(145deg, #FFF5EA 0%, #EFD8BE 35%, #C89B6E 75%, #F8EBDD 100%)',
+      'linear-gradient(145deg, #DCEBF3 0%, #ABCBDD 40%, #c1dcea 80%, #DCEBF3 100%)',
     hoverBg:
-      'linear-gradient(145deg, #FFF4E8 0%, #ECD5BB 55%, #C6986A 100%)',
-    borderColor: '#C6986A',
-    textColor: '#4B3120',
-    subTextColor: 'rgba(75,49,32,0.72)',
-    hoverTextColor: '#4B3120',
-    hoverSubTextColor: 'rgba(75,49,32,0.72)',
+      'linear-gradient(145deg, #E6F1F7 0%, #B7D5E5 55%, #CDE5F0 100%)',
+    borderColor: '#5A92AE',
+    textColor: '#1F3B49',
+    subTextColor: 'rgba(31,59,73,0.72)',
+    hoverTextColor: '#15303D',
+    hoverSubTextColor: 'rgba(21,48,61,0.72)',
   },
   almae: {
     selectedBg:
-      'linear-gradient(145deg, #FFFDF8 0%, #F3E8D6 35%, #D9C0A1 75%, #FCF4E9 100%)',
+      'linear-gradient(145deg, #EAE3D6 0%, #DDD0BB 40%, #d2c8b6 80%, #EAE3D6 100%)',
     hoverBg:
-      'linear-gradient(145deg, #FFFDF9 0%, #F1E6D6 55%, #D6BFA0 100%)',
-    borderColor: '#D1B089',
-    textColor: '#433024',
-    subTextColor: 'rgba(67,48,36,0.72)',
-    hoverTextColor: '#433024',
-    hoverSubTextColor: 'rgba(67,48,36,0.72)',
+      'linear-gradient(145deg, #F0EBE1 0%, #E2D6C2 55%, #D8CEBC 100%)',
+    borderColor: '#9C8259',
+    textColor: '#3A3022',
+    subTextColor: 'rgba(58,48,34,0.72)',
+    hoverTextColor: '#2E2619',
+    hoverSubTextColor: 'rgba(46,38,25,0.72)',
+  },
+  velae: {
+    selectedBg:
+      'linear-gradient(145deg, #352B21 0%, #523F2E 40%, #6f5a46 80%, #352B21 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #3D3226 0%, #5E4A37 55%, #80694F 100%)',
+    borderColor: '#C9AD8C',
+    textColor: '#EFE3D4',
+    subTextColor: 'rgba(239,227,212,0.72)',
+    hoverTextColor: '#F7EEE2',
+    hoverSubTextColor: 'rgba(247,238,226,0.72)',
   },
 
-  // VITÆA
+  // VITÆ
+  naeva: {
+    selectedBg:
+      'linear-gradient(145deg, #0D0F2E 0%, #1A2060 40%, #2A38CC 80%, #0D0F2E 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #10143A 0%, #202870 55%, #3344DD 100%)',
+    borderColor: '#7B7FD9',
+    textColor: '#C8CCFF',
+    subTextColor: 'rgba(200,204,255,0.72)',
+    hoverTextColor: '#D8DCFF',
+    hoverSubTextColor: 'rgba(216,220,255,0.72)',
+  },
+  koyaen: {
+    selectedBg:
+      'linear-gradient(145deg, #0A2418 0%, #163C28 40%, #2A7A4A 80%, #0A2418 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #0D2C1E 0%, #1C4A34 55%, #348A58 100%)',
+    borderColor: '#5EC8B2',
+    textColor: '#B8F0D8',
+    subTextColor: 'rgba(184,240,216,0.72)',
+    hoverTextColor: '#C8F8E8',
+    hoverSubTextColor: 'rgba(200,248,232,0.72)',
+  },
+  ayaem: {
+    selectedBg:
+      'linear-gradient(145deg, #200505 0%, #400A0A 40%, #CC2210 80%, #200505 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #280606 0%, #4E0C0C 55%, #DD2A14 100%)',
+    borderColor: '#E04830',
+    textColor: '#FFB8A8',
+    subTextColor: 'rgba(255,184,168,0.72)',
+    hoverTextColor: '#FFC8B8',
+    hoverSubTextColor: 'rgba(255,200,184,0.72)',
+  },
+  espae: {
+    selectedBg:
+      'linear-gradient(145deg, #180310 0%, #350828 40%, #8C0050 80%, #180310 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #200415 0%, #420A30 55%, #A0005C 100%)',
+    borderColor: '#C4185A',
+    textColor: '#FFAACC',
+    subTextColor: 'rgba(255,170,204,0.72)',
+    hoverTextColor: '#FFBBD9',
+    hoverSubTextColor: 'rgba(255,187,217,0.72)',
+  },
+  // anciens IDs de secours
   syrae: {
     selectedBg:
       'linear-gradient(145deg, #FFE5B8 0%, #FFB36B 30%, #FF7A59 65%, #FFD27D 100%)',
@@ -189,25 +245,47 @@ const perfumeThemes: Record<string, PerfumeTheme> = {
   // UMBRÆ
   aeonis: {
     selectedBg:
-      'linear-gradient(145deg, #1A0B0D 0%, #4A1626 35%, #7A1F2B 70%, #130709 100%)',
+      'linear-gradient(145deg, #2E2729 0%, #6E6062 40%, #9c8b8c 80%, #2E2729 100%)',
     hoverBg:
-      'linear-gradient(145deg, #231012 0%, #561C2C 50%, #842532 100%)',
-    borderColor: '#9B2C3C',
-    textColor: '#F4E6E1',
-    subTextColor: 'rgba(244,230,225,0.72)',
-    hoverTextColor: '#F4E6E1',
-    hoverSubTextColor: 'rgba(244,230,225,0.72)',
+      'linear-gradient(145deg, #362E30 0%, #7E7072 55%, #AC9D9E 100%)',
+    borderColor: '#C4B6B7',
+    textColor: '#EDE5E6',
+    subTextColor: 'rgba(237,229,230,0.72)',
+    hoverTextColor: '#F6F0F0',
+    hoverSubTextColor: 'rgba(246,240,240,0.72)',
+  },
+  valaena: {
+    selectedBg:
+      'linear-gradient(145deg, #2C333A 0%, #475260 40%, #5c6976 80%, #2C333A 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #333B43 0%, #57606E 55%, #6C7986 100%)',
+    borderColor: '#8FA0AE',
+    textColor: '#E2E8ED',
+    subTextColor: 'rgba(226,232,237,0.72)',
+    hoverTextColor: '#EDF1F4',
+    hoverSubTextColor: 'rgba(237,241,244,0.72)',
   },
   aelia: {
     selectedBg:
-      'linear-gradient(145deg, #1B1714 0%, #3B312B 35%, #6E5B4E 72%, #15110F 100%)',
+      'linear-gradient(145deg, #DCE6FE 0%, #AEC4FB 40%, #83a8fb 80%, #DCE6FE 100%)',
     hoverBg:
-      'linear-gradient(145deg, #221C18 0%, #473A33 50%, #776255 100%)',
-    borderColor: '#8A7462',
-    textColor: '#F2E7DB',
-    subTextColor: 'rgba(242,231,219,0.72)',
-    hoverTextColor: '#F2E7DB',
-    hoverSubTextColor: 'rgba(242,231,219,0.72)',
+      'linear-gradient(145deg, #E6EDFE 0%, #BACEFC 55%, #98B8FC 100%)',
+    borderColor: '#5A7FD6',
+    textColor: '#1C2C52',
+    subTextColor: 'rgba(28,44,82,0.72)',
+    hoverTextColor: '#152040',
+    hoverSubTextColor: 'rgba(21,32,64,0.72)',
+  },
+  azrae: {
+    selectedBg:
+      'linear-gradient(145deg, #DCEAE4 0%, #C0D9CD 40%, #aec9c0 80%, #DCEAE4 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #E6F1EC 0%, #CCE1D6 55%, #BCD7CB 100%)',
+    borderColor: '#6F9685',
+    textColor: '#1F362C',
+    subTextColor: 'rgba(31,54,44,0.72)',
+    hoverTextColor: '#162820',
+    hoverSubTextColor: 'rgba(22,40,32,0.72)',
   },
   maraeja: {
     selectedBg:
@@ -222,18 +300,109 @@ const perfumeThemes: Record<string, PerfumeTheme> = {
   },
 
   // FLORÆ
+  // NEROLÆ
+  osae: {
+    selectedBg:
+      'linear-gradient(145deg, #FCE6D9 0%, #FBC9A9 40%, #fa9f73 80%, #FCE6D9 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #FFEFE4 0%, #FDD6BB 55%, #FCB387 100%)',
+    borderColor: '#E87946',
+    textColor: '#5A2F16',
+    subTextColor: 'rgba(90,47,22,0.72)',
+    hoverTextColor: '#491F0D',
+    hoverSubTextColor: 'rgba(73,31,13,0.72)',
+  },
+  saeny: {
+    selectedBg:
+      'linear-gradient(145deg, #FBEBEF 0%, #F4D2DA 40%, #eeb7c4 80%, #FBEBEF 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #FEF3F6 0%, #F8DCE2 55%, #F2C3CF 100%)',
+    borderColor: '#D6839A',
+    textColor: '#5A2A38',
+    subTextColor: 'rgba(90,42,56,0.72)',
+    hoverTextColor: '#481F2C',
+    hoverSubTextColor: 'rgba(72,31,44,0.72)',
+  },
+  laeya: {
+    selectedBg:
+      'linear-gradient(145deg, #0F2A30 0%, #2A5C68 40%, #53b9cb 80%, #0F2A30 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #15333A 0%, #336E7C 55%, #67CADC 100%)',
+    borderColor: '#8AD2DE',
+    textColor: '#D6F2F6',
+    subTextColor: 'rgba(214,242,246,0.72)',
+    hoverTextColor: '#E4F8FA',
+    hoverSubTextColor: 'rgba(228,248,250,0.72)',
+  },
+  naely: {
+    selectedBg:
+      'linear-gradient(145deg, #2A0E33 0%, #6A2580 40%, #a638c0 80%, #2A0E33 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #321040 0%, #7C2C96 55%, #BA48D6 100%)',
+    borderColor: '#D88AEE',
+    textColor: '#F2D8FA',
+    subTextColor: 'rgba(242,216,250,0.72)',
+    hoverTextColor: '#F8E8FC',
+    hoverSubTextColor: 'rgba(248,232,252,0.72)',
+  },
+  'noctae-rosa': {
+    selectedBg:
+      'linear-gradient(145deg, #F2E6EC 0%, #E3CCD8 40%, #ceacbc 80%, #F2E6EC 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #F7EEF2 0%, #EAD9E1 55%, #D9BECC 100%)',
+    borderColor: '#9C7488',
+    textColor: '#3E2630',
+    subTextColor: 'rgba(62,38,48,0.72)',
+    hoverTextColor: '#321D26',
+    hoverSubTextColor: 'rgba(50,29,38,0.72)',
+  },
+
+  // ÆRA
+  vaem: {
+    selectedBg:
+      'linear-gradient(145deg, #EAF2FF 0%, #D2E2FB 40%, #c7dfff 80%, #EAF2FF 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #F1F7FF 0%, #DCE9FC 55%, #B8D4FE 100%)',
+    borderColor: '#6F9FE0',
+    textColor: '#1E3358',
+    subTextColor: 'rgba(30,51,88,0.72)',
+    hoverTextColor: '#162848',
+    hoverSubTextColor: 'rgba(22,40,72,0.72)',
+  },
   lysae: {
     selectedBg:
-      'linear-gradient(145deg, #F6FFF8 0%, #E3F3E8 35%, #CFE7D7 72%, #FBFFFC 100%)',
+      'linear-gradient(145deg, #EEFCE8 0%, #C9F0BE 40%, #ddfad1 80%, #EEFCE8 100%)',
     hoverBg:
-      'linear-gradient(145deg, #F8FFFA 0%, #E8F6EC 50%, #D7ECDD 100%)',
-    borderColor: '#B7D8C0',
-    textColor: '#3F5A49',
-    subTextColor: 'rgba(63,90,73,0.72)',
-    hoverTextColor: '#3F5A49',
-    hoverSubTextColor: 'rgba(63,90,73,0.72)',
+      'linear-gradient(145deg, #F4FEF0 0%, #D6F5CD 55%, #B0E8A2 100%)',
+    borderColor: '#7CC468',
+    textColor: '#27431D',
+    subTextColor: 'rgba(39,67,29,0.72)',
+    hoverTextColor: '#1D3415',
+    hoverSubTextColor: 'rgba(29,52,21,0.72)',
   },
-  
+  taelya: {
+    selectedBg:
+      'linear-gradient(145deg, #FFF1DE 0%, #FFE2BB 40%, #ffd699 80%, #FFF1DE 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #FFF6E9 0%, #FFE8C9 55%, #FFCB80 100%)',
+    borderColor: '#E0A350',
+    textColor: '#553A14',
+    subTextColor: 'rgba(85,58,20,0.72)',
+    hoverTextColor: '#432D0E',
+    hoverSubTextColor: 'rgba(67,45,14,0.72)',
+  },
+  thaely: {
+    selectedBg:
+      'linear-gradient(145deg, #FFF8DE 0%, #FFF0BB 40%, #ffeb99 80%, #FFF8DE 100%)',
+    hoverBg:
+      'linear-gradient(145deg, #FFFBEA 0%, #FFF4CB 55%, #FFE680 100%)',
+    borderColor: '#E0C24E',
+    textColor: '#544B12',
+    subTextColor: 'rgba(84,75,18,0.72)',
+    hoverTextColor: '#423A0E',
+    hoverSubTextColor: 'rgba(66,58,14,0.72)',
+  },
+
   hibiscae: {
     selectedBg:
       'linear-gradient(145deg, #FFF4F7 0%, #F2D8E3 30%, #E7B8CB 70%, #FFF9FB 100%)',
@@ -287,7 +456,7 @@ const DiscoveryBox = () => {
     addItem({
       productId: 'coffret-aeternum',
       format: '10ml',
-      price: 50,
+      price: 39.99,
       name: 'Coffret ÆTERNUM',
       isDiscoveryBox: true,
       selectedPerfumes: selected,
@@ -303,10 +472,10 @@ const DiscoveryBox = () => {
   return (
     <PageTransition>
       <Helmet>
-        <title>Coffret ÆTERNUM — 5 × 10ml | THÆM ÆTERNUM</title>
-        <meta name="description" content="Composez votre coffret découverte : choisissez 5 parfums parmi nos 15 créations artisanales. 5 × 10ml pour 50€." />
-        <meta property="og:title" content="Coffret ÆTERNUM — Coffret Découverte | THÆM ÆTERNUM" />
-        <meta property="og:description" content="Choisissez 5 parfums parmi nos 15 créations artisanales. 5 × 10ml pour 50€." />
+        <title>Coffret ÆTERNUM, 5 × 10ml, THÆM ÆTERNUM</title>
+        <meta name="description" content="Composez votre coffret découverte : choisissez 5 parfums parmi nos créations artisanales. 5 × 10ml pour 39,99€." />
+        <meta property="og:title" content="Coffret ÆTERNUM , Coffret Découverte | THÆM ÆTERNUM" />
+        <meta property="og:description" content="Choisissez 5 parfums parmi nos créations artisanales. 5 × 10ml pour 39,99€." />
       </Helmet>
       <div className="min-h-screen pt-24 lg:pt-28 pb-28 relative bg-background" style={{ backgroundColor: "hsl(var(--background))" }}>
         <div
@@ -340,13 +509,13 @@ const DiscoveryBox = () => {
               className="font-display italic text-base"
               style={{ color: 'hsl(var(--foreground) / 0.5)' }}
             >
-              Choisissez 5 parfums parmi nos 15 créations · 5 × 10ml
+              Choisissez 5 parfums parmi nos créations · 5 × 10ml
             </p>
             <p
               className="font-display text-4xl mt-4"
               style={{ color: 'hsl(43,50%,54%)' }}
             >
-              50€
+              39,99€
             </p>
 
             <motion.div
@@ -373,7 +542,7 @@ const DiscoveryBox = () => {
               <div className="flex gap-2">
                 {Array.from({ length: 5 }).map((_, i) => {
                   const perfume = selected[i]
-                    ? products.find(p => p.id === selected[i])
+                    ? parfumsDB.find(p => p.id === selected[i])
                     : null;
                   const col = perfume ? getCollection(perfume.collection) : null;
                   const perfumeTheme = perfume ? perfumeThemes[perfume.id] : null;
@@ -467,7 +636,7 @@ const DiscoveryBox = () => {
 
           {(['sacrae', 'vitae', 'umbrae', 'nerolae', 'aera'] as const).map((colId, ci) => {
             const col = getCollection(colId)!;
-            const colProducts = products.filter(p => p.collection === colId);
+            const colProducts = parfumsDB.filter(p => p.collection === colId && !p.en_promo);
             const collectionTheme = collectionThemes[colId];
 
             return (
@@ -515,11 +684,11 @@ const DiscoveryBox = () => {
                       ? perfumeTheme?.selectedBg || collectionTheme.fallbackBg
                       : isHovered
                       ? perfumeTheme?.hoverBg || collectionTheme.hoverBg
-                      : 'hsl(0 0% 7%)';
+                      : 'var(--c-bg7)';
 
                     const borderColor = isSelected || isHovered
                       ? perfumeTheme?.borderColor || col.colors.accent
-                      : 'rgba(255,255,255,0.06)';
+                      : 'var(--c-w06)';
 
                     const textColor = isSelected
                       ? perfumeTheme?.textColor || collectionTheme.baseText
@@ -531,7 +700,7 @@ const DiscoveryBox = () => {
                       ? perfumeTheme?.subTextColor || collectionTheme.baseSubText
                       : isHovered
                       ? perfumeTheme?.hoverSubTextColor || collectionTheme.hoverSubText
-                      : 'rgba(255,255,255,0.35)';
+                      : 'var(--c-w35)';
 
                     return (
                       <motion.button
