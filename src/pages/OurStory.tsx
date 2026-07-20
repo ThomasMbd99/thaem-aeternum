@@ -36,6 +36,7 @@ const OurStory = () => (
       <title>Notre Histoire, THÆM ÆTERNUM</title>
       <meta name="description" content="Découvrez l'histoire de THÆM ÆTERNUM, maison de parfumerie artisanale française. Le souffle de l'âme, née d'une passion pour les matières nobles." />
       <meta property="og:title" content="Notre Histoire, THÆM ÆTERNUM" />
+      <link rel="canonical" href="https://www.thaem-aeternum.com/histoire" />
     </Helmet>
     <div className="min-h-screen pt-24 lg:pt-28 pb-28 relative">
 

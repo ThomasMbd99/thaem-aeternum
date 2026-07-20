@@ -164,7 +164,7 @@ const CinematicHero = () => {
         <div className="absolute inset-0 flex items-center justify-center z-20">
           <motion.div style={{ y: bottleY, opacity: bottleOpacity, scale: bottleScale }}>
             <img
-              src="/flacon-hero.png.png"
+              src="/flacon-hero.png"
               alt="Flacon THÆM ÆTERNUM"
               className="h-[52vh] lg:h-[68vh] w-auto object-contain select-none"
               style={{

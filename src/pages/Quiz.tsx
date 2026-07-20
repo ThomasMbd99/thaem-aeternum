@@ -160,6 +160,7 @@ const Quiz = () => {
       <Helmet>
         <title>Votre résultat, Quiz THÆM ÆTERNUM</title>
         <meta name="description" content="Découvrez les univers olfactifs THÆM ÆTERNUM qui correspondent le mieux à votre personnalité." />
+        <link rel="canonical" href="https://www.thaem-aeternum.com/quiz" />
       </Helmet>
       <div className="min-h-screen pt-24 pb-20 bg-background">
         <div className="fixed inset-0 pointer-events-none"
@@ -264,6 +265,7 @@ const Quiz = () => {
       <Helmet>
         <title>Quiz Olfactif, THÆM ÆTERNUM</title>
         <meta name="description" content="Répondez à quelques questions et découvrez les univers olfactifs THÆM ÆTERNUM faits pour vous." />
+        <link rel="canonical" href="https://www.thaem-aeternum.com/quiz" />
       </Helmet>
     <div className="min-h-screen pt-24 pb-20 bg-background flex items-center">
       <div className="fixed inset-0 pointer-events-none"

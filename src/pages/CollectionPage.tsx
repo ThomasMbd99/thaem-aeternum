@@ -52,6 +52,7 @@ const CollectionPage = () => {
         <meta name="description" content={collection ? `${collection.description} Découvrez la gamme ${collection.name} de THÆM ÆTERNUM.` : 'Découvrez nos gammes de parfums artisanaux.'} />
         <meta property="og:title" content={collection ? `${collection.name}, THÆM ÆTERNUM` : 'Collection, THÆM ÆTERNUM'} />
         <meta property="og:description" content={collection?.description ?? ''} />
+        {collection && <link rel="canonical" href={`https://www.thaem-aeternum.com/collection/${collection.id}`} />}
       </Helmet>
       <CollectionSplash collection={collection} />
       <div className="min-h-screen bg-background relative">

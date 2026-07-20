@@ -7,6 +7,7 @@ const MentionsLegales = () => {
       <Helmet>
         <title>Mentions légales, THÆM ÆTERNUM</title>
         <meta name="description" content="Mentions légales du site THÆM ÆTERNUM : éditeur, hébergement et informations légales." />
+        <link rel="canonical" href="https://www.thaem-aeternum.com/mentions-legales" />
       </Helmet>
       <div className="container mx-auto px-4 lg:px-8 max-w-3xl relative z-10">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>

@@ -219,6 +219,26 @@ const ProductPage = () => {
         <meta name="description" content={product ? `${product.tagline} , Extrait de parfum artisanal THÆM ÆTERNUM.` : 'Extrait de parfum artisanal THÆM ÆTERNUM.'} />
         <meta property="og:title" content={product ? `${product.nom}, THÆM ÆTERNUM` : 'Parfum, THÆM ÆTERNUM'} />
         <meta property="og:description" content={product?.tagline ?? ''} />
+        <link rel="canonical" href={`https://www.thaem-aeternum.com/produit/${product.id}`} />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Product',
+            name: product.nom,
+            description: product.tagline,
+            image: allImages[0] ?? undefined,
+            brand: { '@type': 'Brand', name: 'THÆM ÆTERNUM' },
+            offers: {
+              '@type': 'Offer',
+              url: `https://www.thaem-aeternum.com/produit/${product.id}`,
+              priceCurrency: 'EUR',
+              price: currentPrice,
+              availability: outOfStock
+                ? 'https://schema.org/OutOfStock'
+                : 'https://schema.org/InStock',
+            },
+          })}
+        </script>
       </Helmet>
 
       {/* Dégradé global page */}
