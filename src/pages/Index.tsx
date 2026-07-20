@@ -209,6 +209,7 @@ const Index = () => {
         <meta property="og:title" content="THÆM ÆTERNUM, Parfumerie d'Exception" />
         <meta property="og:description" content="Le souffle de l'âme. Extraits de parfum artisanaux d'exception." />
         <meta property="og:type" content="website" />
+        <link rel="canonical" href="https://www.thaem-aeternum.com/" />
       </Helmet>
       <div className="min-h-screen">
 

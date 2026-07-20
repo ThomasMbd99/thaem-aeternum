@@ -205,7 +205,7 @@ const Navbar = () => {
             <User className="w-4 h-4 text-muted-foreground hover:text-primary transition-colors" />
           </Link>
 
-          <button onClick={() => setIsOpen(true)} className="relative p-2 transition-colors hover:text-primary">
+          <button onClick={() => setIsOpen(true)} className="relative p-2 transition-colors hover:text-primary" aria-label="Panier">
             <ShoppingBag className="w-4 h-4" />
             {totalItems > 0 && (
               <motion.span
@@ -219,7 +219,7 @@ const Navbar = () => {
             )}
           </button>
 
-          <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden p-2">
+          <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden p-2" aria-label={mobileOpen ? 'Fermer le menu' : 'Ouvrir le menu'}>
             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>

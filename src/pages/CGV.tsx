@@ -7,6 +7,7 @@ const CGV = () => {
       <Helmet>
         <title>Conditions Générales de Vente, THÆM ÆTERNUM</title>
         <meta name="description" content="Conditions générales de vente de THÆM ÆTERNUM. Informations sur les commandes, livraisons, paiements et droit de rétractation." />
+        <link rel="canonical" href="https://www.thaem-aeternum.com/cgv" />
       </Helmet>
       <div className="container mx-auto px-4 lg:px-8 max-w-3xl relative z-10">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>

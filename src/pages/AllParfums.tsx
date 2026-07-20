@@ -24,6 +24,7 @@ const AllParfums = () => {
         <meta name="description" content="Découvrez l'ensemble des créations THÆM ÆTERNUM, extraits de parfum artisanaux français répartis en 5 univers olfactifs : SACRÆ, VITÆ, UMBRÆ, NEROLÆ et ÆRA." />
         <meta property="og:title" content="Tous les parfums, THÆM ÆTERNUM" />
         <meta property="og:description" content="L'ensemble de nos créations, extraits de parfum artisanaux français." />
+        <link rel="canonical" href="https://www.thaem-aeternum.com/parfums" />
       </Helmet>
       <div className="min-h-screen pt-28 pb-20">
         <div className="container mx-auto px-4 lg:px-8">

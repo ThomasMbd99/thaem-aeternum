@@ -31,6 +31,7 @@ const Sillages = () => {
       <Helmet>
         <title>Le Journal Æ, THÆM ÆTERNUM</title>
         <meta name="description" content="Le journal de la maison THÆM ÆTERNUM , actualités, collections, événements et collaborations." />
+        <link rel="canonical" href="https://www.thaem-aeternum.com/journal" />
       </Helmet>
 
       <div className="min-h-screen pt-24 lg:pt-28 pb-28">

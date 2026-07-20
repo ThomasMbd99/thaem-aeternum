@@ -84,6 +84,7 @@ const SillageArticle = () => {
         {article.image_url && <meta property="og:image" content={article.image_url} />}
         <meta property="og:title" content={`${article.titre}, THÆM ÆTERNUM`} />
         {article.extrait && <meta property="og:description" content={article.extrait} />}
+        <link rel="canonical" href={`https://www.thaem-aeternum.com/journal/${slug}`} />
       </Helmet>
 
       <div className="min-h-screen pt-24 pb-28">

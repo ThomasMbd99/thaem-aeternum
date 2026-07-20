@@ -52,6 +52,7 @@ const OffresPage = () => {
       <Helmet>
         <title>Les Offres Æ, Thæm Æternum</title>
         <meta name="description" content="Créations sélectionnées à des tarifs privilégiés." />
+        <link rel="canonical" href="https://www.thaem-aeternum.com/offres" />
       </Helmet>
 
       <div className="min-h-screen pt-28 pb-24">
