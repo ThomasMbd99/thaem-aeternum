@@ -58,6 +58,7 @@ const UpsellCarousel = ({ products, acc, rgb }: { products: any[], acc: string, 
             >
               {products.map((p, i) => {
                 const col = p.collection;
+                const customImg = p.image_url ?? p.images?.[0] ?? null;
                 return (
                   <div key={p.id} className="w-full flex-shrink-0 px-4">
                     <Link to={`/produit/${p.id}`} className="group block">
@@ -74,9 +75,13 @@ const UpsellCarousel = ({ products, acc, rgb }: { products: any[], acc: string, 
                           style={{ boxShadow: `0 0 50px rgba(${rgb}, 0.2) inset` }}
                         />
                         <img
-                          src={p.image_url ?? p.images?.[0] ?? getBottleImage(col)}
+                          src={customImg ?? getBottleImage(col)}
                           alt={p.name}
-                          className="h-[65%] w-auto object-contain drop-shadow-xl transition-transform duration-700 group-hover:-translate-y-3 group-hover:scale-105 relative z-10"
+                          className={
+                            customImg
+                              ? 'w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 relative z-10'
+                              : 'h-[65%] w-auto object-contain drop-shadow-xl transition-transform duration-700 group-hover:-translate-y-3 group-hover:scale-105 relative z-10'
+                          }
                           loading="lazy"
                         />
                         {/* Ligne accent bas */}
