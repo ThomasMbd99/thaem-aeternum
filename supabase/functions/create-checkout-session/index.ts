@@ -1,4 +1,5 @@
 import Stripe from 'https://esm.sh/stripe@12.18.0?target=deno';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -84,6 +85,46 @@ Deno.serve(async (req) => {
     if (userId) metadata.user_id = userId;
     if (address) metadata.address_json = JSON.stringify(address);
 
+    let appliedPromoId: string | null = null;
+    let stripeCouponId: string | null = null;
+
+    if (promoCode) {
+      const supabaseUrl = Deno.env.get('SUPABASE_URL');
+      const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+      if (supabaseUrl && serviceRoleKey) {
+        const supabase = createClient(supabaseUrl, serviceRoleKey);
+        const now = new Date();
+        const { data: promo } = await supabase
+          .from('promo_codes')
+          .select('*')
+          .eq('code', promoCode.trim().toUpperCase())
+          .maybeSingle();
+
+        const promoValid = promo
+          && promo.active
+          && new Date(promo.valid_from) <= now
+          && (!promo.valid_until || new Date(promo.valid_until) >= now)
+          && (promo.max_uses === null || promo.used_count < promo.max_uses);
+
+        if (!promoValid) {
+          return new Response(JSON.stringify({ error: 'Code promo invalide ou expiré (coupon).' }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+
+        const coupon = await stripe.coupons.create({
+          percent_off: promo.percentage,
+          duration: 'once',
+          name: `Code promo ${promo.code}`,
+        });
+        stripeCouponId = coupon.id;
+        appliedPromoId = promo.id;
+        metadata.promo_code = promo.code;
+        metadata.promo_percentage = String(promo.percentage);
+      }
+    }
+
     const sessionParams: any = {
       payment_method_types: ['card'],
       line_items: lineItems,
@@ -91,10 +132,29 @@ Deno.serve(async (req) => {
       success_url: successUrl,
       cancel_url: cancelUrl,
       metadata,
-      ...(promoCode ? { discounts: [{ coupon: promoCode }] } : {}),
+      ...(stripeCouponId ? { discounts: [{ coupon: stripeCouponId }] } : {}),
     };
 
     const session = await stripe.checkout.sessions.create(sessionParams);
+
+    if (appliedPromoId) {
+      const supabaseUrl = Deno.env.get('SUPABASE_URL');
+      const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+      if (supabaseUrl && serviceRoleKey) {
+        const supabase = createClient(supabaseUrl, serviceRoleKey);
+        await supabase.rpc('increment_promo_usage', { promo_id: appliedPromoId }).then(
+          async (res: any) => {
+            if (res.error) {
+              // Fallback si la fonction RPC n'existe pas encore côté DB
+              const { data: current } = await supabase.from('promo_codes').select('used_count').eq('id', appliedPromoId).maybeSingle();
+              if (current) {
+                await supabase.from('promo_codes').update({ used_count: current.used_count + 1 }).eq('id', appliedPromoId);
+              }
+            }
+          }
+        );
+      }
+    }
 
     return new Response(JSON.stringify({ url: session.url }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
