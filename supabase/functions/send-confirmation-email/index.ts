@@ -34,13 +34,14 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { userEmail, items, address, shippingCost, finalTotal, mode_livraison } = await req.json() as {
+    const { userEmail, items, address, shippingCost, finalTotal, mode_livraison, isAdminCopy } = await req.json() as {
       userEmail: string;
       items: OrderItem[];
       address: Address | null;
       shippingCost: number;
       finalTotal: number;
       mode_livraison?: string;
+      isAdminCopy?: boolean;
     };
     const isClickCollect = mode_livraison === 'click_collect';
 
@@ -82,9 +83,11 @@ Deno.serve(async (req) => {
 
     <!-- Message -->
     <div style="margin-bottom:32px">
-      <p style="font-family:Georgia,serif;font-style:italic;color:#e8ddd0;font-size:18px;margin:0 0 8px">Merci${address?.prenom ? ` ${address.prenom}` : ''},</p>
+      <p style="font-family:Georgia,serif;font-style:italic;color:#e8ddd0;font-size:18px;margin:0 0 8px">${isAdminCopy ? 'Nouvelle commande reçue' : `Merci${address?.prenom ? ` ${address.prenom}` : ''},`}</p>
       <p style="font-family:Arial,sans-serif;font-size:13px;color:#9a8878;line-height:1.7;margin:0">
-        ${isClickCollect
+        ${isAdminCopy
+          ? `Une commande vient d'être payée par ${userEmail}.`
+          : isClickCollect
           ? 'Votre commande est confirmée. Contactez-nous sur Instagram <a href="https://ig.me/m/thaem_aeternum" style="color:#C4956A">@thaem_aeternum</a> pour organiser votre retrait à Lorient.'
           : 'Votre commande a bien été reçue. Nous préparons votre colis avec soin et vous informerons dès son expédition.'}
       </p>
@@ -142,8 +145,8 @@ Deno.serve(async (req) => {
       },
       body: JSON.stringify({
         from: 'Thæm Æternum <commandes@thaem-aeternum.com>',
-        to: userEmail,
-        subject: 'Votre commande Thæm Æternum est confirmée',
+        to: isAdminCopy ? 'contact@thaem-aeternum.com' : userEmail,
+        subject: isAdminCopy ? `Nouvelle commande — ${finalTotal.toFixed(2)}€` : 'Votre commande Thæm Æternum est confirmée',
         html,
       }),
     });

@@ -26,10 +26,10 @@ const Collections = () => {
   const lightThemes = ['sacrae', 'nerolae', 'aera'];
 
   const formats = [
-    { size: '10ml', label: 'Flacon Voyage', price: '10€', desc: "La découverte. Un format nomade pour apprivoiser une fragrance avant de l'adopter.", featured: false },
-    { size: '50ml', label: 'Flacon Signature', price: '45€', desc: "L'objet. Verre lourd, finitions dorées, conçu pour durer et s'exposer.", featured: true },
-    { size: '10×5ml', label: 'Coffret Découverte', price: '50€', desc: "L'exploration. Dix flacons voyage pour traverser nos univers sans choisir.", featured: false },
-    { size: '50ml', label: 'Recharge Éco', price: '35€', desc: "La conscience. Rechargez votre flacon signature, réduisez l'empreinte.", featured: false },
+    { size: '10ml', label: 'Flacon Voyage', price: '9,99€', desc: "La découverte. Un format nomade pour apprivoiser une fragrance avant de l'adopter.", featured: false },
+    { size: '50ml', label: 'Flacon Signature', price: '44,99€', desc: "L'objet. Verre lourd, finitions dorées, conçu pour durer et s'exposer.", featured: true },
+    { size: '5×10ml', label: 'Coffret Découverte', price: '39,99€', desc: "L'exploration. Cinq flacons voyage pour traverser nos univers sans choisir.", featured: false },
+    { size: '50ml', label: 'Recharge Éco', price: '34,99€', desc: "La conscience. Rechargez votre flacon signature, réduisez l'empreinte.", featured: false },
   ];
 
   return (

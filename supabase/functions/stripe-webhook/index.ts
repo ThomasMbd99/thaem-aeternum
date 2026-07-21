@@ -114,6 +114,20 @@ Deno.serve(async (req) => {
     }
 
     // Send confirmation email
+    const emailPayload = {
+      userEmail,
+      items: items.map(i => ({
+        name: i.name,
+        format: i.isDiscoveryBox ? 'Coffret 5×10ml' : i.format,
+        quantity: i.quantity,
+        price: i.price,
+      })),
+      address,
+      shippingCost,
+      finalTotal: total,
+      mode_livraison: modeLivraison,
+    };
+
     if (userEmail) {
       await fetch(`${supabaseUrl}/functions/v1/send-confirmation-email`, {
         method: 'POST',
@@ -121,21 +135,19 @@ Deno.serve(async (req) => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${serviceRoleKey}`,
         },
-        body: JSON.stringify({
-          userEmail,
-          items: items.map(i => ({
-            name: i.name,
-            format: i.isDiscoveryBox ? 'Coffret 5×10ml' : i.format,
-            quantity: i.quantity,
-            price: i.price,
-          })),
-          address,
-          shippingCost,
-          finalTotal: total,
-          mode_livraison: modeLivraison,
-        }),
+        body: JSON.stringify(emailPayload),
       });
     }
+
+    // Notify admin of the new order
+    await fetch(`${supabaseUrl}/functions/v1/send-confirmation-email`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${serviceRoleKey}`,
+      },
+      body: JSON.stringify({ ...emailPayload, isAdminCopy: true }),
+    });
   }
 
   return new Response('OK', { status: 200 });
