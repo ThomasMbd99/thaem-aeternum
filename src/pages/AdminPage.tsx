@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { Package, TrendingUp, Clock, CheckCircle, Truck, XCircle, ChevronDown, RefreshCw, AlertTriangle, Droplets, Save, Plus, X, Trash2, Upload, Loader2, BookOpen, Eye, EyeOff } from 'lucide-react';
+import { Package, TrendingUp, Clock, CheckCircle, Truck, XCircle, ChevronDown, RefreshCw, AlertTriangle, Droplets, Save, Plus, X, Trash2, Upload, Loader2, BookOpen, Eye, EyeOff, Tag } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { supabase, type ParfumDB } from '@/lib/supabase';
 
@@ -25,7 +25,19 @@ const statusConfig: Record<OrderStatus, { label: string; color: string; bg: stri
 
 const allStatuses: OrderStatus[] = ['pending', 'paid', 'confirmed', 'shipped', 'delivered', 'cancelled'];
 
-type AdminTab = 'commandes' | 'parfums' | 'articles';
+type AdminTab = 'commandes' | 'parfums' | 'articles' | 'promos';
+
+interface PromoCodeDB {
+  id: string;
+  code: string;
+  percentage: number;
+  valid_from: string;
+  valid_until: string | null;
+  active: boolean;
+  max_uses: number | null;
+  used_count: number;
+  created_at: string;
+}
 
 interface ArticleDB {
   id: string;
@@ -93,6 +105,14 @@ const AdminPage = () => {
   const [uploadingArticleImg, setUploadingArticleImg] = useState(false);
   const [uploadArticleError, setUploadArticleError] = useState<string | null>(null);
 
+  // Codes promo
+  const [promoCodes, setPromoCodes] = useState<PromoCodeDB[]>([]);
+  const [fetchingPromos, setFetchingPromos] = useState(false);
+  const [savingPromo, setSavingPromo] = useState(false);
+  const [promoError, setPromoError] = useState<string | null>(null);
+  const [promoRlsError, setPromoRlsError] = useState<string | null>(null);
+  const [newPromo, setNewPromo] = useState({ code: '', percentage: 10, valid_from: '', valid_until: '', max_uses: '' });
+
   useEffect(() => {
     if (loading) return;
     if (!user) { navigate('/login'); return; }
@@ -103,7 +123,51 @@ const AdminPage = () => {
   useEffect(() => {
     if (activeTab === 'parfums' && parfums.length === 0) fetchParfums();
     if (activeTab === 'articles' && articles.length === 0) fetchArticles();
+    if (activeTab === 'promos' && promoCodes.length === 0) fetchPromoCodes();
   }, [activeTab]);
+
+  const fetchPromoCodes = async () => {
+    setFetchingPromos(true);
+    setPromoRlsError(null);
+    const { data, error } = await supabase.from('promo_codes').select('*').order('created_at', { ascending: false });
+    if (error) {
+      setPromoRlsError(error.message);
+    } else if (data) {
+      setPromoCodes(data as PromoCodeDB[]);
+    }
+    setFetchingPromos(false);
+  };
+
+  const createPromoCode = async () => {
+    if (!newPromo.code.trim() || newPromo.percentage <= 0 || newPromo.percentage > 100) return;
+    setSavingPromo(true);
+    setPromoError(null);
+    const { error } = await supabase.from('promo_codes').insert({
+      code: newPromo.code.trim().toUpperCase(),
+      percentage: newPromo.percentage,
+      valid_from: newPromo.valid_from ? new Date(newPromo.valid_from).toISOString() : new Date().toISOString(),
+      valid_until: newPromo.valid_until ? new Date(newPromo.valid_until).toISOString() : null,
+      max_uses: newPromo.max_uses ? parseInt(newPromo.max_uses, 10) : null,
+    });
+    if (error) {
+      setPromoError(error.message);
+    } else {
+      setNewPromo({ code: '', percentage: 10, valid_from: '', valid_until: '', max_uses: '' });
+      fetchPromoCodes();
+    }
+    setSavingPromo(false);
+  };
+
+  const togglePromoActive = async (id: string, active: boolean) => {
+    setPromoCodes(prev => prev.map(p => p.id === id ? { ...p, active } : p));
+    const { error } = await supabase.from('promo_codes').update({ active }).eq('id', id);
+    if (error) fetchPromoCodes();
+  };
+
+  const deletePromoCode = async (id: string) => {
+    setPromoCodes(prev => prev.filter(p => p.id !== id));
+    await supabase.from('promo_codes').delete().eq('id', id);
+  };
 
   const fetchOrders = async () => {
     setFetching(true);
@@ -327,7 +391,12 @@ const AdminPage = () => {
             <h1 className="font-display text-3xl lg:text-4xl italic font-light">Tableau de bord</h1>
           </div>
           <button
-            onClick={() => activeTab === 'commandes' ? fetchOrders() : fetchParfums()}
+            onClick={() => {
+              if (activeTab === 'commandes') fetchOrders();
+              else if (activeTab === 'parfums') fetchParfums();
+              else if (activeTab === 'articles') fetchArticles();
+              else if (activeTab === 'promos') fetchPromoCodes();
+            }}
             className="flex items-center gap-2 px-4 py-2 font-body text-xs uppercase tracking-widest text-foreground/40 hover:text-foreground transition-colors border border-white/8 rounded"
           >
             <RefreshCw className="w-3 h-3" /> Actualiser
@@ -340,6 +409,7 @@ const AdminPage = () => {
             { id: 'commandes', label: 'Commandes', icon: Package },
             { id: 'parfums',   label: 'Parfums',   icon: Droplets },
             { id: 'articles',  label: 'Sillages',  icon: BookOpen },
+            { id: 'promos',    label: 'Codes promo', icon: Tag },
           ] as { id: AdminTab; label: string; icon: any }[]).map(({ id, label, icon: Icon }) => (
             <button
               key={id}
@@ -495,6 +565,136 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
                     </button>
                   </div>
                 ))}
+              </div>
+            )}
+          </motion.div>
+        )}
+
+        {activeTab === 'promos' && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+            {promoRlsError && (
+              <div className="mb-8 p-5 rounded border border-yellow-500/20 bg-yellow-500/5">
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="w-5 h-5 shrink-0 text-yellow-500/70 mt-0.5" />
+                  <div>
+                    <p className="font-body text-sm text-yellow-500/80 mb-2">Table "promo_codes" absente ou politique de sécurité manquante</p>
+                    <p className="font-body text-xs text-foreground/40 mb-1">Erreur : {promoRlsError}</p>
+                    <p className="font-body text-xs text-foreground/40 mb-3">Exécutez ce SQL dans votre dashboard Supabase → SQL Editor (voir le message fourni par Claude pour le script complet).</p>
+                  </div>
+                </div>
+              </div>
+            )}
+            {/* Formulaire de création */}
+            <div className="border border-white/8 rounded-lg p-5 mb-8">
+              <p className="font-body text-xs uppercase tracking-widest text-foreground/40 mb-4">Créer un code promo</p>
+              <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
+                <div>
+                  <label className={labelCls}>Code</label>
+                  <input
+                    type="text"
+                    value={newPromo.code}
+                    onChange={e => setNewPromo(prev => ({ ...prev, code: e.target.value.toUpperCase() }))}
+                    placeholder="AETERNUM10"
+                    className={inputCls}
+                  />
+                </div>
+                <div>
+                  <label className={labelCls}>Réduction (%)</label>
+                  <input
+                    type="number" min={1} max={100}
+                    value={newPromo.percentage}
+                    onChange={e => setNewPromo(prev => ({ ...prev, percentage: parseInt(e.target.value, 10) || 0 }))}
+                    className={inputCls}
+                  />
+                </div>
+                <div>
+                  <label className={labelCls}>Valide à partir du</label>
+                  <input
+                    type="date"
+                    value={newPromo.valid_from}
+                    onChange={e => setNewPromo(prev => ({ ...prev, valid_from: e.target.value }))}
+                    className={inputCls}
+                  />
+                </div>
+                <div>
+                  <label className={labelCls}>Valide jusqu'au</label>
+                  <input
+                    type="date"
+                    value={newPromo.valid_until}
+                    onChange={e => setNewPromo(prev => ({ ...prev, valid_until: e.target.value }))}
+                    className={inputCls}
+                  />
+                </div>
+                <div>
+                  <label className={labelCls}>Utilisations max (optionnel)</label>
+                  <input
+                    type="number" min={1}
+                    value={newPromo.max_uses}
+                    onChange={e => setNewPromo(prev => ({ ...prev, max_uses: e.target.value }))}
+                    placeholder="Illimité"
+                    className={inputCls}
+                  />
+                </div>
+              </div>
+              {promoError && <p className="font-body text-xs text-red-400 mb-3">{promoError}</p>}
+              <button
+                onClick={createPromoCode}
+                disabled={savingPromo || !newPromo.code.trim()}
+                className="flex items-center gap-2 px-4 py-2.5 font-body text-xs uppercase tracking-widest rounded transition-all duration-200 disabled:opacity-40"
+                style={{ background: 'rgba(196,149,106,0.12)', border: '1px solid rgba(196,149,106,0.3)', color: '#C4956A' }}
+              >
+                <Plus className="w-3.5 h-3.5" /> {savingPromo ? 'Création...' : 'Créer le code'}
+              </button>
+            </div>
+
+            {/* Liste des codes */}
+            {fetchingPromos ? (
+              <p className="font-body text-sm text-foreground/40 text-center py-10">Chargement...</p>
+            ) : promoCodes.length === 0 ? (
+              <p className="font-body text-sm text-foreground/40 text-center py-10">Aucun code promo créé pour le moment.</p>
+            ) : (
+              <div className="space-y-2">
+                {promoCodes.map(promo => {
+                  const expired = promo.valid_until && new Date(promo.valid_until) < new Date();
+                  const exhausted = promo.max_uses !== null && promo.used_count >= promo.max_uses;
+                  return (
+                    <div key={promo.id} className="flex items-center gap-4 p-4 border border-white/8 rounded-lg hover:border-white/15 transition-colors">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <p className="font-display italic text-foreground/80">{promo.code}</p>
+                          <span className="font-body text-xs" style={{ color: '#C4956A' }}>-{promo.percentage}%</span>
+                          {(expired || exhausted) && (
+                            <span className="font-body text-[9px] uppercase tracking-widest px-2 py-0.5 rounded" style={{ background: 'rgba(239,68,68,0.12)', color: '#EF4444' }}>
+                              {expired ? 'Expiré' : 'Épuisé'}
+                            </span>
+                          )}
+                        </div>
+                        <p className="font-body text-[10px] text-foreground/30 mt-0.5">
+                          Du {new Date(promo.valid_from).toLocaleDateString('fr-FR')}
+                          {promo.valid_until ? ` au ${new Date(promo.valid_until).toLocaleDateString('fr-FR')}` : ' — sans date de fin'}
+                          {' · '}
+                          {promo.used_count} utilisation{promo.used_count > 1 ? 's' : ''}{promo.max_uses ? ` / ${promo.max_uses}` : ''}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => togglePromoActive(promo.id, !promo.active)}
+                        className="px-3 py-1.5 font-body text-[10px] uppercase tracking-widest rounded border transition-all"
+                        style={promo.active
+                          ? { borderColor: 'rgba(34,197,94,0.3)', color: '#22C55E', background: 'rgba(34,197,94,0.08)' }
+                          : { borderColor: 'rgba(255,255,255,0.1)', color: 'var(--c-w40)' }}
+                      >
+                        {promo.active ? 'Actif' : 'Inactif'}
+                      </button>
+                      <button
+                        onClick={() => deletePromoCode(promo.id)}
+                        className="p-2 rounded border border-white/10 text-foreground/30 hover:text-red-400 hover:border-red-500/30 transition-all"
+                        aria-label="Supprimer le code"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </motion.div>
