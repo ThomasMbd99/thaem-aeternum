@@ -255,7 +255,7 @@ const ProductCard = ({ product, index = 0 }: Props) => {
           )}
           {product.stock !== undefined && product.stock > 0 && product.stock <= 5 && (
             <div className="absolute bottom-3 right-3 px-2 py-1 rounded z-10 font-body text-[9px] uppercase tracking-widest" style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)', color: '#ef4444' }}>
-              Plus que {product.stock}
+              Stock limité
             </div>
           )}
 
