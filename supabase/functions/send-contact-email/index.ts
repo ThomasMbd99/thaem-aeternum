@@ -3,6 +3,15 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -20,6 +29,10 @@ Deno.serve(async (req) => {
 
     if (!nom || !email || !message) throw new Error('Champs manquants.');
 
+    const safeNom = escapeHtml(nom);
+    const safeEmail = escapeHtml(email);
+    const safeMessage = escapeHtml(message);
+
     const html = `
 <!DOCTYPE html>
 <html lang="fr">
@@ -35,13 +48,13 @@ Deno.serve(async (req) => {
 
     <div style="background:#141209;border:1px solid #2a2218;border-radius:8px;padding:24px;margin-bottom:24px">
       <p style="font-family:Arial,sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:0.3em;color:#9a8878;margin:0 0 6px">De</p>
-      <p style="font-family:Georgia,serif;font-style:italic;color:#e8ddd0;font-size:16px;margin:0 0 4px">${nom}</p>
-      <a href="mailto:${email}" style="font-family:Arial,sans-serif;font-size:12px;color:#C4956A;">${email}</a>
+      <p style="font-family:Georgia,serif;font-style:italic;color:#e8ddd0;font-size:16px;margin:0 0 4px">${safeNom}</p>
+      <a href="mailto:${safeEmail}" style="font-family:Arial,sans-serif;font-size:12px;color:#C4956A;">${safeEmail}</a>
     </div>
 
     <div style="background:#141209;border:1px solid #2a2218;border-radius:8px;padding:24px">
       <p style="font-family:Arial,sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:0.3em;color:#9a8878;margin:0 0 12px">Message</p>
-      <p style="font-family:Arial,sans-serif;font-size:13px;color:#e8ddd0;line-height:1.8;margin:0;white-space:pre-wrap">${message}</p>
+      <p style="font-family:Arial,sans-serif;font-size:13px;color:#e8ddd0;line-height:1.8;margin:0;white-space:pre-wrap">${safeMessage}</p>
     </div>
 
   </div>

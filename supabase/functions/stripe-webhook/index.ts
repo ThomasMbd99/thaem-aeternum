@@ -32,11 +32,24 @@ Deno.serve(async (req) => {
   const meta = session.metadata ?? {};
 
   if (event.type === 'checkout.session.completed') {
+    // Idempotence : Stripe peut rejouer un webhook (timeout, retry manuel) — si cette
+    // session a déjà produit une commande, on ne refait rien.
+    const { data: existing } = await supabase
+      .from('commandes')
+      .select('id')
+      .eq('stripe_session_id', session.id)
+      .maybeSingle();
+
+    if (existing) {
+      return new Response('OK (déjà traitée)', { status: 200 });
+    }
+
     const userEmail = meta.user_email ?? '';
     const userId = meta.user_id ?? null;
     const modeLivraison = meta.mode_livraison ?? 'home';
     const shippingCost = parseFloat(meta.shipping_cost ?? '0');
     const bundleDiscount = parseFloat(meta.bundle_discount ?? '0');
+    const promoDiscount = parseFloat(meta.promo_discount ?? '0');
     const address = meta.address_json ? JSON.parse(meta.address_json) : null;
     const compactItems: any[][] = meta.items_json ? JSON.parse(meta.items_json) : [];
 
@@ -50,7 +63,7 @@ Deno.serve(async (req) => {
     }));
 
     const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
-    const total = subtotal - bundleDiscount + shippingCost;
+    const total = subtotal - bundleDiscount - promoDiscount + shippingCost;
 
     // Create order (statut = 'paid' directly since payment is confirmed)
     const { data: commande, error: cmdError } = await supabase
@@ -61,6 +74,7 @@ Deno.serve(async (req) => {
         statut: 'paid',
         total,
         mode_livraison: modeLivraison,
+        stripe_session_id: session.id,
       })
       .select()
       .single();
@@ -111,6 +125,13 @@ Deno.serve(async (req) => {
           return supabase.from('parfums').update({ stock: newStock }).eq('nom', nom);
         })
       );
+    }
+
+    // Comptabilise l'usage du code promo seulement maintenant que le paiement est
+    // confirmé (évite qu'un panier abandonné consomme un usage pour rien), via une
+    // fonction SQL atomique qui vérifie max_uses au moment même de l'incrément.
+    if (meta.promo_id) {
+      await supabase.rpc('increment_promo_usage', { promo_id: meta.promo_id });
     }
 
     // Send confirmation email
