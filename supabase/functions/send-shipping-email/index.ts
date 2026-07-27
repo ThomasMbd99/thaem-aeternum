@@ -1,7 +1,14 @@
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+// Seuls ces comptes peuvent déclencher un email d'expédition — sans ce contrôle,
+// n'importe qui connaissant l'URL de la fonction pouvait envoyer des emails arbitraires
+// via notre compte Resend.
+const ADMIN_EMAILS = ['contact@thaem-aeternum.com', 'thomasmabed56@gmail.com'];
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -11,6 +18,24 @@ Deno.serve(async (req) => {
   try {
     const resendKey = Deno.env.get('RESEND_API_KEY');
     if (!resendKey) throw new Error('Resend API key manquante.');
+
+    const supabaseUrl = Deno.env.get('SUPABASE_URL');
+    const anonKey = Deno.env.get('SUPABASE_ANON_KEY');
+    const authHeader = req.headers.get('Authorization');
+    if (!supabaseUrl || !anonKey || !authHeader) {
+      return new Response(JSON.stringify({ error: 'Non autorisé.' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+    const authClient = createClient(supabaseUrl, anonKey, { global: { headers: { Authorization: authHeader } } });
+    const { data: { user } } = await authClient.auth.getUser();
+    if (!user?.email || !ADMIN_EMAILS.includes(user.email)) {
+      return new Response(JSON.stringify({ error: 'Non autorisé.' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
 
     const { userEmail, orderId, trackingNumber, items } = await req.json() as {
       userEmail: string;

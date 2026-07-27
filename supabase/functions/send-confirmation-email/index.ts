@@ -34,6 +34,18 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Cette fonction n'est appelée que par stripe-webhook (server-to-server), jamais
+    // par le navigateur d'un client — on le vérifie pour empêcher n'importe qui de
+    // s'en servir pour envoyer des emails arbitraires via notre compte Resend.
+    const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+    const authHeader = req.headers.get('Authorization');
+    if (!serviceRoleKey || authHeader !== `Bearer ${serviceRoleKey}`) {
+      return new Response(JSON.stringify({ error: 'Non autorisé.' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     const { userEmail, items, address, shippingCost, finalTotal, mode_livraison, isAdminCopy } = await req.json() as {
       userEmail: string;
       items: OrderItem[];

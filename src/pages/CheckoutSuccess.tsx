@@ -4,12 +4,9 @@ import { Helmet } from 'react-helmet-async';
 import { CheckCircle, Instagram } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '@/context/CartContext';
-import { useAuth } from '@/context/AuthContext';
-import { supabase } from '@/lib/supabase';
 
 const CheckoutSuccess = () => {
   const { clearCart } = useCart();
-  const { user } = useAuth();
   const [isClickCollect, setIsClickCollect] = useState(false);
 
   useEffect(() => {
@@ -20,25 +17,9 @@ const CheckoutSuccess = () => {
         const data = JSON.parse(raw);
         if (data.mode_livraison === 'click_collect') setIsClickCollect(true);
       } catch { /* */ }
-    }
-  }, [clearCart]);
-
-  useEffect(() => {
-    const raw = sessionStorage.getItem('pendingOrder');
-    if (!raw) return;
-    try {
-      const orderData = JSON.parse(raw);
-      const userEmail = user?.email || orderData.userEmail;
-      if (userEmail && orderData.items?.length > 0) {
-        supabase.functions.invoke('send-confirmation-email', {
-          body: { ...orderData, userEmail },
-        });
-        sessionStorage.removeItem('pendingOrder');
-      }
-    } catch {
       sessionStorage.removeItem('pendingOrder');
     }
-  }, [user]);
+  }, [clearCart]);
 
   return (
     <>
