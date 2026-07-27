@@ -100,7 +100,7 @@ const Collections = () => {
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.12, duration: 0.7 }}
-                  className="group lg:[&:nth-child(2n)]:translate-y-6"
+                  className="group"
                 >
                   <button onClick={() => handleCollectionClick(col.id)} className="w-full block text-left">
                     <div
@@ -185,11 +185,11 @@ const Collections = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className={`relative p-8 flex flex-col items-center text-center rounded-2xl overflow-hidden group transition-all duration-500${f.featured ? ' sm:col-span-2' : ''}`}
+                className="relative p-8 flex flex-col items-center text-center rounded-2xl overflow-hidden group transition-all duration-500"
                 style={{
                   border: f.featured ? '1px solid hsl(43,50%,54%)' : '1px solid var(--c-w06)',
                   background: f.featured ? 'rgba(196,149,106,0.06)' : 'var(--c-bg7)',
-                  minHeight: f.featured ? '340px' : '260px',
+                  minHeight: '260px',
                 }}
               >
                 {f.featured && (
