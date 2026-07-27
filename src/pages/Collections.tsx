@@ -100,15 +100,15 @@ const Collections = () => {
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.12, duration: 0.7 }}
-                  className="group"
+                  className="group lg:[&:nth-child(2n)]:translate-y-6"
                 >
                   <button onClick={() => handleCollectionClick(col.id)} className="w-full block text-left">
                     <div
-                      className="relative p-6 min-h-[260px] sm:min-h-[340px] flex flex-col items-center justify-center text-center overflow-hidden rounded transition-all duration-700"
+                      className="relative p-6 min-h-[260px] sm:min-h-[340px] flex flex-col items-center justify-center text-center overflow-hidden rounded-2xl transition-all duration-700"
                       style={{ background: 'var(--c-bg7)', border: '1px solid var(--c-w06)' }}
                     >
                       <div
-                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none rounded"
+                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none rounded-2xl"
                         style={{ background: themeBgs[col.id] }}
                       />
                       <div className="relative z-10 flex flex-col items-center gap-3">
@@ -177,7 +177,7 @@ const Collections = () => {
             style={{ background: 'linear-gradient(to left, hsl(43,50%,54%), transparent)' }}
           />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
             {formats.map((f, i) => (
               <motion.div
                 key={i}
@@ -185,11 +185,11 @@ const Collections = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="relative p-8 flex flex-col items-center text-center rounded overflow-hidden group transition-all duration-500"
+                className={`relative p-8 flex flex-col items-center text-center rounded-2xl overflow-hidden group transition-all duration-500${f.featured ? ' sm:col-span-2' : ''}`}
                 style={{
                   border: f.featured ? '1px solid hsl(43,50%,54%)' : '1px solid var(--c-w06)',
                   background: f.featured ? 'rgba(196,149,106,0.06)' : 'var(--c-bg7)',
-                  minHeight: '260px',
+                  minHeight: f.featured ? '340px' : '260px',
                 }}
               >
                 {f.featured && (

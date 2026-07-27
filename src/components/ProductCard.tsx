@@ -174,7 +174,7 @@ const ProductCard = ({ product, index = 0 }: Props) => {
       >
         <div
           ref={cardRef}
-          className="aspect-[3/4] rounded overflow-hidden relative mb-4 flex items-center justify-center transition-all duration-500 group-hover:scale-[1.03]"
+          className="aspect-[3/4] rounded-2xl overflow-hidden relative mb-4 flex items-center justify-center transition-all duration-500 group-hover:scale-[1.03]"
           style={{ background: `linear-gradient(135deg, var(--c-bg8), var(--c-bg12))` }}
           onMouseEnter={() => { handleMouseEnter(); setIsHovered(true); }}
           onMouseLeave={() => setIsHovered(false)}
@@ -185,13 +185,13 @@ const ProductCard = ({ product, index = 0 }: Props) => {
         >
           {/* Hover glow ring */}
           <div
-            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded pointer-events-none"
+            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl pointer-events-none"
             style={{ boxShadow: `inset 0 0 0 1px ${collection?.colors.accent}55, 0 0 40px ${collection?.colors.accent}33` }}
           />
           {/* Shimmer curseur */}
           {isHovered && (
             <div
-              className="absolute inset-0 pointer-events-none z-[15] rounded"
+              className="absolute inset-0 pointer-events-none z-[15] rounded-2xl"
               style={{
                 background: `radial-gradient(circle 90px at ${mousePos.x}px ${mousePos.y}px, ${collection?.colors.accent}22 0%, transparent 65%)`,
               }}
@@ -240,7 +240,7 @@ const ProductCard = ({ product, index = 0 }: Props) => {
 
           {/* Badge Prochainement */}
           {isComingSoon && (
-            <div className="absolute inset-0 z-30 rounded" style={{ backdropFilter: 'blur(8px)', background: 'rgba(0,0,0,0.45)' }}>
+            <div className="absolute inset-0 z-30 rounded-2xl" style={{ backdropFilter: 'blur(8px)', background: 'rgba(0,0,0,0.45)' }}>
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
                 <span className="font-body text-xs uppercase tracking-[0.3em] text-white/80">Prochainement</span>
               </div>
@@ -249,7 +249,7 @@ const ProductCard = ({ product, index = 0 }: Props) => {
 
           {/* Badge stock */}
           {product.stock !== undefined && product.stock === 0 && (
-            <div className="absolute inset-0 flex items-center justify-center z-30 rounded" style={{ background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(2px)' }}>
+            <div className="absolute inset-0 flex items-center justify-center z-30 rounded-2xl" style={{ background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(2px)' }}>
               <span className="font-body text-xs uppercase tracking-widest text-white/70">Rupture de stock</span>
             </div>
           )}
