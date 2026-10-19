@@ -21,7 +21,7 @@ insert into public.promo_codes (id, code, percentage) values
 set local role anon;
 select set_config('request.jwt.claims', '{"role":"anon"}', true);
 do $$ begin
-  assert not public.is_admin(), 'Visitor gained admin';
+  assert not has_function_privilege(current_user, 'public.is_admin()', 'EXECUTE'), 'Visitor can execute admin authorization';
   assert (select count(*) = 1 from public.parfums where id = -990001), 'Public catalogue broken';
   assert (select count(*) = 1 from public.articles where slug = '__security_published__'), 'Published article inaccessible';
   assert (select count(*) = 0 from public.articles where slug = '__security_draft__'), 'Draft leaked';

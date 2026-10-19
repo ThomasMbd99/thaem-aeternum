@@ -34,6 +34,8 @@ where user_id in (select id from auth.users where lower(email) = lower('administ
 
 `VITE_ADMIN_EMAIL` n'est plus utilisé. Aucune clé `service_role` ni aucun secret ne doit être placé dans `VITE_*`.
 Les comptes non confirmés et bannis n'obtiennent pas les droits d'administration.
+La seconde migration verrouille aussi les chemins de résolution des fonctions privilégiées
+et interdit aux visiteurs anonymes d'exécuter la vérification d'administration.
 
 ## Déployer et vérifier
 
@@ -53,7 +55,13 @@ Le test SQL utilise des données temporaires, simule les rôles visiteur/client/
 vérifie la révocation et annule toutes ses écritures. Il n'envoie aucun email ni paiement.
 
 Une migration appliquée via `db query --linked --file ...` doit être enregistrée avec
-`supabase migration repair 20261019000100 --status applied --linked` avant un futur `db push`.
+`supabase migration repair <version> --status applied --linked` avant un futur `db push`.
+
+Le contrôle `is_admin()` est volontairement exécutable par les utilisateurs connectés :
+il ne reçoit aucun identifiant en paramètre et ne renvoie que les droits de la session courante.
+L'avertissement Supabase sur cette fonction SECURITY DEFINER correspond à cet usage prévu.
+La protection Supabase contre les mots de passe compromis reste à activer dans les paramètres Auth
+si l'offre du projet le permet ; elle est indépendante des autorisations d'administration.
 
 ## Exposition antérieure
 
