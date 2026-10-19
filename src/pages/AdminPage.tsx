@@ -1,16 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { Package, TrendingUp, Clock, CheckCircle, Truck, XCircle, ChevronDown, RefreshCw, AlertTriangle, Droplets, Save, Plus, X, Trash2, Upload, Loader2, BookOpen, Eye, EyeOff, Tag } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
+import RequireAdmin from '@/components/RequireAdmin';
 import { supabase, type ParfumDB } from '@/lib/supabase';
 
 const FAMILLES = ['SACRÆ', 'VITÆA', 'UMBRÆ', 'NEROLÆ', 'ÆRA'];
 const inputCls = 'w-full px-3 py-2 bg-white/5 border border-white/10 rounded font-body text-sm text-foreground focus:outline-none focus:border-white/25 transition-colors';
 const labelCls = 'block font-body text-[10px] uppercase tracking-widest text-foreground/40 mb-1';
-
-const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL as string;
 
 type OrderStatus = 'pending' | 'paid' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled';
 
@@ -66,8 +64,6 @@ const statutParfumConfig: Record<string, { label: string; color: string }> = {
 };
 
 const AdminPage = () => {
-  const { user, loading } = useAuth();
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<AdminTab>('commandes');
 
   // Commandes
@@ -114,11 +110,8 @@ const AdminPage = () => {
   const [newPromo, setNewPromo] = useState({ code: '', percentage: 10, valid_from: '', valid_until: '', max_uses: '' });
 
   useEffect(() => {
-    if (loading) return;
-    if (!user) { navigate('/login'); return; }
-    if (ADMIN_EMAIL && user.email !== ADMIN_EMAIL) { navigate('/'); return; }
     fetchOrders();
-  }, [user, loading]);
+  }, []);
 
   useEffect(() => {
     if (activeTab === 'parfums' && parfums.length === 0) fetchParfums();
@@ -198,7 +191,7 @@ const AdminPage = () => {
         const order = orders.find(o => o.id === orderId);
         if (order?.email) {
           supabase.functions.invoke('send-shipping-email', {
-            body: { userEmail: order.email, orderId, trackingNumber, items: order.commande_items },
+            body: { orderId },
           });
         }
       }
@@ -367,7 +360,7 @@ const AdminPage = () => {
   const pendingCount = orders.filter(o => !o.statut || o.statut === 'pending').length;
   const shippedCount = orders.filter(o => o.statut === 'shipped').length;
 
-  if (loading || fetching) return (
+  if (fetching) return (
     <div className="min-h-screen flex items-center justify-center">
       <p className="font-display italic text-foreground/40">Chargement...</p>
     </div>
@@ -432,11 +425,7 @@ const AdminPage = () => {
               <AlertTriangle className="w-5 h-5 shrink-0 text-yellow-500/70 mt-0.5" />
               <div>
                 <p className="font-body text-sm text-yellow-500/80 mb-2">Politique de sécurité Supabase à configurer</p>
-                <p className="font-body text-xs text-foreground/40 mb-3">Exécutez ce SQL dans votre dashboard Supabase → SQL Editor :</p>
-                <pre className="font-mono text-xs text-foreground/60 bg-white/5 rounded p-3 overflow-x-auto">
-{`CREATE POLICY "Admin full access" ON commandes
-FOR ALL USING (auth.email() = '${user?.email}');`}
-                </pre>
+                <p className="font-body text-xs text-foreground/40 mb-3">Accès aux commandes refusé. Vérifiez les migrations de sécurité et les droits administrateur côté serveur.</p>
               </div>
             </div>
           </motion.div>
@@ -706,8 +695,7 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
             <AlertTriangle className="w-4 h-4 shrink-0 text-red-400 mt-0.5" />
             <div>
               <p className="font-body text-sm text-red-400 mb-2">{updateError}</p>
-              <p className="font-body text-xs text-foreground/40">Exécutez ce SQL dans Supabase → SQL Editor :</p>
-              <pre className="font-mono text-xs text-foreground/60 bg-white/5 rounded p-3 mt-2 overflow-x-auto">{`CREATE POLICY "Admin update" ON commandes\nFOR UPDATE USING (auth.email() = '${user?.email}');`}</pre>
+              <p className="font-body text-xs text-foreground/40">La modification a été refusée. Vérifiez vos droits administrateur côté serveur.</p>
             </div>
           </motion.div>
         )}
@@ -1300,4 +1288,6 @@ FOR ALL USING (auth.email() = '${user?.email}');`}
   );
 };
 
-export default AdminPage;
+export default function ProtectedAdminPage() {
+  return <RequireAdmin><AdminPage /></RequireAdmin>;
+}

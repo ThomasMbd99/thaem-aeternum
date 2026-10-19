@@ -5,14 +5,12 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// Seuls ces comptes peuvent déclencher un email d'expédition — sans ce contrôle,
-// n'importe qui connaissant l'URL de la fonction pouvait envoyer des emails arbitraires
-// via notre compte Resend.
-const ADMIN_EMAILS = ['contact@thaem-aeternum.com', 'thomasmabed56@gmail.com'];
-
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
+  }
+  if (req.method !== 'POST') {
+    return new Response('Method not allowed', { status: 405, headers: corsHeaders });
   }
 
   try {
@@ -30,21 +28,38 @@ Deno.serve(async (req) => {
     }
     const authClient = createClient(supabaseUrl, anonKey, { global: { headers: { Authorization: authHeader } } });
     const { data: { user } } = await authClient.auth.getUser();
-    if (!user?.email || !ADMIN_EMAILS.includes(user.email)) {
+    if (!user) {
       return new Response(JSON.stringify({ error: 'Non autorisé.' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    const { userEmail, orderId, trackingNumber, items } = await req.json() as {
-      userEmail: string;
-      orderId: string;
-      trackingNumber: string;
-      items?: { parfum_nom?: string; format?: string; quantite?: number }[];
-    };
+    const { data: isAdmin, error: adminError } = await authClient.rpc('is_admin');
+    if (adminError || isAdmin !== true) {
+      return new Response(JSON.stringify({ error: 'Accès refusé.' }), {
+        status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
 
-    if (!userEmail) throw new Error('Email manquant.');
+    // Recipient, tracking and contents come from the authorized order, never the caller.
+    const { orderId } = await req.json() as { orderId?: string | number };
+    if (!['string', 'number'].includes(typeof orderId) || !/^[1-9][0-9]{0,18}$/.test(String(orderId))) {
+      return new Response('Invalid order', { status: 400, headers: corsHeaders });
+    }
+    const { data: order, error: orderError } = await authClient.from('commandes')
+      .select('email, statut, numero_suivi, commande_items(parfum_nom, format, quantite)')
+      .eq('id', orderId).single();
+    if (orderError || !order || order.statut !== 'shipped' || !order.numero_suivi || !order.email) {
+      return new Response('Order unavailable or not shipped', { status: 400, headers: corsHeaders });
+    }
+    const userEmail = order.email;
+    const escapeHtml = (value: unknown) => String(value ?? '').replace(/[&<>"']/g, char =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]!));
+    const trackingNumber = escapeHtml(order.numero_suivi);
+    const items = order.commande_items.map(item => ({
+      parfum_nom: escapeHtml(item.parfum_nom), format: escapeHtml(item.format), quantite: Number(item.quantite),
+    }));
 
     const orderRef = String(orderId).slice(0, 8).toUpperCase();
 
